@@ -1,23 +1,14 @@
-import { Header } from './components/layout/Header'
-import { Footer } from './components/layout/Footer'
+import { Header } from '@/components/layout/Header'
+import { Hero } from '@/components/sections/Hero'
+import { Footer } from '@/components/layout/Footer'
 
 export default function App() {
   return (
-    <div id="topo" className="min-h-screen bg-[var(--prospera-white)]">
+    <div id="topo" className="min-h-screen bg-prospera-white text-prospera-graphite flex flex-col justify-between selection:bg-prospera-green selection:text-prospera-gold">
       <Header />
 
-      <main>
-        <section className="container-prospera py-20 sm:py-28">
-          <div className="max-w-3xl">
-            <div className="eyebrow">Prospera Investment</div>
-            <h1 className="mt-5 font-serif text-4xl leading-tight text-[var(--prospera-green)] sm:text-5xl lg:text-6xl">
-              Fundação técnica pronta para a nova experiência Prospera.
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-black/65">
-              Estrutura inicial criada com foco em performance, responsividade, identidade premium e crescimento modular. A primeira dobra visual será construída somente após validação desta base.
-            </p>
-          </div>
-        </section>
+      <main className="flex-1">
+        <Hero />
       </main>
 
       <Footer />

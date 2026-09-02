@@ -1,33 +1,205 @@
 @import "tailwindcss";
 
+@theme {
+  --color-prospera-green: #0F3B2E;
+  --color-prospera-green-secondary: #123F35;
+  --color-prospera-gold: #C9A14A;
+  --color-prospera-gold-secondary: #B88A2B;
+  --color-prospera-ivory: #F8F5EE;
+  --color-prospera-white: #FFFDF8;
+  --color-prospera-graphite: #2C2C2C;
+
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 :root {
   --prospera-green: #0F3B2E;
-  --prospera-green-2: #123F35;
+  --prospera-green-secondary: #123F35;
   --prospera-gold: #C9A14A;
-  --prospera-gold-2: #B88A2B;
+  --prospera-gold-secondary: #B88A2B;
   --prospera-ivory: #F8F5EE;
   --prospera-white: #FFFDF8;
   --prospera-graphite: #2C2C2C;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: var(--prospera-graphite);
-  background: var(--prospera-white);
 }
 
-html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; background: var(--prospera-white); }
-* { box-sizing: border-box; }
-a { color: inherit; text-decoration: none; }
-button, a { -webkit-tap-highlight-color: transparent; }
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+  color: var(--prospera-graphite);
+  background-color: var(--prospera-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--prospera-white);
+  color: var(--prospera-graphite);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background-color: #0F3B2E;
+  color: #F8F5EE;
+}
 
 .container-prospera {
-  width: min(1180px, calc(100% - 2rem));
+  width: min(1200px, calc(100% - 2rem));
   margin-inline: auto;
 }
 
+@media (min-width: 640px) {
+  .container-prospera {
+    width: min(1200px, calc(100% - 3rem));
+  }
+}
+
+.container-luxury {
+  width: min(1560px, calc(100% - 2.5rem));
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .container-luxury {
+    width: min(1560px, calc(100% - 3.5rem));
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-luxury {
+    width: min(1560px, calc(100% - 5rem));
+  }
+}
+
 .eyebrow {
-  letter-spacing: .18em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--prospera-gold-2);
+  color: var(--prospera-gold-secondary);
+}
+
+/* ==========================================================================
+   Luxury Motion & Keyframes (Hero Premium)
+   ========================================================================== */
+
+@keyframes heroFadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes goldShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes subtleAmbientGlow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes subtleScroll {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+
+.animate-hero-fade-in {
+  animation: heroFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-hero-fade-in-up-1 {
+  opacity: 0;
+  animation: heroFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+}
+
+.animate-hero-fade-in-up-2 {
+  opacity: 0;
+  animation: heroFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+}
+
+.animate-hero-fade-in-up-3 {
+  opacity: 0;
+  animation: heroFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+}
+
+.animate-hero-fade-in-up-4 {
+  opacity: 0;
+  animation: heroFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
+}
+
+.animate-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(201, 161, 74, 0.2) 0%,
+    rgba(201, 161, 74, 0.9) 50%,
+    rgba(201, 161, 74, 0.2) 100%
+  );
+  background-size: 200% 100%;
+  animation: goldShimmer 6s ease-in-out infinite;
+}
+
+.animate-ambient-glow {
+  animation: subtleAmbientGlow 8s ease-in-out infinite;
+}
+
+.animate-subtle-scroll {
+  animation: subtleScroll 2.4s ease-in-out infinite;
+}
+
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
