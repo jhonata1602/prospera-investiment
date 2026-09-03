@@ -1,23 +1,49 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { ArrowUpRight, ChevronDown, Landmark, ShieldCheck, MapPin } from 'lucide-react'
 
+// 5-Scene Master Sequence per HERO_VIDEO_SHOTLIST.md (15s Total Cycle, 3s each)
+const VIDEO_SCENES = [
+  {
+    id: 'thames',
+    src: '/assets/prospera/video/london-thames-bridge.mp4',
+    title: 'Cena 1: Tâmisa + Ponte + Skyline (0–3s)',
+  },
+  {
+    id: 'big-ben',
+    src: '/assets/prospera/video/london-big-ben.mp4',
+    title: 'Cena 2: Westminster + Big Ben (3–6s)',
+  },
+  {
+    id: 'london-eye',
+    src: '/assets/prospera/video/london-eye.mp4',
+    title: 'Cena 3: London Eye + Tâmisa (6–9s)',
+  },
+  {
+    id: 'skyline',
+    src: '/assets/prospera/video/london-skyline.mp4',
+    title: 'Cena 4: Skyline Premium (9–12s)',
+  },
+  {
+    id: 'property',
+    src: '/assets/prospera/video/london-property.mp4',
+    title: 'Cena 5: Imóveis Britânicos Premium (12–15s)',
+  },
+]
+
 interface CinematicHeroProps {
-  videoSrcWebm?: string
-  videoSrcMp4?: string
   posterSrc?: string
   adrianaSrc?: string
 }
 
 export function CinematicHero({
-  videoSrcWebm = '/assets/prospera/hero/london-master.webm',
-  videoSrcMp4 = '/assets/prospera/hero/london-master.mp4',
   posterSrc = '/assets/prospera/hero/poster-london.webp',
   adrianaSrc = '/assets/prospera/adriana/adriana-cutout.webp',
 }: CinematicHeroProps) {
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 })
   const [isDesktop, setIsDesktop] = useState(false)
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const [currentSceneIdx, setCurrentSceneIdx] = useState(0)
+  const [isAnyVideoWorking, setIsAnyVideoWorking] = useState(false)
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
 
   // Detect capability: Desktop pointer, viewport size, reduced motion preference
   useEffect(() => {
@@ -33,29 +59,35 @@ export function CinematicHero({
     return () => window.removeEventListener('resize', checkEnvironment)
   }, [])
 
-  // Video playback attempt with silent fallback
+  // 15-second master sequence crossfader (3 seconds per scene, per HERO_VIDEO_SHOTLIST.md)
   useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
+    // Only run multi-clip sequence if on desktop and reduced motion is off
+    if (!isDesktop) return
 
-    const handleCanPlay = () => setIsVideoLoaded(true)
-    const handleError = () => setIsVideoLoaded(false)
+    const interval = setInterval(() => {
+      setCurrentSceneIdx((prev) => {
+        const next = (prev + 1) % VIDEO_SCENES.length
+        const nextVideo = videoRefs.current[next]
+        if (nextVideo) {
+          nextVideo.currentTime = 0
+          nextVideo.play().catch(() => {})
+        }
+        return next
+      })
+    }, 3000)
 
-    video.addEventListener('canplay', handleCanPlay)
-    video.addEventListener('error', handleError)
+    return () => clearInterval(interval)
+  }, [isDesktop])
 
-    const playPromise = video.play()
-    if (playPromise !== undefined) {
-      playPromise.then(() => setIsVideoLoaded(true)).catch(() => setIsVideoLoaded(false))
+  // Track video availability
+  const handleVideoCanPlay = (idx: number) => {
+    setIsAnyVideoWorking(true)
+    if (idx === currentSceneIdx && videoRefs.current[idx]) {
+      videoRefs.current[idx]?.play().catch(() => {})
     }
+  }
 
-    return () => {
-      video.removeEventListener('canplay', handleCanPlay)
-      video.removeEventListener('error', handleError)
-    }
-  }, [])
-
-  // Subtle microparallax on mouse move (Desktop only)
+  // Subtle microparallax on mouse move (8–14px per HERO_VIDEO_SHOTLIST.md)
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       if (!isDesktop) return
@@ -65,7 +97,7 @@ export function CinematicHero({
       const y = (e.clientY - rect.top) / rect.height - 0.5
 
       setMouseOffset({
-        x: Math.round(x * 12),
+        x: Math.round(x * 14),
         y: Math.round(y * 10),
       })
     },
@@ -85,39 +117,41 @@ export function CinematicHero({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="relative w-full min-h-[100svh] lg:h-screen lg:min-h-[760px] lg:max-h-[1080px] flex items-center bg-[#07110D] text-prospera-white overflow-hidden"
-      aria-label="Primeira Dobra — Prospera Investment"
+      aria-label="Primeira Dobra Cinematográfica — Prospera Investment"
     >
       {/* =========================================================================
-          CAMADA 1: BACKGROUND CINEMATOGRÁFICO (Londres em Movimento / Full-Screen)
-          Vídeo em tela cheia com slots WebM/MP4 + Poster Panorâmico de Fallback
+          CAMADA 1: VÍDEO FULL-SCREEN (Sequência 5 Cenas de Londres com Crossfade)
+          0–3s: Tâmisa + ponte | 3–6s: Big Ben | 6–9s: London Eye | 9–12s: Skyline | 12–15s: Imóveis
          ========================================================================= */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Master Video Slot */}
-        <video
-          ref={videoRef}
-          playsInline
-          autoPlay
-          muted
-          loop
-          preload="metadata"
-          poster={posterSrc}
-          className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-1000 ${
-            isVideoLoaded ? 'opacity-85' : 'opacity-0'
-          }`}
-        >
-          <source src={videoSrcWebm} type="video/webm" />
-          <source src={videoSrcMp4} type="video/mp4" />
-        </video>
+        {/* 5-Video Scene Slots with 500ms Crossfade */}
+        {VIDEO_SCENES.map((scene, idx) => (
+          <video
+            key={scene.id}
+            ref={(el) => { videoRefs.current[idx] = el }}
+            playsInline
+            autoPlay
+            muted
+            loop
+            preload="metadata"
+            onCanPlay={() => handleVideoCanPlay(idx)}
+            className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500 ease-in-out ${
+              isAnyVideoWorking && currentSceneIdx === idx ? 'opacity-85' : 'opacity-0'
+            }`}
+          >
+            <source src={scene.src} type="video/mp4" />
+          </video>
+        ))}
 
-        {/* Poster Fallback com sutil pan cinematográfico contínuo */}
+        {/* Poster Fallback Panorâmico (Exibido enquanto vídeos carregam ou caso ainda não estejam na pasta) */}
         <div
           className={`absolute inset-0 transition-opacity duration-1000 ${
-            isVideoLoaded ? 'opacity-0' : 'opacity-90'
+            isAnyVideoWorking ? 'opacity-0' : 'opacity-90'
           }`}
         >
           <img
             src={posterSrc}
-            alt="Londres — Westminster, Big Ben e Tâmisa"
+            alt="Londres — Westminster, Big Ben, London Eye e Tâmisa"
             fetchPriority="high"
             loading="eager"
             decoding="async"
@@ -125,21 +159,21 @@ export function CinematicHero({
           />
         </div>
 
-        {/* Tratamento visual suave — Londres permanece viva e luminosa */}
+        {/* Tratamento visual suave — Londres permanece viva, nítida e luminosa */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#07110D]/75 via-transparent to-[#07110D]/40" />
         <div className="absolute inset-0 bg-[#07110D]/10 mix-blend-multiply" />
       </div>
 
       {/* =========================================================================
-          CAMADA 2: ESCRITÓRIO PREMIUM (Camada Intermediária Arquitetônica)
-          Janela panorâmica piso-teto, frisos nobres, tampo da mesa executiva na base
+          CAMADA 2 & 3: ESCRITÓRIO PREMIUM (Camada Intermediária)
+          Janela panorâmica piso-teto, frisos dourados, tampo da mesa executiva na base
          ========================================================================= */}
       <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Divisória arquitetônica de vidro piso-ao-teto */}
+        {/* Divisórias arquitetônicas de vidro piso-ao-teto */}
         <div className="hidden lg:block absolute inset-y-0 left-[38%] xl:left-[35%] w-px bg-gradient-to-b from-prospera-gold/25 via-white/10 to-prospera-gold/30 shadow-[0_0_15px_rgba(201,161,74,0.15)]" />
         <div className="hidden xl:block absolute inset-y-0 left-[68%] w-px bg-gradient-to-b from-white/10 via-white/5 to-white/15" />
 
-        {/* Reflexo de vidro e iluminação suave de escritório */}
+        {/* Reflexo de vidro e iluminação de escritório executivo */}
         <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.04] via-transparent to-prospera-gold/[0.03]" />
 
         {/* Superfície da mesa executiva na base em primeiro plano */}
@@ -154,8 +188,8 @@ export function CinematicHero({
       </div>
 
       {/* =========================================================================
-          CAMADA 3: ADRIANA HORROCKS (Fixa em Primeiro Plano, Recortada, Sem Moldura)
-          Posicionada à esquerda, postura e rosto impecáveis, leve microparallax
+          CAMADA 2 / 3: ADRIANA HORROCKS (Fixa em Primeiro Plano, Recortada, Sem Moldura)
+          Posicionada à esquerda, rosto e postura impecáveis, leve microparallax (8-14px)
          ========================================================================= */}
       <div
         className="absolute bottom-0 left-0 sm:left-4 lg:left-[3%] xl:left-[6%] 2xl:left-[9%] z-20 pointer-events-none transition-transform duration-700 ease-out will-change-transform flex items-end"
@@ -166,7 +200,7 @@ export function CinematicHero({
         }}
       >
         <div className="relative">
-          {/* Sombra suave de contato e profundidade natural sob Adriana */}
+          {/* Sombra suave de contato e profundidade sob Adriana */}
           <div className="absolute -inset-x-8 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent blur-xl" />
 
           <img
