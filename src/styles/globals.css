@@ -95,13 +95,13 @@ button, a {
 }
 
 /* ==========================================================================
-   Luxury Motion & Keyframes (Hero Premium)
+   Luxury Motion & Keyframes (Cinematic Hero Specification)
    ========================================================================== */
 
 @keyframes heroFadeInUp {
   0% {
     opacity: 0;
-    transform: translateY(22px);
+    transform: translateY(20px);
   }
   100% {
     opacity: 1;
@@ -118,6 +118,56 @@ button, a {
   }
 }
 
+@keyframes cinematicPanZoom {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.03) translate3d(-0.8%, -0.4%, 0);
+  }
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sceneBreathe {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.018);
+  }
+}
+
+@keyframes ctaGlowPulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes buttonShine {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  20%, 100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+@keyframes subtleBreathe {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
 @keyframes goldShimmer {
   0% {
     background-position: -200% 0;
@@ -129,11 +179,11 @@ button, a {
 
 @keyframes subtleAmbientGlow {
   0%, 100% {
-    opacity: 0.35;
+    opacity: 0.25;
     transform: scale(1);
   }
   50% {
-    opacity: 0.55;
+    opacity: 0.45;
     transform: scale(1.05);
   }
 }
@@ -150,27 +200,54 @@ button, a {
 }
 
 .animate-hero-fade-in {
-  animation: heroFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: heroFadeIn 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+.animate-scene-breathe {
+  animation: sceneBreathe 26s ease-in-out infinite;
+}
+
+.animate-cta-glow {
+  animation: ctaGlowPulse 4.5s ease-in-out infinite;
+}
+
+.animate-button-shine {
+  animation: buttonShine 6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.animate-cinematic-pan {
+  animation: cinematicPanZoom 24s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.animate-subtle-breathe {
+  animation: subtleBreathe 7s ease-in-out infinite;
+}
+
+/* Stagger timings per CINEMATIC_HERO_SPEC.md:
+   Eyebrow (100ms) -> Headline (240ms) -> Subheadline (400ms) -> CTAs (580ms) -> Autoridade (750ms) */
 .animate-hero-fade-in-up-1 {
   opacity: 0;
-  animation: heroFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+  animation: heroFadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.10s forwards;
 }
 
 .animate-hero-fade-in-up-2 {
   opacity: 0;
-  animation: heroFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+  animation: heroFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.24s forwards;
 }
 
 .animate-hero-fade-in-up-3 {
   opacity: 0;
-  animation: heroFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+  animation: heroFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.40s forwards;
 }
 
 .animate-hero-fade-in-up-4 {
   opacity: 0;
-  animation: heroFadeInUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.75s forwards;
+  animation: heroFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.58s forwards;
+}
+
+.animate-hero-fade-in-up-5 {
+  opacity: 0;
+  animation: heroFadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.75s forwards;
 }
 
 .animate-gold-shimmer {

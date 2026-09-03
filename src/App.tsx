@@ -1,5 +1,5 @@
 import { Header } from '@/components/layout/Header'
-import { Hero } from '@/components/sections/Hero'
+import { CinematicHero } from '@/components/sections/CinematicHero'
 import { Footer } from '@/components/layout/Footer'
 
 export default function App() {
@@ -8,7 +8,7 @@ export default function App() {
       <Header />
 
       <main className="flex-1">
-        <Hero />
+        <CinematicHero />
       </main>
 
       <Footer />

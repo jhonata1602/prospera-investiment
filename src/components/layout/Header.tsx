@@ -27,28 +27,28 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? 'bg-[#07110D]/95 shadow-[0_4px_30px_rgba(0,0,0,0.6)] backdrop-blur-xl border-b border-prospera-gold/25'
-          : 'bg-[#07110D]/80 backdrop-blur-md border-b border-white/10'
+          ? 'bg-[#07110D]/95 shadow-[0_4px_30px_rgba(0,0,0,0.7)] backdrop-blur-xl border-b border-prospera-gold/25 h-16 lg:h-18'
+          : 'bg-transparent border-b border-white/10 backdrop-blur-[2px] h-16 lg:h-20'
       }`}
     >
-      <div className="container-luxury flex h-20 lg:h-24 items-center justify-between gap-6">
+      <div className="container-luxury flex h-full items-center justify-between gap-6">
         {/* Logo */}
         <a
           href="#topo"
-          className="group flex items-center gap-3.5 transition-opacity hover:opacity-90"
+          className="group flex items-center gap-3 transition-opacity hover:opacity-90"
           aria-label="Prospera Investment — Página inicial"
         >
-          <div className="relative flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-full border border-prospera-gold/90 bg-prospera-green text-prospera-gold transition-transform duration-300 group-hover:scale-105 shadow-md">
-            <span className="font-serif text-xl sm:text-2xl font-bold">P</span>
-            <div className="absolute -inset-1 rounded-full border border-prospera-gold/30" />
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-prospera-gold/80 bg-prospera-green text-prospera-gold transition-transform duration-300 group-hover:scale-105 shadow-sm">
+            <span className="font-serif text-lg font-bold">P</span>
+            <div className="absolute -inset-0.5 rounded-full border border-prospera-gold/30" />
           </div>
           <div>
-            <div className="font-serif text-xl sm:text-2xl font-semibold tracking-wider text-prospera-white">
+            <div className="font-serif text-lg font-semibold tracking-wider text-prospera-white">
               PROSPERA
             </div>
-            <div className="text-[10px] sm:text-[11px] font-semibold tracking-[0.28em] text-prospera-gold uppercase">
+            <div className="text-[9px] font-semibold tracking-[0.26em] text-prospera-gold uppercase">
               Investments
             </div>
           </div>
@@ -56,40 +56,40 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav
-          className="hidden items-center gap-8 xl:gap-10 lg:flex"
+          className="hidden items-center gap-7 xl:gap-9 lg:flex"
           aria-label="Navegação principal"
         >
           {NAV_ITEMS.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="group relative py-1 text-[15px] font-medium text-prospera-white/90 transition-colors hover:text-prospera-gold"
+              className="group relative py-1 text-sm font-medium text-white/85 transition-colors hover:text-prospera-gold"
             >
               {item.label}
-              <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-prospera-gold transition-all duration-300 group-hover:w-full" />
+              <span className="absolute bottom-0 left-0 h-[1.5px] w-0 bg-prospera-gold transition-all duration-300 group-hover:w-full" />
             </a>
           ))}
         </nav>
 
         {/* CTA & Mobile Toggle */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3.5">
           <a
             href="#diagnostico"
-            className="hidden sm:inline-flex items-center gap-2.5 rounded-full bg-prospera-gold px-6 py-3 text-xs sm:text-[13px] font-bold uppercase tracking-wider text-[#07110D] shadow-md transition-all duration-300 hover:bg-[#D8B35C] hover:shadow-lg hover:scale-105 active:scale-95"
+            className="hidden sm:inline-flex items-center gap-2 rounded-full bg-prospera-gold px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#07110D] shadow-sm transition-all duration-300 hover:bg-[#D8B35C] hover:shadow-md hover:scale-102 active:scale-95"
           >
             <span>Descobrir minha rota</span>
-            <ArrowUpRight size={15} className="text-[#07110D]" />
+            <ArrowUpRight size={14} className="text-[#07110D]" />
           </a>
 
           {/* Mobile hamburger button */}
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="grid h-12 w-12 place-items-center rounded-full border border-white/20 text-prospera-gold transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-prospera-gold/50 lg:hidden"
+            className="grid h-10 w-10 place-items-center rounded-full border border-white/20 text-prospera-gold transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-prospera-gold/50 lg:hidden"
             aria-label={isMobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
             aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
