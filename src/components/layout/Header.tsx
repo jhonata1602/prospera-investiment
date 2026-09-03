@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Menu, X, ArrowUpRight } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { NAV_ITEMS } from '@/constants/navigation'
 
 export function Header() {
@@ -8,7 +8,7 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
+      setIsScrolled(window.scrollY > 25)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
@@ -29,32 +29,38 @@ export function Header() {
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? 'bg-[#07110D]/95 shadow-[0_4px_30px_rgba(0,0,0,0.7)] backdrop-blur-xl border-b border-prospera-gold/25 h-16 lg:h-18'
-          : 'bg-transparent border-b border-white/10 backdrop-blur-[2px] h-16 lg:h-20'
+          ? 'bg-[#07110D]/95 shadow-[0_8px_32px_rgba(0,0,0,0.7)] backdrop-blur-xl border-b border-prospera-gold/20 h-16 lg:h-18'
+          : 'bg-gradient-to-b from-[#07110D]/65 via-[#07110D]/30 to-transparent backdrop-blur-[4px] h-18 lg:h-20'
       }`}
     >
-      <div className="container-luxury flex h-full items-center justify-between gap-6">
-        {/* Logo */}
+      <div className="container-luxury flex h-full items-center justify-between gap-8">
+        {/* Logo Oficial Prospera: Escudo à esquerda + Tipografia refinada */}
         <a
           href="#topo"
-          className="group flex items-center gap-3 transition-opacity hover:opacity-90"
+          className="group flex items-center gap-3.5 transition-opacity hover:opacity-95"
           aria-label="Prospera Investment — Página inicial"
         >
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-full border border-prospera-gold/80 bg-prospera-green text-prospera-gold transition-transform duration-300 group-hover:scale-105 shadow-sm">
-            <span className="font-serif text-lg font-bold">P</span>
-            <div className="absolute -inset-0.5 rounded-full border border-prospera-gold/30" />
+          {/* Brasão Oficial com Escudo Verde, Coroa e Coluna */}
+          <div className="relative shrink-0 flex items-center justify-center">
+            <img
+              src="/assets/prospera/brand/logo-shield.webp"
+              alt="Brasão Oficial Prospera Investment"
+              className="h-10 sm:h-11 lg:h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(212,175,55,0.25)] transition-transform duration-300 group-hover:scale-105"
+            />
           </div>
-          <div>
-            <div className="font-serif text-lg font-semibold tracking-wider text-prospera-white">
+
+          {/* Nome Oficial Institucional */}
+          <div className="flex flex-col justify-center">
+            <span className="font-serif text-lg sm:text-xl font-semibold tracking-[0.24em] text-prospera-white uppercase leading-tight">
               PROSPERA
-            </div>
-            <div className="text-[9px] font-semibold tracking-[0.26em] text-prospera-gold uppercase">
-              Investments
-            </div>
+            </span>
+            <span className="text-[9px] sm:text-[10px] font-semibold tracking-[0.32em] text-gold-metallic uppercase leading-tight mt-0.5">
+              INVESTMENT
+            </span>
           </div>
         </a>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation: branco/off-white (rgba(255,255,255,0.92)) e dourado (#D4AF37) no hover */}
         <nav
           className="hidden items-center gap-7 xl:gap-9 lg:flex"
           aria-label="Navegação principal"
@@ -63,29 +69,20 @@ export function Header() {
             <a
               key={item.href}
               href={item.href}
-              className="group relative py-1 text-sm font-medium text-white/85 transition-colors hover:text-prospera-gold"
+              className="group relative py-1.5 text-[14px] xl:text-[14.5px] font-medium tracking-[0.02em] text-[rgba(255,255,255,0.92)] transition-colors duration-200 hover:text-[#D4AF37] drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)]"
             >
               {item.label}
-              <span className="absolute bottom-0 left-0 h-[1.5px] w-0 bg-prospera-gold transition-all duration-300 group-hover:w-full" />
+              <span className="absolute bottom-0 left-0 h-[1.5px] w-0 bg-[#D4AF37] transition-all duration-300 group-hover:w-full rounded-full shadow-[0_0_8px_rgba(212,175,55,0.7)]" />
             </a>
           ))}
         </nav>
 
-        {/* CTA & Mobile Toggle */}
-        <div className="flex items-center gap-3.5">
-          <a
-            href="#diagnostico"
-            className="hidden sm:inline-flex items-center gap-2 rounded-full bg-prospera-gold px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#07110D] shadow-sm transition-all duration-300 hover:bg-[#D8B35C] hover:shadow-md hover:scale-102 active:scale-95"
-          >
-            <span>Descobrir minha rota</span>
-            <ArrowUpRight size={14} className="text-[#07110D]" />
-          </a>
-
-          {/* Mobile hamburger button */}
+        {/* Mobile Hamburger Toggle Button */}
+        <div className="flex items-center lg:hidden">
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="grid h-10 w-10 place-items-center rounded-full border border-white/20 text-prospera-gold transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-prospera-gold/50 lg:hidden"
+            className="grid h-10 w-10 place-items-center rounded-full border border-prospera-gold/40 bg-[#07110D]/70 text-prospera-gold backdrop-blur-md transition-all hover:border-prospera-gold hover:bg-prospera-gold/20 focus:outline-none focus:ring-2 focus:ring-prospera-gold/50"
             aria-label={isMobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
             aria-expanded={isMobileMenuOpen}
           >
@@ -99,13 +96,13 @@ export function Header() {
         <div className="lg:hidden">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 top-20 z-40 bg-prospera-green/40 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 top-16 z-40 bg-[#07110D]/70 backdrop-blur-sm transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
           {/* Drawer content */}
-          <div className="fixed inset-x-0 top-20 z-50 max-h-[calc(100vh-5rem)] overflow-y-auto border-b border-prospera-gold/30 bg-[#07110D]/98 backdrop-blur-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all">
+          <div className="fixed inset-x-0 top-16 z-50 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-prospera-gold/25 bg-[#07110D]/98 backdrop-blur-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)]">
             <nav className="flex flex-col space-y-4" aria-label="Navegação mobile">
               {NAV_ITEMS.map((item) => (
                 <a
@@ -120,18 +117,9 @@ export function Header() {
               ))}
             </nav>
 
-            <div className="mt-6 pt-2">
-              <a
-                href="#diagnostico"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex w-full items-center justify-center gap-2 rounded-full bg-prospera-gold py-4 text-xs font-bold uppercase tracking-wider text-[#07110D] shadow-lg transition-all hover:bg-[#D8B35C] active:scale-95"
-              >
-                <span>Descobrir minha rota</span>
-                <ArrowUpRight size={15} className="text-[#07110D]" />
-              </a>
-
-              <p className="mt-4 text-center text-[11px] text-prospera-ivory/60">
-                Estratégia e estrutura patrimonial no Reino Unido
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <p className="text-center text-xs text-prospera-ivory/60 font-light">
+                Estrutura e estratégia imobiliária de alto padrão no Reino Unido
               </p>
             </div>
           </div>

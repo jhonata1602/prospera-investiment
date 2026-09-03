@@ -1,32 +1,58 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { ArrowUpRight, ChevronDown, Landmark, ShieldCheck, MapPin } from 'lucide-react'
+import { ArrowUpRight, ChevronDown } from 'lucide-react'
 
-// 5-Scene Master Sequence per HERO_VIDEO_SHOTLIST.md (15s Total Cycle, 3s each)
+// Available High-Definition London Scenes in public/assets/prospera/video/
 const VIDEO_SCENES = [
-  {
-    id: 'thames',
-    src: '/assets/prospera/video/london-thames-bridge.mp4',
-    title: 'Cena 1: Tâmisa + Ponte + Skyline (0–3s)',
-  },
   {
     id: 'big-ben',
     src: '/assets/prospera/video/london-big-ben.mp4',
-    title: 'Cena 2: Westminster + Big Ben (3–6s)',
+    title: 'Cena 1: Big Ben & Palácio de Westminster',
+    className: 'object-cover',
+    style: {
+      objectPosition: '55% center',
+    },
+  },
+  {
+    id: 'thames-bridge',
+    src: '/assets/prospera/video/london-thames-bridge.mp4',
+    title: 'Cena 2: Tower Bridge & Rio Tâmisa',
+    className: 'object-cover object-center',
+    style: undefined,
   },
   {
     id: 'london-eye',
     src: '/assets/prospera/video/london-eye.mp4',
-    title: 'Cena 3: London Eye + Tâmisa (6–9s)',
+    title: 'Cena 3: London Eye & Tâmisa',
+    className: 'object-cover',
+    style: {
+      objectPosition: '35% center',
+      transform: 'scale(1.18) translateX(12%)',
+    },
   },
   {
-    id: 'skyline',
+    id: 'london-streets',
+    src: '/assets/prospera/video/london-streets.mp4',
+    title: 'Cena 4: Trafalgar Square & Arquitetura Britânica',
+    className: 'object-cover',
+    style: {
+      objectPosition: '60% center',
+    },
+  },
+  {
+    id: 'london-skyline',
     src: '/assets/prospera/video/london-skyline.mp4',
-    title: 'Cena 4: Skyline Premium (9–12s)',
+    title: 'Cena 5: Skyline Contemporâneo de Londres',
+    className: 'object-cover object-center',
+    style: undefined,
   },
   {
-    id: 'property',
-    src: '/assets/prospera/video/london-property.mp4',
-    title: 'Cena 5: Imóveis Britânicos Premium (12–15s)',
+    id: 'victoria-memorial',
+    src: '/assets/prospera/video/london-victoria-memorial.mp4',
+    title: 'Cena 6: Victoria Memorial & Tradição',
+    className: 'object-cover',
+    style: {
+      objectPosition: 'center 40%',
+    },
   },
 ]
 
@@ -37,7 +63,7 @@ interface CinematicHeroProps {
 
 export function CinematicHero({
   posterSrc = '/assets/prospera/hero/poster-london.webp',
-  adrianaSrc = '/assets/prospera/adriana/adriana-cutout.webp',
+  adrianaSrc = '/assets/prospera/hero-adriana-prospera-final.png',
 }: CinematicHeroProps) {
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 })
   const [isDesktop, setIsDesktop] = useState(false)
@@ -45,7 +71,7 @@ export function CinematicHero({
   const [isAnyVideoWorking, setIsAnyVideoWorking] = useState(false)
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
 
-  // Detect capability: Desktop pointer, viewport size, reduced motion preference
+  // Detect capability: Desktop pointer, viewport size, reduced motion
   useEffect(() => {
     const checkEnvironment = () => {
       const isFinePointer = window.matchMedia('(pointer: fine)').matches
@@ -59,54 +85,47 @@ export function CinematicHero({
     return () => window.removeEventListener('resize', checkEnvironment)
   }, [])
 
-  // 15-second master sequence crossfader (3 seconds per scene, per HERO_VIDEO_SHOTLIST.md)
-  useEffect(() => {
-    // Only run multi-clip sequence if on desktop and reduced motion is off
-    if (!isDesktop) return
-
-    const interval = setInterval(() => {
-      setCurrentSceneIdx((prev) => {
-        const next = (prev + 1) % VIDEO_SCENES.length
-        const nextVideo = videoRefs.current[next]
-        if (nextVideo) {
-          nextVideo.currentTime = 0
-          nextVideo.play().catch(() => {})
-        }
-        return next
-      })
-    }, 3000)
-
-    return () => clearInterval(interval)
-  }, [isDesktop])
-
-  // Track video availability
-  const handleVideoCanPlay = (idx: number) => {
-    setIsAnyVideoWorking(true)
-    if (idx === currentSceneIdx && videoRefs.current[idx]) {
-      videoRefs.current[idx]?.play().catch(() => {})
-    }
-  }
-
-  // Subtle microparallax on mouse move (8–14px per HERO_VIDEO_SHOTLIST.md)
+  // Parallax tracking with low-pass dampening
   const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
+    (e: React.MouseEvent<HTMLDivElement>) => {
       if (!isDesktop) return
-
-      const rect = e.currentTarget.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / rect.width - 0.5
-      const y = (e.clientY - rect.top) / rect.height - 0.5
+      const { clientX, clientY, currentTarget } = e
+      const { width, height, left, top } = currentTarget.getBoundingClientRect()
+      const normalizedX = (clientX - left) / width - 0.5
+      const normalizedY = (clientY - top) / height - 0.5
 
       setMouseOffset({
-        x: Math.round(x * 14),
-        y: Math.round(y * 10),
+        x: Math.round(normalizedX * 18),
+        y: Math.round(normalizedY * 12),
       })
     },
-    [isDesktop],
+    [isDesktop]
   )
 
   const handleMouseLeave = useCallback(() => {
     setMouseOffset({ x: 0, y: 0 })
   }, [])
+
+  // Smooth continuous crossfader between scenes (4.0s per scene, 700ms crossfade)
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) return
+
+    const interval = setInterval(() => {
+      setCurrentSceneIdx((prev) => (prev + 1) % VIDEO_SCENES.length)
+    }, 4000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Whenever active scene updates, start playing next video cleanly
+  useEffect(() => {
+    const nextVideo = videoRefs.current[currentSceneIdx]
+    if (nextVideo) {
+      nextVideo.currentTime = 0
+      nextVideo.play().catch(() => {})
+    }
+  }, [currentSceneIdx])
 
   const scrollToNext = () => {
     window.scrollBy({ top: window.innerHeight * 0.9, behavior: 'smooth' })
@@ -114,228 +133,206 @@ export function CinematicHero({
 
   return (
     <section
+      id="hero"
+      aria-label="Introdução Prospera Investment"
+      className="relative min-h-[100svh] w-full flex items-center overflow-hidden bg-[#07110D]"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full min-h-[100svh] lg:h-screen lg:min-h-[760px] lg:max-h-[1080px] flex items-center bg-[#07110D] text-prospera-white overflow-hidden"
-      aria-label="Primeira Dobra Cinematográfica — Prospera Investment"
     >
       {/* =========================================================================
-          CAMADA 1: VÍDEO FULL-SCREEN (Sequência 5 Cenas de Londres com Crossfade)
-          0–3s: Tâmisa + ponte | 3–6s: Big Ben | 6–9s: London Eye | 9–12s: Skyline | 12–15s: Imóveis
+          CAMADA 1: VÍDEOS DE ALTA RESOLUÇÃO DE LONDRES (Background Cinematográfico)
+          - Transição suave entre as 6 cenas em crossfade de 700ms
+          - Zoom lento contínuo (ken burns) para máxima sofisticação
+          - Fallback com poster panorâmico garantindo zero tela preta
          ========================================================================= */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* 5-Video Scene Slots with 500ms Crossfade */}
-        {VIDEO_SCENES.map((scene, idx) => (
-          <video
-            key={scene.id}
-            ref={(el) => { videoRefs.current[idx] = el }}
-            playsInline
-            autoPlay
-            muted
-            loop
-            preload="metadata"
-            onCanPlay={() => handleVideoCanPlay(idx)}
-            className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-500 ease-in-out ${
-              isAnyVideoWorking && currentSceneIdx === idx ? 'opacity-85' : 'opacity-0'
-            }`}
-          >
-            <source src={scene.src} type="video/mp4" />
-          </video>
-        ))}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
+        {VIDEO_SCENES.map((scene, idx) => {
+          const isActive = idx === currentSceneIdx
+          return (
+            <div
+              key={scene.id}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              }`}
+            >
+              <div
+                className="w-full h-full animate-kenburns-subtle will-change-transform"
+                style={scene.style}
+              >
+                <video
+                  ref={(el) => { videoRefs.current[idx] = el }}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload={idx < 2 ? 'auto' : 'metadata'}
+                  className={`w-full h-full ${scene.className}`}
+                  aria-hidden="true"
+                  onPlaying={() => setIsAnyVideoWorking(true)}
+                >
+                  <source src={scene.src} type="video/mp4" />
+                </video>
+              </div>
+            </div>
+          )
+        })}
 
-        {/* Poster Fallback Panorâmico (Exibido enquanto vídeos carregam ou caso ainda não estejam na pasta) */}
-        <div
-          className={`absolute inset-0 transition-opacity duration-1000 ${
-            isAnyVideoWorking ? 'opacity-0' : 'opacity-90'
-          }`}
-        >
+        {/* Fallback de alta resolução caso vídeo não reproduza */}
+        {!isAnyVideoWorking && (
           <img
             src={posterSrc}
-            alt="Londres — Westminster, Big Ben, London Eye e Tâmisa"
+            alt=""
             fetchPriority="high"
-            loading="eager"
-            decoding="async"
-            className="h-full w-full object-cover object-[center_35%] animate-cinematic-pan will-change-transform"
+            className="absolute inset-0 w-full h-full object-cover object-center"
           />
-        </div>
-
-        {/* Tratamento visual suave — Londres permanece viva, nítida e luminosa */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#07110D]/75 via-transparent to-[#07110D]/40" />
-        <div className="absolute inset-0 bg-[#07110D]/10 mix-blend-multiply" />
+        )}
       </div>
 
       {/* =========================================================================
-          CAMADA 2 & 3: ESCRITÓRIO PREMIUM (Camada Intermediária)
-          Janela panorâmica piso-teto, frisos dourados, tampo da mesa executiva na base
+          CAMADA 2: OVERLAY ÚNICO E CONTÍNUO (Zero faixas, zero linhas, zero cortes)
+          Um único gradiente contínuo cobrindo 100% da viewport (inset-0) sem divisões parciais
          ========================================================================= */}
-      <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Divisórias arquitetônicas de vidro piso-ao-teto */}
-        <div className="hidden lg:block absolute inset-y-0 left-[38%] xl:left-[35%] w-px bg-gradient-to-b from-prospera-gold/25 via-white/10 to-prospera-gold/30 shadow-[0_0_15px_rgba(201,161,74,0.15)]" />
-        <div className="hidden xl:block absolute inset-y-0 left-[68%] w-px bg-gradient-to-b from-white/10 via-white/5 to-white/15" />
+      {/* Overlay contínuo para Desktop (>= 1024px) */}
+      <div
+        className="hidden lg:block absolute inset-0 pointer-events-none z-10"
+        style={{
+          background:
+            'linear-gradient(90deg, rgba(7,17,13,0.25) 0%, transparent 22%, transparent 56%, rgba(7,17,13,0.65) 72%, rgba(7,17,13,0.92) 88%, rgba(7,17,13,0.96) 100%), linear-gradient(180deg, rgba(7,17,13,0.38) 0%, transparent 15%, transparent 85%, rgba(7,17,13,0.65) 100%)',
+        }}
+        aria-hidden="true"
+      />
 
-        {/* Reflexo de vidro e iluminação de escritório executivo */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/[0.04] via-transparent to-prospera-gold/[0.03]" />
-
-        {/* Superfície da mesa executiva na base em primeiro plano */}
-        <div className="absolute inset-x-0 bottom-0 h-28 sm:h-36 lg:h-44 bg-gradient-to-t from-[#07110D] via-[#091410]/95 to-transparent">
-          {/* Friso em ouro nobre na borda da mesa executiva */}
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-prospera-gold/40 via-30% to-transparent" />
-        </div>
-
-        {/* Auras de iluminação ambiental interna refinada */}
-        <div className="absolute -bottom-20 left-[10%] h-[380px] w-[380px] rounded-full bg-prospera-gold/10 blur-[130px] animate-ambient-glow" />
-        <div className="absolute top-1/3 -right-20 h-[450px] w-[450px] rounded-full bg-prospera-green/25 blur-[140px]" />
-      </div>
+      {/* Overlay contínuo vertical para Tablet e Mobile (< 1024px) */}
+      <div
+        className="lg:hidden absolute inset-0 pointer-events-none z-10"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(7,17,13,0.92) 0%, rgba(7,17,13,0.78) 45%, rgba(7,17,13,0.35) 100%)',
+        }}
+        aria-hidden="true"
+      />
 
       {/* =========================================================================
-          CAMADA 2 / 3: ADRIANA HORROCKS (Fixa em Primeiro Plano, Recortada, Sem Moldura)
-          Posicionada à esquerda, rosto e postura impecáveis, leve microparallax (8-14px)
+          CAMADA 3: ADRIANA HORROCKS OFICIAL (hero-adriana-prospera-final.png)
+          - Imagem com fundo transparente nativo (preservando livro, maquete e mesa)
+          - Ancorada em left-0 e bottom-0 para integração natural da mesa com a viewport
+          - Escala proporcional nobre em todas as resoluções
          ========================================================================= */}
       <div
-        className="absolute bottom-0 left-0 sm:left-4 lg:left-[3%] xl:left-[6%] 2xl:left-[9%] z-20 pointer-events-none transition-transform duration-700 ease-out will-change-transform flex items-end"
+        className="absolute bottom-0 left-0 z-20 pointer-events-none flex items-end transition-transform duration-700 ease-out will-change-transform max-w-[85%] sm:max-w-[70%] md:max-w-[58%] lg:max-w-none"
         style={{
+          width: isDesktop ? 'clamp(620px, 44vw, 980px)' : undefined,
           transform: isDesktop
-            ? `translate3d(${-mouseOffset.x * 0.4}px, ${-mouseOffset.y * 0.3}px, 0)`
+            ? `translate3d(${-mouseOffset.x * 0.2}px, ${-mouseOffset.y * 0.12}px, 0)`
             : 'none',
         }}
+        aria-hidden="true"
       >
-        <div className="relative">
-          {/* Sombra suave de contato e profundidade sob Adriana */}
-          <div className="absolute -inset-x-8 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent blur-xl" />
-
+        <div className="relative w-full">
           <img
             src={adrianaSrc}
             alt="Adriana Horrocks — Fundadora da Prospera Investment"
             fetchPriority="high"
             loading="eager"
             decoding="async"
-            className="h-[62vh] sm:h-[70vh] md:h-[76vh] lg:h-[82vh] xl:h-[86vh] max-h-[860px] w-auto object-contain object-bottom drop-shadow-[0_20px_45px_rgba(0,0,0,0.65)]"
+            className="h-[44vh] sm:h-[48vh] md:h-[54vh] lg:h-[76vh] xl:h-[82vh] 2xl:h-[86vh] max-h-[920px] w-auto max-w-none object-contain object-bottom-left"
           />
         </div>
       </div>
 
       {/* =========================================================================
-          CAMADA 4: CONTEÚDO E COPY (Lado Direito, Gradiente Localizado, Cidade Visível)
+          CAMADA 4: COPY SOLTA SOBRE A HERO (Sem Moldura, Sem Card, Mais Respiro)
+          - Container principal com max-width entre 1600px e 1720px
+          - Proporção nobre e equilibrada com Adriana
+          - Tipografia refinada com clamp e quebra de linha editorial
+          - CTA Principal dominante + Microcopy discreta + CTA Secundário leve
          ========================================================================= */}
-      <div className="container-luxury relative z-30 w-full pt-20 pb-12 sm:pt-24 sm:pb-16 lg:py-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 w-full items-center">
+      <div className="container-luxury relative z-30 w-full pt-20 pb-12 sm:pt-24 sm:pb-16 md:py-16 lg:py-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 w-full items-center min-h-[calc(100svh-5rem)] md:min-h-[85vh] lg:min-h-screen">
           
-          {/* Colunas 1 a 6/7 livres à esquerda para Adriana e a vista de Londres */}
-          <div className="hidden lg:block lg:col-span-6 xl:col-span-7" aria-hidden="true" />
+          {/* Espaço à esquerda dedicado à Adriana e notebook */}
+          <div className="hidden lg:block lg:col-span-5 xl:col-span-5 2xl:col-span-5" aria-hidden="true" />
 
-          {/* Coluna da Copy com gradiente localizado diretamente atrás do texto */}
+          {/* Coluna da Copy — TOTALMENTE SOLTA, sem caixa ou moldura ao redor */}
           <div
-            className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center max-w-[590px] w-full pt-72 sm:pt-96 lg:pt-0 lg:ml-auto transition-transform duration-500 ease-out will-change-transform"
+            className="lg:col-span-7 xl:col-span-7 2xl:col-span-7 flex flex-col justify-center max-w-[620px] lg:max-w-[660px] xl:max-w-[680px] w-full pb-56 sm:pb-60 md:pb-68 lg:pb-0 lg:ml-auto transition-transform duration-500 ease-out will-change-transform"
             style={{
               transform: isDesktop
-                ? `translate3d(${mouseOffset.x * 0.25}px, ${mouseOffset.y * 0.25}px, 0)`
+                ? `translate3d(${mouseOffset.x * 0.15}px, ${mouseOffset.y * 0.15}px, 0)`
                 : 'none',
             }}
           >
-            {/* Box com backdrop glassmorphism e gradiente escuro localizado (Londres permanece visível ao redor) */}
-            <div className="relative p-6 sm:p-8 lg:p-9 rounded-3xl bg-[#07110D]/75 lg:bg-[#07110D]/65 backdrop-blur-md border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-              
-              {/* Glow dourado ambiental localizado */}
-              <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-prospera-gold/15 blur-3xl pointer-events-none" />
+            {/* Título Principal com Destaque Dourado Oficial Metálico */}
+            <h1
+              className="animate-hero-fade-in-up-1 font-serif font-normal leading-[1.08] sm:leading-[1.06] lg:leading-[1.08] tracking-[-0.015em] text-prospera-white"
+              style={{
+                fontSize: 'clamp(2.4rem, 3.8vw, 4.5rem)',
+              }}
+            >
+              Invista no mercado imobiliário britânico com{' '}
+              <span className="text-gold-metallic italic font-light sm:whitespace-nowrap">
+                direção, estrutura
+              </span>{' '}
+              <span className="text-gold-metallic italic font-light sm:whitespace-nowrap">
+                e visão de longo prazo.
+              </span>
+            </h1>
 
-              {/* Step 1: Label / Eyebrow (100ms) */}
-              <div className="animate-hero-fade-in-up-1">
-                <div className="inline-flex items-center gap-2.5 rounded-full border border-prospera-gold/40 bg-[#0F3B2E]/90 px-4 py-1.5 backdrop-blur-md shadow-sm">
-                  <span className="h-1.5 w-1.5 rounded-full bg-prospera-gold animate-pulse" />
-                  <span className="text-[10px] sm:text-xs font-semibold tracking-[0.22em] text-prospera-gold uppercase">
-                    PROSPERA INVESTMENT
-                  </span>
-                </div>
-              </div>
+            {/* Texto Secundário com Alto Respiro e Legibilidade */}
+            <p className="animate-hero-fade-in-up-2 mt-5 sm:mt-6 lg:mt-7 text-[15.5px] sm:text-[17px] lg:text-[1.125rem] xl:text-[1.2rem] font-light leading-relaxed text-[#F8F5EE]/90 max-w-[580px]">
+              Da análise do seu perfil à aquisição, gestão e crescimento do patrimônio no Reino Unido.
+            </p>
 
-              {/* Step 2: Headline (280ms) */}
-              <h1
-                className="animate-hero-fade-in-up-2 mt-4 sm:mt-5 font-serif font-normal leading-[1.12] tracking-tight text-prospera-white text-shadow-sm"
-                style={{
-                  fontSize: 'clamp(2.15rem, 3.4vw, 3.95rem)',
-                }}
-              >
-                Invista no mercado imobiliário britânico com{' '}
-                <span className="italic font-light text-prospera-gold">direção</span>,{' '}
-                <span className="italic font-light text-prospera-gold">estrutura</span> e{' '}
-                <span className="italic font-light text-prospera-gold">visão de longo prazo</span>.
-              </h1>
-
-              {/* Step 3: Subheadline (460ms) */}
-              <p className="animate-hero-fade-in-up-3 mt-3.5 sm:mt-4 text-base sm:text-lg lg:text-[1.18rem] xl:text-[1.24rem] font-light leading-relaxed text-prospera-ivory/90">
-                Da análise do seu perfil à aquisição, gestão e crescimento do patrimônio no Reino Unido.
-              </p>
-
-              {/* Step 4: CTAs com Leve Glow Dourado e Microinteração Refinada (640ms) */}
-              <div className="animate-hero-fade-in-up-4 mt-7 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4">
-                {/* CTA Principal */}
+            {/* Bloco de CTAs: Ação Principal Dominante + Microcopy + Ação Secundária Discreta */}
+            <div className="animate-hero-fade-in-up-3 mt-8 sm:mt-10 lg:mt-11 flex flex-col sm:flex-row items-stretch sm:items-start gap-4 sm:gap-6 lg:gap-8">
+              {/* Bloco do CTA Principal Dominante + Microcopy */}
+              <div className="flex flex-col items-stretch sm:items-start gap-2.5">
                 <div className="relative group">
                   <div
-                    className="absolute -inset-1 rounded-full bg-prospera-gold/25 blur-lg animate-cta-glow pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity duration-500"
+                    className="absolute -inset-1 rounded-full bg-prospera-gold/25 blur-lg animate-cta-glow pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-500"
                     aria-hidden="true"
                   />
 
                   <a
                     href="#diagnostico"
-                    className="relative overflow-hidden inline-flex items-center justify-center gap-3 rounded-full bg-prospera-gold px-7 py-4 sm:px-8 sm:py-4.5 min-h-[54px] text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-[#07110D] shadow-[0_4px_25px_rgba(201,161,74,0.35)] transition-all duration-300 hover:bg-[#D8B35C] hover:shadow-[0_8px_35px_rgba(201,161,74,0.55)] hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-prospera-gold/70 w-full sm:w-auto"
+                    className="btn-gold-primary relative overflow-hidden inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 sm:px-9 sm:py-4.5 min-h-[54px] sm:min-h-[58px] text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-[#07110D] w-full sm:w-auto shadow-[0_8px_30px_rgba(212,175,55,0.4)] transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-prospera-gold/70"
                   >
                     <span
-                      className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none animate-button-shine"
+                      className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none animate-button-shine"
                       aria-hidden="true"
                     />
                     <span>DESCOBRIR MINHA ROTA</span>
                     <ArrowUpRight
                       size={17}
-                      className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
+                      className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#07110D]"
                     />
                   </a>
                 </div>
 
-                {/* CTA Secundário */}
-                <a
-                  href="#sobre"
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-full border border-prospera-gold/50 bg-black/25 px-6 py-4 sm:px-7 sm:py-4.5 min-h-[54px] text-xs sm:text-[13px] font-semibold tracking-[0.12em] uppercase text-prospera-white backdrop-blur-md transition-all duration-300 hover:border-prospera-gold hover:bg-prospera-gold/15 hover:text-prospera-gold hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(201,161,74,0.2)] active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-prospera-gold/50"
-                >
-                  <span>CONHECER A PROSPERA</span>
-                  <span className="text-prospera-gold transition-transform duration-300 group-hover:translate-x-1.5">
-                    →
-                  </span>
-                </a>
+                {/* Microcopy Elegante e Discreta */}
+                <p className="text-[12px] sm:text-[12.5px] font-light tracking-[0.02em] text-[#F8F5EE]/70 pl-2 text-center sm:text-left">
+                  Descubra a estratégia mais alinhada ao seu perfil.
+                </p>
               </div>
 
-              {/* Step 5: Linha de Autoridade & Benefícios (820ms) */}
-              <div className="animate-hero-fade-in-up-5 mt-7 sm:mt-8 pt-5 border-t border-white/10 flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <div className="h-[2px] w-8 sm:w-10 rounded-full animate-gold-shimmer shrink-0" />
-                  <p className="text-xs sm:text-[12px] font-semibold tracking-wider text-prospera-gold uppercase">
-                    Estratégia • Aquisição • Gestão • Crescimento Patrimonial
-                  </p>
-                </div>
-
-                {/* Micro-indicadores Institucionais */}
-                <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-prospera-ivory/70">
-                  <div className="flex items-center gap-2">
-                    <Landmark size={14} className="text-prospera-gold shrink-0" />
-                    <span>32+ anos no Reino Unido</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck size={14} className="text-prospera-gold shrink-0" />
-                    <span>Governança Patrimonial</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin size={14} className="text-prospera-gold shrink-0" />
-                    <span>Mayfair & City Advisory</span>
-                  </div>
-                </div>
-              </div>
-
+              {/* CTA Secundário: Discreto, sem competir com o botão principal */}
+              <a
+                href="#sobre"
+                className="inline-flex items-center justify-center gap-2.5 py-4 px-5 text-xs sm:text-[13px] font-medium tracking-[0.12em] uppercase text-[rgba(255,255,255,0.85)] hover:text-[#E7C76A] transition-colors duration-300 group/sec sm:mt-1 self-center sm:self-start"
+              >
+                <span>CONHECER A PROSPERA</span>
+                <span className="text-prospera-gold transition-transform duration-300 group-hover/sec:translate-x-1">
+                  →
+                </span>
+              </a>
             </div>
+
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          SCROLL INDICATOR
+          SCROLL INDICATOR DISCRETO
          ========================================================================= */}
       <button
         type="button"
