@@ -198,12 +198,15 @@ export function HowItWorks() {
          ===================================================================== */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
         {/* Poster de Alta Resolução como base estática imediata cobrindo toda a dobra */}
-        <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
-          style={{
-            backgroundImage: `url('${POSTER_SRC}')`,
-          }}
-        />
+        <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+          <img
+            src={POSTER_SRC}
+            alt=""
+            className="w-full h-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
 
         {/* Video Player 1 (A) */}
         <video
@@ -371,6 +374,13 @@ export function HowItWorks() {
                     alt={`${stepData.step} - ${stepData.title}`}
                     className="w-full h-full object-cover transition-transform duration-600 ease-out group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      const target = e.currentTarget
+                      if (target.src.endsWith('.webp')) {
+                        target.src = target.src.replace('.webp', '.jpg')
+                      }
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10 pointer-events-none" />
 

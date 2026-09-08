@@ -271,16 +271,13 @@ export function AdrianaAuthority() {
                =================================================================== */}
             <div className="w-full lg:hidden my-6 sm:my-8 flex justify-center">
               <div className="relative w-[86%] max-w-[340px] md:max-w-[390px] mx-auto aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-[0_12px_36px_rgba(15,59,46,0.15)] border border-[#D4AF37]/35 bg-gradient-to-b from-white/90 to-[#F5F0E6]/90 p-2 sm:p-2.5">
-                <picture className="w-full h-full block">
-                  <source srcSet="/assets/prospera/adriana-executive-portrait.webp" type="image/webp" />
-                  <img
-                    src="/assets/prospera/adriana-executive-portrait.png"
-                    alt="Adriana Horrocks — CEO da Prospera Investments"
-                    className="w-full h-full object-cover object-top rounded-xl"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </picture>
+                <img
+                  src="/assets/prospera/adriana-executive-portrait.png"
+                  alt="Adriana Horrocks — CEO da Prospera Investments"
+                  className="w-full h-full object-cover object-top rounded-xl"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </div>
 
@@ -412,16 +409,13 @@ export function AdrianaAuthority() {
             style={imageColStyle}
           >
             <div className="relative w-full h-full min-h-[680px] xl:min-h-[740px] 2xl:min-h-[780px] flex items-end justify-center lg:justify-end">
-              <picture className="w-auto h-full flex items-end justify-center lg:justify-end">
-                <source srcSet="/assets/prospera/adriana-executive-portrait.webp" type="image/webp" />
-                <img
-                  src="/assets/prospera/adriana-executive-portrait.png"
-                  alt="Adriana Horrocks — CEO e Fundadora da Prospera Investments"
-                  className="w-auto h-full max-h-[740px] xl:max-h-[800px] 2xl:max-h-[840px] object-contain object-bottom drop-shadow-[0_20px_40px_rgba(15,59,46,0.18)] select-none pointer-events-none transition-transform duration-700 hover:scale-[1.015]"
-                  loading="eager"
-                  decoding="async"
-                />
-              </picture>
+              <img
+                src="/assets/prospera/adriana-executive-portrait.png"
+                alt="Adriana Horrocks — CEO e Fundadora da Prospera Investments"
+                className="w-auto h-full max-h-[740px] xl:max-h-[800px] 2xl:max-h-[840px] object-contain object-bottom drop-shadow-[0_20px_40px_rgba(15,59,46,0.18)] select-none pointer-events-none transition-transform duration-700 hover:scale-[1.015]"
+                loading="eager"
+                decoding="async"
+              />
             </div>
           </div>
 

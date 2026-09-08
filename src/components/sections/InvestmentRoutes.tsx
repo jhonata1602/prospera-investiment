@@ -343,12 +343,15 @@ export function InvestmentRoutes() {
          ===================================================================== */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
         {/* Imagem de Fundo cobrindo a dobra com margem de segurança */}
-        <div
-          className="absolute -inset-y-8 inset-x-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url('/assets/prospera/investment-routes-background.jpg')",
-          }}
-        />
+        <div className="absolute -inset-y-8 inset-x-0 overflow-hidden pointer-events-none">
+          <img
+            src="/assets/prospera/investment-routes-background.jpg"
+            alt="Townhouse britânica londrina de alto padrão"
+            className="w-full h-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
 
         {/* Overlay translúcido nobre e uniforme, permitindo que a imagem da townhouse permaneça nítida, clara e luminosa */}
         <div
@@ -511,7 +514,7 @@ export function InvestmentRoutes() {
                   <img
                     src={route.imageSrc}
                     alt={cardData.title}
-                    loading="lazy"
+                    loading={idx < 6 ? "eager" : "lazy"}
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-0 brightness-[1.18] contrast-[1.03] saturate-[1.06] transition-transform duration-700 ease-out group-hover:scale-105"
                   />
@@ -581,7 +584,7 @@ export function InvestmentRoutes() {
                   <img
                     src={route.imageSrc}
                     alt={cardData.title}
-                    loading="lazy"
+                    loading={idx < 6 ? "eager" : "lazy"}
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-0 brightness-[1.18] contrast-[1.03] saturate-[1.06] transition-transform duration-700 ease-out group-hover:scale-105"
                   />

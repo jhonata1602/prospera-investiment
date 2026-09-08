@@ -141,12 +141,15 @@ export function Opportunities() {
         />
 
         {/* Imagem de Fundo de Mansão Inglesa de Luxo (O P A C A / CLARA / Champagne) */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.14] mix-blend-multiply"
-          style={{
-            backgroundImage: "url('/assets/prospera/opportunities-mansion-bg.jpg')",
-          }}
-        />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.14] mix-blend-multiply" aria-hidden="true">
+          <img
+            src="/assets/prospera/opportunities-mansion-bg.jpg"
+            alt=""
+            className="w-full h-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
 
         {/* Brilho Atmosférico Champagne Suave */}
         <div
@@ -224,11 +227,11 @@ export function Opportunities() {
                 }`}
               >
                 {/* Imagem Superior Clara e Nítida */}
-                <div className="relative h-34 sm:h-38 lg:h-40 w-full overflow-hidden shrink-0 bg-[#0F3B2E]/5">
+                <div className="relative h-[136px] sm:h-[152px] lg:h-[160px] w-full overflow-hidden shrink-0 bg-[#0F3B2E]/5">
                   <img
                     src={card.image}
                     alt={cardData.title}
-                    loading="lazy"
+                    loading={index < 3 ? "eager" : "lazy"}
                     decoding="async"
                     className="h-full w-full object-cover object-center brightness-[1.03] transition-transform duration-500 ease-out group-hover:scale-105"
                   />

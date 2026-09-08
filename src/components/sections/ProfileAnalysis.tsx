@@ -108,12 +108,15 @@ export function ProfileAnalysis() {
         />
 
         {/* Imagem Opaca e Clara de Escritório Executivo Private Banking / Wealth Management */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.11] mix-blend-multiply"
-          style={{
-            backgroundImage: "url('/assets/prospera/profile-office-bg.jpg')",
-          }}
-        />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.11] mix-blend-multiply" aria-hidden="true">
+          <img
+            src="/assets/prospera/profile-office-bg.jpg"
+            alt=""
+            className="w-full h-full object-cover object-center"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
 
         {/* Brilho Atmosférico Dourado Perolado */}
         <div
