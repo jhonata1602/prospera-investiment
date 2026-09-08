@@ -1,45 +1,63 @@
-import { NAV_ITEMS, BRAND_INFO } from '@/constants/navigation'
 import { ShieldCheck, MapPin } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export function Footer() {
+  const { t, language } = useLanguage()
+
+  const navItems = [
+    { label: t.nav.about, href: '#sobre' },
+    { label: t.nav.method, href: '#metodo' },
+    { label: t.nav.routes, href: '#rotas' },
+    { label: t.nav.howItWorks, href: '#como-funciona' },
+    { label: t.nav.opportunities, href: '#oportunidades' },
+    { label: t.nav.analyzeProfile, href: '#diagnostico' },
+  ]
+
   return (
-    <footer className="border-t border-prospera-gold/20 bg-prospera-green text-prospera-white">
-      {/* Main Footer Content */}
-      <div className="container-luxury py-16 lg:py-20">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12">
-          {/* Column 1: Brand & Positioning */}
-          <div className="lg:col-span-4">
+    <footer className="relative bg-[#0E2E23] text-[#FFFDF8]">
+      {/* Transição névoa difusa no topo do rodapé */}
+      <div className="fold-transition-top" aria-hidden="true">
+        <div className="fold-transition-glow-top" />
+      </div>
+
+      {/* Main Footer Content — Altura compacta e verde britânico refinado */}
+      <div className="container-luxury py-8 sm:py-10 lg:py-12">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
+          {/* Column 1: Brand & Positioning (Full on mobile, half on tablet, 4 cols on desktop) */}
+          <div className="md:col-span-1 lg:col-span-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-full border border-prospera-gold bg-prospera-green-secondary text-prospera-gold shadow-inner">
-                <span className="font-serif text-lg font-bold">P</span>
-              </div>
-              <div>
-                <div className="font-serif text-xl font-bold tracking-wider text-prospera-white">
+              <img
+                src="/assets/prospera/brand/logo-shield.webp"
+                alt="Brasão Oficial Prospera Investment"
+                className="h-10 sm:h-11 lg:h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(212,175,55,0.25)]"
+              />
+              <div className="flex flex-col justify-center">
+                <div className="font-serif text-[1.12rem] sm:text-[1.22rem] font-semibold tracking-[0.24em] text-[#FFFDF8] uppercase leading-tight">
                   PROSPERA
                 </div>
-                <div className="text-[10px] font-medium tracking-[0.24em] text-prospera-gold uppercase">
-                  Investments
+                <div className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.32em] text-gold-metallic uppercase leading-tight mt-0.5">
+                  INVESTMENT
                 </div>
               </div>
             </div>
 
-            <p className="mt-5 text-sm leading-relaxed text-prospera-white/75">
-              Direção estratégica, estrutura patrimonial e acompanhamento qualificado para brasileiros que investem no mercado imobiliário do Reino Unido.
+            <p className="mt-4 text-[13.5px] sm:text-[14px] leading-relaxed text-[#FFFDF8]/88 max-w-sm">
+              {t.footer.tagline}
             </p>
 
-            <div className="mt-6 flex items-center gap-2 text-xs text-prospera-gold">
+            <div className="mt-4 flex items-center gap-2 text-[12.5px] text-prospera-gold">
               <MapPin size={14} className="shrink-0" />
-              <span>{BRAND_INFO.city}</span>
+              <span>{t.footer.location}</span>
             </div>
           </div>
 
-          {/* Column 2: Navigation */}
-          <div className="lg:col-span-3">
-            <h3 className="font-serif text-base font-semibold tracking-wide text-prospera-gold">
-              Navegação
+          {/* Column 2: Navigation (Full on mobile, half on tablet, 3 cols on desktop) */}
+          <div className="md:col-span-1 lg:col-span-3">
+            <h3 className="font-serif text-[1rem] sm:text-[1.08rem] font-semibold tracking-wide text-prospera-gold">
+              {t.footer.navTitle}
             </h3>
-            <ul className="mt-4 space-y-2.5 text-sm text-prospera-white/80">
-              {NAV_ITEMS.map((item) => (
+            <ul className="mt-3.5 space-y-2 text-[13.5px] sm:text-[14px] text-[#FFFDF8]/88">
+              {navItems.map((item) => (
                 <li key={item.href}>
                   <a
                     href={item.href}
@@ -54,37 +72,47 @@ export function Footer() {
                   href="#diagnostico"
                   className="font-medium text-prospera-gold hover:underline"
                 >
-                  Diagnóstico Prospera →
+                  {t.footer.diagnosticLink}
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Institutional Notice / Compliance */}
-          <div className="lg:col-span-5">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-prospera-gold">
+          {/* Column 3: Institutional Notice / Compliance (Full on mobile, spans 2 cols on tablet, 5 cols on desktop) */}
+          <div className="md:col-span-2 lg:col-span-5">
+            <div className="flex items-center gap-2 text-[12px] sm:text-[12.5px] font-semibold uppercase tracking-wider text-prospera-gold">
               <ShieldCheck size={16} />
-              <span>Aviso Institucional & Conformidade</span>
+              <span>{t.footer.complianceTitle}</span>
             </div>
-            <p className="mt-3 text-xs leading-relaxed text-prospera-white/65">
-              {BRAND_INFO.disclaimer}
+            <p className="mt-2.5 text-[12.5px] sm:text-[13px] leading-relaxed text-[#FFFDF8]/80">
+              {t.footer.complianceText1}
             </p>
-            <p className="mt-3 text-xs leading-relaxed text-prospera-white/50">
-              Operações imobiliárias e societárias internacionais exigem diligência técnica e representação por profissionais habilitados (solicitors e consultores fiscais credenciados).
+            <p className="mt-2.5 text-[12px] sm:text-[12.5px] leading-relaxed text-[#FFFDF8]/70">
+              {t.footer.complianceText2}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-white/10 bg-prospera-green-secondary/80 py-6">
-        <div className="container-luxury flex flex-col items-center justify-between gap-4 text-center text-xs text-prospera-white/60 sm:flex-row sm:text-left">
-          <div>
-            © {new Date().getFullYear()} Prospera Investment. Todos os direitos reservados.
+      {/* Bottom Bar — Sem copyright, com links discretos de compliance e voltar ao topo */}
+      <div className="border-t border-white/10 bg-[#0A231B] py-4">
+        <div className="container-luxury flex flex-col items-center justify-between gap-3 text-center text-xs text-[#FFFDF8]/75 sm:flex-row sm:text-left">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-5">
+            <a href="#privacidade" className="hover:text-prospera-gold transition-colors">
+              {language === 'en' ? 'Privacy Policy' : 'Política de Privacidade'}
+            </a>
+            <span className="text-[#D4AF37]/35">•</span>
+            <a href="#termos" className="hover:text-prospera-gold transition-colors">
+              {language === 'en' ? 'Terms of Use' : 'Termos de Uso'}
+            </a>
+            <span className="text-[#D4AF37]/35">•</span>
+            <a href="#aviso-institucional" className="hover:text-prospera-gold transition-colors">
+              {language === 'en' ? 'Institutional Notice' : 'Aviso Institucional'}
+            </a>
           </div>
           <div className="flex items-center gap-6">
-            <a href="#topo" className="transition-colors hover:text-prospera-gold">
-              Voltar ao topo ↑
+            <a href="#hero" className="transition-colors hover:text-prospera-gold">
+              {t.footer.backToTop}
             </a>
           </div>
         </div>

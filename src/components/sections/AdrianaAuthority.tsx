@@ -1,195 +1,430 @@
-import { ArrowRight } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { ArrowRight, Award, Compass, TrendingUp } from 'lucide-react'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export function AdrianaAuthority() {
+  const { t } = useLanguage()
+  const [isVisible, setIsVisible] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const sectionRef = useRef<HTMLElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const hasTriggeredRef = useRef(false)
+  const [bgState, setBgState] = useState({
+    progress: 0,
+    parallaxY: 0,
+  })
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    // 1. Detectar preferência por movimento reduzido (WCAG 2.1 AA)
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (motionQuery.matches) {
+      setPrefersReducedMotion(true)
+      setIsVisible(true)
+      setBgState({ progress: 1, parallaxY: 0 })
+      return
+    }
+
+    // 2. Detectar viewport mobile/tablet
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    const section = sectionRef.current
+    if (!section) return () => window.removeEventListener('resize', checkMobile)
+
+    // 3. Se carregado com hash direto ou já visível na tela
+    if (window.location.hash === '#sobre') {
+      setIsVisible(true)
+      hasTriggeredRef.current = true
+      setBgState({ progress: 1, parallaxY: 0 })
+      return () => window.removeEventListener('resize', checkMobile)
+    }
+
+    const initialRect = section.getBoundingClientRect()
+    if (initialRect.top <= window.innerHeight * 0.85) {
+      setIsVisible(true)
+      hasTriggeredRef.current = true
+      setBgState({ progress: 1, parallaxY: 0 })
+      return () => window.removeEventListener('resize', checkMobile)
+    }
+
+    // 4. Parallax suave de fundo e controle de visibilidade
+    let rafId: number
+    const handleScroll = () => {
+      rafId = requestAnimationFrame(() => {
+        const rect = section.getBoundingClientRect()
+        const windowH = window.innerHeight
+
+        const enterDistance = windowH * 0.70
+        const rawProgress = (windowH - rect.top) / enterDistance
+        const progress = Math.min(1, Math.max(0, rawProgress))
+
+        let pY = 0
+        if (window.innerWidth >= 1024 && rect.top < windowH && rect.bottom > 0) {
+          pY = Math.max(-16, Math.min(16, (rect.top - windowH * 0.35) * 0.04))
+        }
+
+        if (!hasTriggeredRef.current && (progress >= 0.15 || (window.scrollY > 30 && rect.top <= windowH * 0.80))) {
+          hasTriggeredRef.current = true
+          setIsVisible(true)
+        }
+
+        setBgState((prev) => {
+          if (prev.progress === 1 && progress === 1 && Math.abs(prev.parallaxY - pY) < 0.5) {
+            return prev
+          }
+          return {
+            progress: hasTriggeredRef.current ? Math.max(prev.progress, progress) : progress,
+            parallaxY: Math.round(pY * 10) / 10,
+          }
+        })
+      })
+    }
+
+    // 5. IntersectionObserver como garantia adicional
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries
+        if (entry.isIntersecting && !hasTriggeredRef.current) {
+          hasTriggeredRef.current = true
+          setIsVisible(true)
+          setBgState((prev) => ({ ...prev, progress: 1 }))
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    )
+    observer.observe(section)
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', checkMobile)
+      window.removeEventListener('scroll', handleScroll)
+      cancelAnimationFrame(rafId)
+    }
+  }, [])
+
+  // Helper de transição escalonada para os elementos internos
+  const getStaggerStyle = (delayMs: number) => {
+    if (prefersReducedMotion) return undefined
+    return {
+      transition: `opacity 750ms cubic-bezier(0.22, 1, 0.36, 1) ${delayMs}ms, transform 750ms cubic-bezier(0.22, 1, 0.36, 1) ${delayMs}ms`,
+      opacity: isVisible ? 1 : 0,
+      transform: isVisible ? 'translateY(0px)' : 'translateY(20px)',
+      willChange: 'opacity, transform',
+    }
+  }
+
+  // Animação coordenada das duas colunas principais
+  const copyColStyle = prefersReducedMotion
+    ? undefined
+    : {
+        transition: 'opacity 900ms cubic-bezier(0.22, 1, 0.36, 1), transform 900ms cubic-bezier(0.22, 1, 0.36, 1)',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible
+          ? 'translate3d(0, 0, 0)'
+          : isMobile
+            ? 'translate3d(0, 24px, 0)'
+            : 'translate3d(-36px, 0, 0)',
+        willChange: 'opacity, transform',
+      }
+
+  const imageColStyle = prefersReducedMotion
+    ? undefined
+    : {
+        transition: 'opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1) 120ms, transform 1000ms cubic-bezier(0.22, 1, 0.36, 1) 120ms',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible
+          ? 'translate3d(0, 0, 0)'
+          : 'translate3d(36px, 0, 0)',
+        willChange: 'opacity, transform',
+      }
+
   return (
     <section
       id="sobre"
+      ref={sectionRef}
       aria-label="Sobre Adriana Horrocks — Fundadora da Prospera Investment"
-      className="relative w-full overflow-hidden bg-gradient-to-b from-[#07110D] via-[#0C1712] to-[#07110D] text-prospera-white"
+      className="relative w-full overflow-hidden bg-[#FAF7F2] text-[#0A221A]"
     >
       {/* =========================================================================
-          CAMADA VISUAL PANORÂMICA (Desktop / Telas Grandes)
-          - Usa a nova imagem oficial: adriana-second-section-london.png
-          - Adriana sentada à mesa com notebook Prospera e casa em miniatura
-          - Big Ben e Tower Bridge visíveis ao fundo através das janelas
-          - Grande área livre no lado direito integrada à copy editorial
-          - Overlay sutil preservando a iluminação nobre e a claridade da imagem
+          1. FUNDO DA SEGUNDA DOBRA: LONDRES OCUPANDO TODA A DOBRA
+          - Background full width e full height
+          - Imagem nítida de Londres (Big Ben, Rio Tâmisa, Westminster, London Eye)
+          - Atmosfera clara, suave, translúcida em off-white/champagne
+          - NÃO é verde escuro chapado, NÃO é preto, NÃO é parede escura
          ========================================================================= */}
-      <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
-        <div className="relative w-full h-full max-w-[2200px] mx-auto">
+      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
+        {/* Imagem panorâmica de Londres com margem de segurança para parallax */}
+        <div
+          className="absolute -inset-y-12 inset-x-0 will-change-transform"
+          style={{
+            transform: prefersReducedMotion
+              ? 'none'
+              : `translate3d(0, ${bgState.parallaxY * 0.35}px, 0)`,
+          }}
+        >
           <img
-            src="/assets/prospera/adriana-second-section-london.png"
-            alt="Adriana Horrocks — Fundadora da Prospera Investment em seu escritório em Londres com vista para o Big Ben e Tower Bridge"
+            src="/assets/prospera/adriana-london-background.jpg"
+            alt="Skyline panorâmico de Londres — Big Ben, Rio Tâmisa e Westminster"
+            className="w-full h-full object-cover object-center brightness-[0.98] contrast-[1.02]"
             loading="lazy"
             decoding="async"
-            className="w-full h-full object-cover object-[left_center] xl:object-center transition-transform duration-1000 ease-out will-change-transform"
           />
-
-          {/* Overlay sutil apenas no lado direito para contraste de leitura nobre, preservando a luz da imagem */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(90deg, transparent 0%, transparent 40%, rgba(7,17,13,0.28) 52%, rgba(7,17,13,0.68) 72%, rgba(7,17,13,0.88) 100%)',
-            }}
-            aria-hidden="true"
-          />
-
-          {/* Transição suave topo e base para integração contínua com as dobras */}
-          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#07110D] to-transparent pointer-events-none" aria-hidden="true" />
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#07110D] to-transparent pointer-events-none" aria-hidden="true" />
         </div>
+
+        {/* Overlay translúcido nobre em off-white e champagne perolado
+            Garante que Londres permaneça visível em toda a dobra, mantendo a atmosfera luminosa e premium */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(135deg, rgba(251, 248, 244, 0.90) 0%, rgba(250, 246, 239, 0.84) 40%, rgba(246, 241, 232, 0.76) 100%)',
+          }}
+        />
+
+        {/* Micro reforço de luminosidade champanhe à esquerda para leitura perfeita */}
+        <div
+          className="absolute inset-y-0 left-0 w-full lg:w-3/5 pointer-events-none"
+          style={{
+            background:
+              'linear-gradient(to right, rgba(253, 251, 247, 0.65) 0%, rgba(251, 248, 244, 0.40) 60%, transparent 100%)',
+          }}
+        />
+
+        {/* Transição suave e contínua no topo (com a 1ª dobra / Hero) — sem faixas pretas ou cortes duros */}
+        <div className="fold-transition-top" aria-hidden="true" />
+        <div className="fold-transition-glow-top" aria-hidden="true" />
+
+        {/* Transição suave e contínua na base (com a 3ª dobra / Rotas) — sombra difusa curta e nuance nobre */}
+        <div className="fold-transition-bottom" aria-hidden="true" />
+        <div className="fold-transition-glow-bottom" aria-hidden="true" />
       </div>
 
       {/* =========================================================================
-          HALOS DE LUZ AMBIENTE (Atmosphere & Warm Luxury)
-          - Luz ambiente dourada e esmeralda para atmosfera acolhedora e clara
+          2. COMPOSIÇÃO EDITORIAL EM TODA A ÁREA DA DOBRA
+          - Ocupa a tela inteira com respiro nobre (sem card fechado no centro)
+          - Lado Esquerdo: Copy principal, nome, cargo, texto institucional, quote, indicadores e CTAs
+          - Lado Direito: Foto protagonista da Adriana Horrocks com roupa branca
          ========================================================================= */}
       <div
-        className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-prospera-gold/[0.06] blur-[160px] pointer-events-none"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute bottom-1/4 right-1/6 w-[700px] h-[700px] rounded-full bg-[#1B4B3B]/20 blur-[170px] pointer-events-none"
-        aria-hidden="true"
-      />
-
-      {/* =========================================================================
-          COMPOSIÇÃO MOBILE / TABLET (Empilhamento Vertical Nobre)
-          - Imagem completa no topo preservando o rosto, Londres e os elementos
-          - Sem cortes ruins, sem card quadrado, integrada naturalmente
-         ========================================================================= */}
-      <div className="lg:hidden w-full pt-10 sm:pt-14 pb-4 px-4 sm:px-6 flex justify-center">
-        <div className="relative w-full max-w-[620px] select-none">
-          <img
-            src="/assets/prospera/adriana-second-section-london.png"
-            alt="Adriana Horrocks — Fundadora da Prospera Investment"
-            loading="lazy"
-            decoding="async"
-            className="w-full h-auto object-cover object-[20%_center] aspect-[16/10] sm:aspect-[16/9] drop-shadow-[0_20px_45px_rgba(0,0,0,0.5)] [mask-image:linear-gradient(to_bottom,black_86%,transparent_100%)]"
-          />
-        </div>
-      </div>
-
-      {/* =========================================================================
-          ESTRUTURA EM 2 COLUNAS (Desktop / Ultrawide)
-          - Coluna Esquerda: Espaço de visibilidade plena para Adriana e Londres
-          - Coluna Direita: Área de leitura com copy, indicadores e CTAs
-         ========================================================================= */}
-      <div className="container-luxury relative z-10 w-full max-w-[1440px] xl:max-w-[1600px] 2xl:max-w-[1720px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-center min-h-0 lg:min-h-[760px] xl:min-h-[820px] 2xl:min-h-[860px]">
+        ref={contentRef}
+        className="container-luxury section-py-luxury relative z-10"
+      >
+        <div className="flex flex-col lg:flex-row items-center lg:items-end justify-between gap-10 lg:gap-12 xl:gap-16 w-full">
           
-          {/* COLUNA ESQUERDA: Emolduramento visual livre de Adriana, Big Ben, Tower Bridge e a mesa */}
-          <div className="hidden lg:flex lg:col-span-6 xl:col-span-6 2xl:col-span-6 h-full items-center justify-start pointer-events-none select-none" />
-
-          {/* COLUNA DIREITA: Área de leitura com copy editorial oficial */}
-          <div className="lg:col-span-6 xl:col-span-6 2xl:col-span-6 flex flex-col justify-center max-w-[640px] xl:max-w-[700px] 2xl:max-w-[760px] text-left pt-2 pb-16 lg:py-16">
+          {/* =====================================================================
+              COLUNA ESQUERDA: AUTORIDADE INSTITUCIONAL, COPY E AÇÕES (~54%)
+             ===================================================================== */}
+          <div
+            className="w-full lg:w-[54%] xl:w-[52%] flex flex-col justify-center text-left py-2 lg:py-6"
+            style={copyColStyle}
+          >
             
-            {/* Eyebrow de Posicionamento */}
-            <div className="flex items-center gap-3 animate-hero-fade-in-up-1">
-              <span className="h-[1px] w-9 bg-prospera-gold/70" aria-hidden="true" />
-              <span className="text-xs sm:text-[13px] font-bold tracking-[0.24em] uppercase text-prospera-gold drop-shadow-sm">
-                ADRIANA HORROCKS
-              </span>
+            {/* 1. Eyebrow: ADRIANA HORROCKS */}
+            <div style={getStaggerStyle(0)}>
+              <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#0F3B2E] border border-[#D4AF37]/50 text-[#F5D77F] text-[11px] sm:text-[12px] font-bold tracking-[0.22em] uppercase shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_6px_rgba(212,175,55,0.9)]" />
+                <span>{t.adriana.eyebrow}</span>
+              </div>
             </div>
 
-            {/* Headline Principal */}
-            <h2 className="mt-4 sm:mt-5 font-serif text-[2.15rem] sm:text-[2.65rem] lg:text-[2.8rem] xl:text-[3.25rem] font-normal leading-[1.14] sm:leading-[1.12] tracking-[-0.015em] text-[#FFFDF8] animate-hero-fade-in-up-2 drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
-              Estratégia construída com{' '}
-              <span className="text-gold-metallic italic font-light sm:whitespace-nowrap">
-                experiência real
-              </span>{' '}
-              no Reino Unido.
-            </h2>
+            {/* 2. Headline Principal: Forte, elegante, visível e premium */}
+            <div style={getStaggerStyle(60)}>
+              <h2
+                className="mt-4 sm:mt-5 font-serif font-normal leading-[1.08] sm:leading-[1.06] tracking-[-0.015em] text-[#0A221A]"
+                style={{
+                  fontSize: 'clamp(2.1rem, 2.4vw + 1.25rem, 3.5rem)',
+                }}
+              >
+                {t.adriana.headlinePart1}
+                <span className="text-[#0F3B2E] italic font-normal sm:whitespace-nowrap underline decoration-[#D4AF37]/60 decoration-1 underline-offset-4">
+                  {t.adriana.headlineGold}
+                </span>
+                {t.adriana.headlinePart2}
+              </h2>
+            </div>
 
-            {/* Texto Narrativo Institucional */}
-            <div className="mt-5 sm:mt-6 space-y-3.5 text-[15.5px] sm:text-[16.5px] lg:text-[1.05rem] xl:text-[1.12rem] font-light leading-relaxed text-[#F8F5EE]/90 animate-hero-fade-in-up-3 drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]">
-              <p>
-                Há mais de 32 anos no Reino Unido, Adriana Horrocks construiu sua trajetória entre negócios, patrimônio e visão de longo prazo.
+            {/* 3. Destaque de Nome & Cargo com Maior Presença Visual */}
+            <div style={getStaggerStyle(110)}>
+              <div className="mt-4 sm:mt-5 flex flex-wrap items-center gap-3 sm:gap-4 border-b border-[#D4AF37]/35 pb-4">
+                <span className="font-serif text-2xl sm:text-[2rem] text-[#0F3B2E] font-bold tracking-tight">
+                  Adriana Horrocks
+                </span>
+                <span className="text-[11.5px] sm:text-[12.5px] font-bold tracking-[0.18em] uppercase text-[#7A5A12] bg-[#D4AF37]/20 px-3.5 py-1.5 rounded-full border border-[#D4AF37]/50 shadow-xs">
+                  {t.adriana.role}
+                </span>
+              </div>
+            </div>
+
+            {/* ===================================================================
+                FOTO NO MOBILE / TABLET (< 1024px)
+                Empilhamento solicitado:
+                1. título/copy -> 2. foto da Adriana -> 3. texto/quote -> 4. indicadores -> 5. CTAs
+                Proporção contida: w-[86%] max-w-[340px] sm:max-w-[420px] aspect-[4/5]
+               =================================================================== */}
+            <div className="w-full lg:hidden my-6 sm:my-8 flex justify-center">
+              <div className="relative w-[86%] max-w-[340px] md:max-w-[390px] mx-auto aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-[0_12px_36px_rgba(15,59,46,0.15)] border border-[#D4AF37]/35 bg-gradient-to-b from-white/90 to-[#F5F0E6]/90 p-2 sm:p-2.5">
+                <picture className="w-full h-full block">
+                  <source srcSet="/assets/prospera/adriana-executive-portrait.webp" type="image/webp" />
+                  <img
+                    src="/assets/prospera/adriana-executive-portrait.png"
+                    alt="Adriana Horrocks — CEO da Prospera Investments"
+                    className="w-full h-full object-cover object-top rounded-xl"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
+              </div>
+            </div>
+
+            {/* 4. Textos de Apoio Institucionais com Alto Contraste e Legibilidade */}
+            <div
+              style={getStaggerStyle(160)}
+              className="mt-5 sm:mt-6 space-y-3.5 font-sans text-[#0D261C] text-[15px] sm:text-[16px] xl:text-[16.5px] leading-[1.74]"
+            >
+              <p className="font-medium text-[#0A221A]">
+                {t.adriana.p1}
               </p>
               <p>
-                A Prospera Investment nasce dessa experiência prática: transformar decisões imobiliárias em estratégias estruturadas, com clareza, segurança e acompanhamento em cada etapa.
+                {t.adriana.p2}
+              </p>
+              <p>
+                {t.adriana.p3}
               </p>
             </div>
 
-            {/* Frase de Destaque / Quote Editorial */}
-            <div className="my-6 sm:my-7 pl-5 sm:pl-6 border-l-2 border-prospera-gold/70 bg-gradient-to-r from-prospera-gold/[0.06] via-prospera-gold/[0.02] to-transparent py-3 rounded-r-lg animate-hero-fade-in-up-4">
-              <p className="font-serif italic text-[1.05rem] sm:text-[1.18rem] lg:text-[1.22rem] leading-relaxed text-[#FFFDF8] drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]">
-                “Criadora do Método PROSPERA, Adriana conduz investidores a partir do diagnóstico do perfil, da definição da rota e da construção de uma estratégia alinhada aos objetivos patrimoniais de cada pessoa.”
+            {/* 5. Quote Editorial com Fundo Dourado Suave e Destaque Visual */}
+            <div
+              style={getStaggerStyle(220)}
+              className="mt-5 sm:mt-6 pl-4 sm:pl-5 pr-4 py-3.5 border-l-3 border-[#D4AF37] bg-gradient-to-r from-[#D4AF37]/20 via-[#D4AF37]/[0.08] to-transparent rounded-r-xl shadow-xs"
+            >
+              <p className="font-serif italic text-[1.10rem] sm:text-[1.25rem] leading-[1.48] text-[#0F3B2E] font-medium">
+                {t.adriana.quote}
               </p>
             </div>
 
-            {/* Indicadores de Autoridade com Divisores Finos e Respiro Nobre */}
-            <div className="pt-5 pb-6 border-t border-white/15 grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 lg:gap-6 xl:gap-8 text-left animate-hero-fade-in-up-5">
+            {/* 6. Indicadores de Autoridade: 3 blocos limpos, sem cards escuros pesados */}
+            <div
+              style={getStaggerStyle(280)}
+              className="mt-6 sm:mt-7 pt-5 border-t border-[#D4AF37]/30 grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4 text-left"
+            >
               {/* Indicador 1 */}
-              <div className="flex flex-col group/ind">
-                <div className="font-serif text-[1.65rem] sm:text-[1.85rem] font-medium text-prospera-gold leading-tight drop-shadow-sm transition-colors duration-300">
-                  32+ anos
+              <div className="flex flex-col p-3.5 sm:p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-[#D4AF37]/30 shadow-[0_4px_16px_rgba(15,59,46,0.06)] transition-transform duration-300 hover:translate-y-[-2px]">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Award className="w-4 h-4 text-[#A67C1E] shrink-0" aria-hidden="true" />
+                  <span className="text-[11px] uppercase tracking-wider text-[#A67C1E] font-bold">
+                    {t.adriana.metric1Label}
+                  </span>
                 </div>
-                <div className="mt-1 text-xs sm:text-[13px] text-[#F8F5EE]/80 font-light leading-snug">
-                  No Reino Unido
+                <div className="font-serif text-[1.38rem] sm:text-[1.48rem] font-bold text-[#0F3B2E] leading-tight">
+                  {t.adriana.metric1Value}
+                </div>
+                <div className="mt-1 text-xs text-[#3E5248] font-normal leading-snug">
+                  {t.adriana.metric1Sub}
                 </div>
               </div>
 
               {/* Indicador 2 */}
-              <div className="flex flex-col group/ind">
-                <div className="font-serif text-[1.65rem] sm:text-[1.85rem] font-medium text-prospera-gold leading-tight drop-shadow-sm transition-colors duration-300">
-                  Método
+              <div className="flex flex-col p-3.5 sm:p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-[#D4AF37]/30 shadow-[0_4px_16px_rgba(15,59,46,0.06)] transition-transform duration-300 hover:translate-y-[-2px]">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Compass className="w-4 h-4 text-[#A67C1E] shrink-0" aria-hidden="true" />
+                  <span className="text-[11px] uppercase tracking-wider text-[#A67C1E] font-bold">
+                    {t.adriana.metric2Label}
+                  </span>
                 </div>
-                <div className="mt-1 text-xs sm:text-[13px] text-[#F8F5EE]/80 font-light leading-snug tracking-wider uppercase">
-                  PROSPERA
+                <div className="font-serif text-[1.22rem] sm:text-[1.32rem] font-bold text-[#0F3B2E] leading-tight">
+                  {t.adriana.metric2Value}
+                </div>
+                <div className="mt-1 text-xs text-[#3E5248] font-normal leading-snug">
+                  {t.adriana.metric2Sub}
                 </div>
               </div>
 
               {/* Indicador 3 */}
-              <div className="flex flex-col group/ind">
-                <div className="font-serif text-[1.65rem] sm:text-[1.85rem] font-medium text-prospera-gold leading-tight drop-shadow-sm transition-colors duration-300">
-                  Visão
+              <div className="flex flex-col p-3.5 sm:p-4 rounded-xl bg-white/80 backdrop-blur-sm border border-[#D4AF37]/30 shadow-[0_4px_16px_rgba(15,59,46,0.06)] transition-transform duration-300 hover:translate-y-[-2px]">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <TrendingUp className="w-4 h-4 text-[#A67C1E] shrink-0" aria-hidden="true" />
+                  <span className="text-[11px] uppercase tracking-wider text-[#A67C1E] font-bold">
+                    {t.adriana.metric3Label}
+                  </span>
                 </div>
-                <div className="mt-1 text-xs sm:text-[13px] text-[#F8F5EE]/80 font-light leading-snug">
-                  Estratégia • Aquisição • Gestão • Patrimônio
+                <div className="font-serif text-[1.22rem] sm:text-[1.32rem] font-bold text-[#0F3B2E] leading-tight">
+                  {t.adriana.metric3Value}
+                </div>
+                <div className="mt-1 text-xs text-[#3E5248] font-normal leading-snug">
+                  {t.adriana.metric3Sub}
                 </div>
               </div>
             </div>
 
-            {/* Bloco de CTAs: Principal Dourado Premium + Secundário Discreto */}
-            <div className="mt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 w-full">
+            {/* 7. Botões CTAs: Dourado Principal + Secundário Transparente */}
+            <div
+              style={getStaggerStyle(340)}
+              className="mt-7 sm:mt-8 pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4.5 w-full"
+            >
               {/* CTA Principal: CONHECER A PROSPERA */}
-              <div className="relative group">
+              <div className="relative group w-full sm:w-auto">
                 <div
-                  className="absolute -inset-1 rounded-full bg-prospera-gold/25 blur-lg animate-cta-glow pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-500"
+                  className="absolute -inset-1 rounded-full bg-prospera-gold/35 blur-md animate-cta-glow pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-500"
                   aria-hidden="true"
                 />
                 <a
                   href="#diagnostico"
-                  className="btn-gold-primary relative overflow-hidden inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 sm:px-9 sm:py-4 min-h-[52px] sm:min-h-[54px] text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-[#07110D] shadow-[0_8px_30px_rgba(212,175,55,0.38)] transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-prospera-gold/70 w-full sm:w-auto"
+                  className="btn-gold-primary relative overflow-hidden inline-flex items-center justify-center gap-2.5 rounded-full px-8 py-3.5 sm:px-10 sm:py-4 min-h-[52px] sm:min-h-[56px] text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-[#07110D] shadow-[0_8px_24px_rgba(212,175,55,0.4)] transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-prospera-gold/70 w-full sm:w-auto"
                 >
                   <span
                     className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none animate-button-shine"
                     aria-hidden="true"
                   />
-                  <span>CONHECER A PROSPERA</span>
-                  <ArrowRight
-                    size={16}
-                    className="transition-transform duration-300 group-hover:translate-x-1 text-[#07110D]"
-                  />
+                  <span>{t.adriana.ctaPrimary}</span>
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1 text-[#07110D]" />
                 </a>
               </div>
 
               {/* CTA Secundário: VER COMO FUNCIONA */}
               <a
                 href="#metodo"
-                className="inline-flex items-center justify-center gap-2.5 py-3.5 px-4 text-xs sm:text-[13px] font-medium tracking-[0.12em] uppercase text-[rgba(255,255,255,0.88)] hover:text-[#E7C76A] transition-colors duration-300 group/sec"
+                className="inline-flex items-center justify-center gap-2.5 rounded-full px-7 py-3.5 sm:px-8 sm:py-4 min-h-[52px] sm:min-h-[56px] text-xs sm:text-[13px] font-semibold tracking-[0.14em] uppercase text-[#0F3B2E] hover:text-[#07110D] bg-white/60 hover:bg-white/90 border border-[#0F3B2E]/25 hover:border-[#D4AF37] backdrop-blur-sm shadow-sm transition-all duration-300 group/sec w-full sm:w-auto"
               >
-                <span>VER COMO FUNCIONA</span>
-                <ArrowRight
-                  size={15}
-                  className="text-prospera-gold transition-transform duration-300 group-hover/sec:translate-x-1"
-                />
+                <span>{t.adriana.ctaSecondary}</span>
+                <ArrowRight className="w-4 h-4 text-[#0F3B2E] transition-transform duration-300 group-hover:translate-x-1" />
               </a>
             </div>
 
           </div>
+
+          {/* =====================================================================
+              COLUNA DIREITA: FOTO PROTAGONISTA DA ADRIANA HORROCKS (~46%)
+              - Visível em Desktop (lg: e acima)
+              - Foto nítida, alta presença visual, postura executiva no terno branco
+              - Enquadramento elegante ancorado na base da seção
+              - TOTALMENTE SEM BADGE NO PÉ OU ELEMENTO FLUTUANTE INADEQUADO
+             ===================================================================== */}
+          <div
+            className="hidden lg:flex lg:w-[46%] xl:w-[48%] items-end justify-center lg:justify-end self-stretch pt-6"
+            style={imageColStyle}
+          >
+            <div className="relative w-full h-full min-h-[680px] xl:min-h-[740px] 2xl:min-h-[780px] flex items-end justify-center lg:justify-end">
+              <picture className="w-auto h-full flex items-end justify-center lg:justify-end">
+                <source srcSet="/assets/prospera/adriana-executive-portrait.webp" type="image/webp" />
+                <img
+                  src="/assets/prospera/adriana-executive-portrait.png"
+                  alt="Adriana Horrocks — CEO e Fundadora da Prospera Investments"
+                  className="w-auto h-full max-h-[740px] xl:max-h-[800px] 2xl:max-h-[840px] object-contain object-bottom drop-shadow-[0_20px_40px_rgba(15,59,46,0.18)] select-none pointer-events-none transition-transform duration-700 hover:scale-[1.015]"
+                  loading="eager"
+                  decoding="async"
+                />
+              </picture>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>

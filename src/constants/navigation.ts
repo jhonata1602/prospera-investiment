@@ -1,12 +1,12 @@
-﻿import type { NavItem } from '@/types'
+import type { NavItem } from '@/types'
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Sobre', href: '#sobre' },
   { label: 'Método PROSPERA', href: '#metodo' },
   { label: 'Rotas de Investimento', href: '#rotas' },
-  { label: 'Como Funciona', href: '#sistema' },
-  { label: 'Livro', href: '#livro' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Como Funciona', href: '#como-funciona' },
+  { label: 'Oportunidades', href: '#oportunidades' },
+  { label: 'Analisar Meu Perfil', href: '#diagnostico', isCta: true },
 ]
 
 export const BRAND_INFO = {
