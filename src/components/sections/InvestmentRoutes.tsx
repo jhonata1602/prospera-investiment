@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Compass } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Compass, Sparkles } from 'lucide-react'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -150,39 +150,12 @@ export function InvestmentRoutes() {
 
     let rafId: number
     let lastTime = performance.now()
-    // Velocidade base reduzida e suave (0.11 px/frame): ritmo calmo, sereno e sem pressa
-    const baseSpeed = 0.11
+    // Velocidade base contínua e suave (0.20 px/frame): ritmo calmo, constante e sem pausas
+    const baseSpeed = 0.20
 
     // Respeitar preferência de movimento reduzido (WCAG 2.1 AA)
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     const prefersReduced = motionQuery.matches
-
-    // Modulação suave "andar devagar -> desacelerar -> pausar -> acelerar devagar" 100% SINCRONIZADA:
-    // As duas esteiras andam juntas, desaceleram juntas, pausam juntas e voltam juntas
-    // Ciclo de 9.4s:
-    // - 0ms a 5200ms: velocidade de cruzeiro calma e elegante (mult = 1.0)
-    // - 5200ms a 6400ms: desaceleração suave de 1.2s via curva cosseno
-    // - 6400ms a 8000ms: pausa contemplativa perfeita (~1600ms) para leitura detalhada dos cards
-    // - 8000ms a 9200ms: aceleração suave de 1.2s de volta à velocidade de cruzeiro
-    // - 9200ms a 9400ms: cruzeiro estabilizado
-    const getBreatheMult = (time: number): number => {
-      const cycle = 9400
-      const t = time % cycle
-      if (t < 5200) {
-        return 1.0
-      }
-      if (t < 6400) {
-        const p = (t - 5200) / 1200
-        const ease = 0.5 * (1 + Math.cos(p * Math.PI))
-        return ease
-      }
-      if (t < 8000) {
-        return 0.0 // Pausa suave/contemplativa para leitura exata dos cards
-      }
-      const p = (t - 8000) / 1200
-      const ease = 0.5 * (1 - Math.cos(p * Math.PI))
-      return ease
-    }
 
     const tick = (now: number) => {
       const dt = Math.min((now - lastTime) / 16.67, 2.5)
@@ -200,15 +173,12 @@ export function InvestmentRoutes() {
         offset2Ref.current += step
       }
 
-      // Autoplay contínuo ininterrupto e 100% sincronizado (hover NÃO pausa)
+      // Autoplay 100% contínuo, ininterrupto e sem pausas (hover não pausa)
       if (!prefersReduced && !isDraggingRef.current) {
-        const mult = getBreatheMult(now)
-
-        // As duas esteiras andam juntas e pausam juntas no mesmo instante
         // Esteira 1: desloca para a esquerda (offset aumenta)
-        offset1Ref.current += baseSpeed * mult * dt
+        offset1Ref.current += baseSpeed * dt
         // Esteira 2: desloca para a direita (offset diminui)
-        offset2Ref.current -= baseSpeed * mult * dt
+        offset2Ref.current -= baseSpeed * dt
       }
 
       // Modulo wrap preciso: elimina qualquer pulo, travamento ou gap
@@ -221,12 +191,12 @@ export function InvestmentRoutes() {
         offset2Ref.current = ((offset2Ref.current % w2) + w2) % w2
       }
 
-      // Atualização direta do DOM via GPU translate3d (sem re-renders do React)
+      // Atualização direta do DOM via GPU translate3d estável (sem oscilações de subpixel nem re-renders do React)
       if (row1TrackRef.current) {
-        row1TrackRef.current.style.transform = `translate3d(${-offset1Ref.current}px, 0, 0)`
+        row1TrackRef.current.style.transform = `translate3d(${-Number(offset1Ref.current.toFixed(2))}px, 0, 0)`
       }
       if (row2TrackRef.current) {
-        row2TrackRef.current.style.transform = `translate3d(${-offset2Ref.current}px, 0, 0)`
+        row2TrackRef.current.style.transform = `translate3d(${-Number(offset2Ref.current.toFixed(2))}px, 0, 0)`
       }
 
       rafId = requestAnimationFrame(tick)
@@ -362,14 +332,40 @@ export function InvestmentRoutes() {
           }}
         />
 
-        {/* Transição névoa difusa no topo (com a 2ª dobra) */}
-        <div className="fold-transition-top" aria-hidden="true">
-          <div className="fold-transition-glow-top" />
+        {/* Transição suave e difusa no topo (com a 2ª dobra Adriana) */}
+        <div
+          className="absolute inset-x-0 top-0 h-16 sm:h-20 lg:h-24 pointer-events-none z-20"
+          style={{
+            background:
+              'linear-gradient(to bottom, rgba(7, 19, 13, 0.85) 0%, rgba(7, 19, 13, 0.45) 35%, rgba(15, 59, 46, 0.10) 75%, transparent 100%)',
+          }}
+          aria-hidden="true"
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse 75% 100% at 50% 0%, rgba(212, 175, 55, 0.04) 0%, transparent 75%)',
+            }}
+          />
         </div>
 
-        {/* Transição névoa difusa na base (com a 4ª dobra) */}
-        <div className="fold-transition-bottom" aria-hidden="true">
-          <div className="fold-transition-glow-bottom" />
+        {/* Transição suave e sombra difusa na base (com a 4ª dobra Como Funciona - sem corte seco) */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-14 sm:h-18 lg:h-22 pointer-events-none z-20"
+          style={{
+            background:
+              'linear-gradient(to bottom, transparent 0%, rgba(7, 20, 14, 0.22) 40%, rgba(7, 17, 13, 0.55) 75%, rgba(7, 17, 13, 0.85) 100%)',
+          }}
+          aria-hidden="true"
+        >
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse 75% 100% at 50% 100%, rgba(212, 175, 55, 0.05) 0%, transparent 80%)',
+            }}
+          />
         </div>
       </div>
 
@@ -386,27 +382,29 @@ export function InvestmentRoutes() {
         <div className="relative max-w-[860px] mx-auto px-4 sm:px-6">
           {/* Suave reforço de contraste difuso sem bordas nem caixas visíveis */}
           <div
-            className="absolute -inset-x-10 -inset-y-6 sm:-inset-x-16 sm:-inset-y-10 pointer-events-none -z-10 blur-3xl opacity-65"
+            className="absolute -inset-x-10 -inset-y-6 sm:-inset-x-16 sm:-inset-y-10 pointer-events-none -z-10 blur-3xl opacity-80"
             style={{
               background:
-                'radial-gradient(ellipse 85% 75% at 50% 45%, rgba(6, 18, 13, 0.62) 0%, rgba(6, 18, 13, 0.22) 55%, transparent 80%)',
+                'radial-gradient(ellipse 85% 75% at 50% 45%, rgba(5, 16, 11, 0.78) 0%, rgba(5, 16, 11, 0.35) 55%, transparent 80%)',
             }}
             aria-hidden="true"
           />
 
-          {/* Eyebrow Institucional Padronizado com a 4ª Dobra */}
+          {/* Eyebrow Institucional Padronizado */}
           <div
-            className={`inline-flex items-center justify-center gap-2 mb-2.5 sm:mb-3 px-3.5 py-1 rounded-full bg-[#0F3B2E]/90 border border-[#D4AF37]/65 text-[#F5D77F] text-[11px] font-bold tracking-[0.22em] uppercase backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.45)] transition-all duration-700 delay-100 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`inline-flex items-center justify-center mb-3 sm:mb-3.5 transition-all duration-700 delay-100 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_6px_rgba(212,175,55,0.9)]" />
-            <span>{t.routes.eyebrow}</span>
+            <div className="badge-section-pill">
+              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" aria-hidden="true" />
+              <span>{t.routes.eyebrow}</span>
+            </div>
           </div>
 
           {/* Headline Principal com excelente leitura e contraste firme contra as folhas */}
           <h2
-            className={`font-serif font-normal leading-[1.14] tracking-tight text-[#FFFFFF] transition-all duration-700 delay-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`font-serif font-medium sm:font-semibold leading-[1.14] tracking-tight text-[#FFFFFF] transition-all duration-700 delay-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
             style={{
@@ -416,9 +414,9 @@ export function InvestmentRoutes() {
           >
             {t.routes.headlinePart1}
             <span
-              className="italic font-serif text-[#F5D77F]"
+              className="italic font-serif font-semibold text-[#F5D982]"
               style={{
-                textShadow: '0 0 18px rgba(245,215,127,0.45), 0 2px 4px rgba(0,0,0,0.98)',
+                textShadow: '0 0 18px rgba(245,217,130,0.45), 0 2px 4px rgba(0,0,0,0.98)',
               }}
             >
               {t.routes.headlineGold}
@@ -428,7 +426,7 @@ export function InvestmentRoutes() {
 
           {/* Subheadline Explicativa com tom off-white firme e legibilidade imediata */}
           <p
-            className={`mt-2.5 sm:mt-3 font-normal text-[#F5EFE6] max-w-[760px] mx-auto leading-[1.65] transition-all duration-700 delay-400 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`mt-3 sm:mt-3.5 font-medium text-[#FAF5EC] max-w-[760px] mx-auto leading-[1.68] transition-all duration-700 delay-400 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
             }`}
             style={{
@@ -502,41 +500,45 @@ export function InvestmentRoutes() {
             className={`flex w-max gap-3.5 sm:gap-4 md:gap-4.5 xl:gap-5 [@media(min-width:1920px)]:gap-6 will-change-transform transition-opacity duration-1000 ${
               isVisible ? 'opacity-100' : 'opacity-0'
             }`}
+            style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
           >
             {marqueeCardsRow1.map((route, idx) => {
               const cardData = t.routes.items[route.id] || { title: route.title, microcopy: route.microcopy }
               return (
                 <div
                   key={`row1-${route.id}-${idx}`}
-                  className="group relative w-[190px] sm:w-[205px] md:w-[215px] lg:w-[220px] xl:w-[226px] [@media(min-width:1601px)]:w-[245px] [@media(min-width:1920px)]:w-[260px] [@media(min-width:2500px)]:w-[295px] h-[240px] sm:h-[255px] md:h-[258px] lg:h-[264px] xl:h-[270px] [@media(min-width:1601px)]:h-[292px] [@media(min-width:1920px)]:h-[305px] [@media(min-width:2500px)]:h-[345px] shrink-0 rounded-2xl overflow-hidden border border-white/20 bg-black/10 shadow-[0_6px_20px_rgba(0,0,0,0.25)] transition-all duration-300 ease-out hover:scale-[1.02] hover:border-[#D4AF37]/80 hover:shadow-[0_10px_28px_rgba(0,0,0,0.35),0_0_18px_rgba(212,175,55,0.22)] flex flex-col justify-end p-3.5 sm:p-4 xl:p-4.5 [@media(min-width:1601px)]:p-5 [@media(min-width:1920px)]:p-5.5 select-none"
+                  className="group relative w-[190px] sm:w-[205px] md:w-[215px] lg:w-[220px] xl:w-[226px] [@media(min-width:1601px)]:w-[245px] [@media(min-width:1920px)]:w-[260px] [@media(min-width:2500px)]:w-[295px] h-[240px] sm:h-[255px] md:h-[258px] lg:h-[264px] xl:h-[270px] [@media(min-width:1601px)]:h-[292px] [@media(min-width:1920px)]:h-[305px] [@media(min-width:2500px)]:h-[345px] shrink-0 rounded-2xl overflow-hidden border border-white/20 bg-[#05110B] shadow-[0_6px_20px_rgba(0,0,0,0.28)] transition-[border-color,box-shadow] duration-300 ease-out hover:border-[#D4AF37]/90 hover:shadow-[0_10px_28px_rgba(0,0,0,0.4),0_0_16px_rgba(212,175,55,0.25)] flex flex-col justify-end p-3.5 sm:p-4 xl:p-4.5 [@media(min-width:1601px)]:p-5 [@media(min-width:1920px)]:p-5.5 select-none"
+                  style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', isolation: 'isolate' }}
                 >
-                  {/* Imagem Clara e Luminosa em Alta Resolução (topo >55% 100% nítido e iluminado) */}
+                  {/* Imagem Clara e Luminosa em Alta Resolução — Estabilizada sem re-rasterização */}
                   <img
                     src={route.imageSrc}
                     alt={cardData.title}
-                    loading={idx < 6 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-0 brightness-[1.18] contrast-[1.03] saturate-[1.06] transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="eager"
+                    decoding="auto"
+                    className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-0 brightness-[1.14] contrast-[1.03] saturate-[1.05]"
+                    style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                   />
 
-                  {/* Overlay gradiente suave SOMENTE na base para leitura perfeita (topo >55% 100% nítido e luminoso) */}
+                  {/* Base escura suave reforçada SOMENTE na base para contraste de microcopy premium */}
                   <div
-                    className="absolute inset-x-0 bottom-0 h-28 sm:h-32 bg-gradient-to-t from-[#04120B]/95 via-[#04120B]/60 via-50% to-transparent pointer-events-none z-10 transition-opacity duration-300"
+                    className="absolute inset-x-0 bottom-0 h-36 sm:h-40 bg-gradient-to-t from-[#020B06]/98 via-[#020B06]/85 via-45% to-transparent pointer-events-none z-10"
+                    style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                     aria-hidden="true"
                   />
 
                   {/* Conteúdo do Card: Título, Microcopy e CTA com Máxima Legibilidade */}
                   <div className="relative z-20 text-left">
                     <h3
-                      className="font-serif text-[1.05rem] sm:text-[1.12rem] md:text-[1.18rem] xl:text-[1.24rem] [@media(min-width:1920px)]:text-[1.36rem] font-bold leading-[1.2] text-[#FFFFFF] drop-shadow-md transition-colors duration-300 group-hover:text-[#F5D77F]"
-                      style={{ textShadow: '0 2px 5px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,1)' }}
+                      className="font-serif text-[1.05rem] sm:text-[1.12rem] md:text-[1.18rem] xl:text-[1.24rem] [@media(min-width:1920px)]:text-[1.36rem] font-bold leading-[1.2] text-[#FFFFFF] drop-shadow-md transition-colors duration-200 group-hover:text-[#F5D77F]"
+                      style={{ textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,1)' }}
                     >
                       {cardData.title}
                     </h3>
 
                     <p
-                      className="mt-1 text-[11.5px] sm:text-[12px] xl:text-[12.6px] [@media(min-width:1601px)]:text-[13px] font-normal text-[#F5EFE6] leading-[1.42] line-clamp-2"
-                      style={{ textShadow: '0 1px 3px rgba(0,0,0,0.95), 0 2px 6px rgba(0,0,0,0.9)' }}
+                      className="mt-1 text-[11.5px] sm:text-[12px] xl:text-[12.6px] [@media(min-width:1601px)]:text-[13px] font-semibold text-[#FFFFFF] leading-[1.46] line-clamp-2 tracking-[0.01em]"
+                      style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 1), 0 2px 6px rgba(0, 0, 0, 0.95)' }}
                     >
                       {cardData.microcopy}
                     </p>
@@ -545,8 +547,8 @@ export function InvestmentRoutes() {
                     <a
                       href="#diagnostico"
                       onClick={handleCardClick}
-                      className="mt-2 sm:mt-2.5 inline-flex items-center gap-1.5 text-[11px] sm:text-[11.5px] md:text-[12px] font-bold tracking-wider uppercase text-[#F5D77F] hover:text-white transition-colors duration-300"
-                      style={{ textShadow: '0 1px 4px rgba(0,0,0,0.95), 0 0 10px rgba(245,215,127,0.35)' }}
+                      className="mt-2 sm:mt-2.5 inline-flex items-center gap-1.5 text-[11px] sm:text-[11.5px] md:text-[12px] font-bold tracking-wider uppercase text-[#F5D77F] hover:text-white transition-colors duration-200"
+                      style={{ textShadow: '0 1px 4px rgba(0,0,0,0.95), 0 0 8px rgba(245,215,127,0.35)' }}
                     >
                       <span>{t.routes.exploreRoute}</span>
                       <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1.5 text-[#F5D77F]" />
@@ -572,41 +574,45 @@ export function InvestmentRoutes() {
             className={`flex w-max gap-3.5 sm:gap-4 md:gap-4.5 xl:gap-5 [@media(min-width:1920px)]:gap-6 will-change-transform transition-opacity duration-1000 ${
               isVisible ? 'opacity-100' : 'opacity-0'
             }`}
+            style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
           >
             {marqueeCardsRow2.map((route, idx) => {
               const cardData = t.routes.items[route.id] || { title: route.title, microcopy: route.microcopy }
               return (
                 <div
                   key={`row2-${route.id}-${idx}`}
-                  className="group relative w-[190px] sm:w-[205px] md:w-[215px] lg:w-[220px] xl:w-[226px] [@media(min-width:1601px)]:w-[245px] [@media(min-width:1920px)]:w-[260px] [@media(min-width:2500px)]:w-[295px] h-[240px] sm:h-[255px] md:h-[258px] lg:h-[264px] xl:h-[270px] [@media(min-width:1601px)]:h-[292px] [@media(min-width:1920px)]:h-[305px] [@media(min-width:2500px)]:h-[345px] shrink-0 rounded-2xl overflow-hidden border border-white/20 bg-black/10 shadow-[0_6px_20px_rgba(0,0,0,0.25)] transition-all duration-300 ease-out hover:scale-[1.02] hover:border-[#D4AF37]/80 hover:shadow-[0_10px_28px_rgba(0,0,0,0.35),0_0_18px_rgba(212,175,55,0.22)] flex flex-col justify-end p-3.5 sm:p-4 xl:p-4.5 [@media(min-width:1601px)]:p-5 [@media(min-width:1920px)]:p-5.5 select-none"
+                  className="group relative w-[190px] sm:w-[205px] md:w-[215px] lg:w-[220px] xl:w-[226px] [@media(min-width:1601px)]:w-[245px] [@media(min-width:1920px)]:w-[260px] [@media(min-width:2500px)]:w-[295px] h-[240px] sm:h-[255px] md:h-[258px] lg:h-[264px] xl:h-[270px] [@media(min-width:1601px)]:h-[292px] [@media(min-width:1920px)]:h-[305px] [@media(min-width:2500px)]:h-[345px] shrink-0 rounded-2xl overflow-hidden border border-white/20 bg-[#05110B] shadow-[0_6px_20px_rgba(0,0,0,0.28)] transition-[border-color,box-shadow] duration-300 ease-out hover:border-[#D4AF37]/90 hover:shadow-[0_10px_28px_rgba(0,0,0,0.4),0_0_16px_rgba(212,175,55,0.25)] flex flex-col justify-end p-3.5 sm:p-4 xl:p-4.5 [@media(min-width:1601px)]:p-5 [@media(min-width:1920px)]:p-5.5 select-none"
+                  style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', isolation: 'isolate' }}
                 >
-                  {/* Imagem Clara e Luminosa em Alta Resolução (topo >55% 100% nítido e iluminado) */}
+                  {/* Imagem Clara e Luminosa em Alta Resolução — Estabilizada sem re-rasterização */}
                   <img
                     src={route.imageSrc}
                     alt={cardData.title}
-                    loading={idx < 6 ? "eager" : "lazy"}
-                    decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-0 brightness-[1.18] contrast-[1.03] saturate-[1.06] transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="eager"
+                    decoding="auto"
+                    className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-0 brightness-[1.14] contrast-[1.03] saturate-[1.05]"
+                    style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                   />
 
-                  {/* Overlay gradiente suave SOMENTE na base para leitura perfeita (topo >55% 100% nítido e luminoso) */}
+                  {/* Base escura suave reforçada SOMENTE na base para contraste de microcopy premium */}
                   <div
-                    className="absolute inset-x-0 bottom-0 h-28 sm:h-32 bg-gradient-to-t from-[#04120B]/95 via-[#04120B]/60 via-50% to-transparent pointer-events-none z-10 transition-opacity duration-300"
+                    className="absolute inset-x-0 bottom-0 h-36 sm:h-40 bg-gradient-to-t from-[#020B06]/98 via-[#020B06]/85 via-45% to-transparent pointer-events-none z-10"
+                    style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                     aria-hidden="true"
                   />
 
                   {/* Conteúdo do Card: Título, Microcopy e CTA com Máxima Legibilidade */}
                   <div className="relative z-20 text-left">
                     <h3
-                      className="font-serif text-[1.05rem] sm:text-[1.12rem] md:text-[1.18rem] xl:text-[1.24rem] [@media(min-width:1920px)]:text-[1.36rem] font-bold leading-[1.2] text-[#FFFFFF] drop-shadow-md transition-colors duration-300 group-hover:text-[#F5D77F]"
-                      style={{ textShadow: '0 2px 5px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,1)' }}
+                      className="font-serif text-[1.05rem] sm:text-[1.12rem] md:text-[1.18rem] xl:text-[1.24rem] [@media(min-width:1920px)]:text-[1.36rem] font-bold leading-[1.2] text-[#FFFFFF] drop-shadow-md transition-colors duration-200 group-hover:text-[#F5D77F]"
+                      style={{ textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 1px 2px rgba(0,0,0,1)' }}
                     >
                       {cardData.title}
                     </h3>
 
                     <p
-                      className="mt-1 text-[11.5px] sm:text-[12px] xl:text-[12.6px] [@media(min-width:1601px)]:text-[13px] font-normal text-[#F5EFE6] leading-[1.42] line-clamp-2"
-                      style={{ textShadow: '0 1px 3px rgba(0,0,0,0.95), 0 2px 6px rgba(0,0,0,0.9)' }}
+                      className="mt-1 text-[11.5px] sm:text-[12px] xl:text-[12.6px] [@media(min-width:1601px)]:text-[13px] font-semibold text-[#FFFFFF] leading-[1.46] line-clamp-2 tracking-[0.01em]"
+                      style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 1), 0 2px 6px rgba(0, 0, 0, 0.95)' }}
                     >
                       {cardData.microcopy}
                     </p>
@@ -615,8 +621,8 @@ export function InvestmentRoutes() {
                     <a
                       href="#diagnostico"
                       onClick={handleCardClick}
-                      className="mt-2 sm:mt-2.5 inline-flex items-center gap-1.5 text-[11px] sm:text-[11.5px] md:text-[12px] font-bold tracking-wider uppercase text-[#F5D77F] hover:text-white transition-colors duration-300"
-                      style={{ textShadow: '0 1px 4px rgba(0,0,0,0.95), 0 0 10px rgba(245,215,127,0.35)' }}
+                      className="mt-2 sm:mt-2.5 inline-flex items-center gap-1.5 text-[11px] sm:text-[11.5px] md:text-[12px] font-bold tracking-wider uppercase text-[#F5D77F] hover:text-white transition-colors duration-200"
+                      style={{ textShadow: '0 1px 4px rgba(0,0,0,0.95), 0 0 8px rgba(245,215,127,0.35)' }}
                     >
                       <span>{t.routes.exploreRoute}</span>
                       <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1.5 text-[#F5D77F]" />
@@ -637,12 +643,12 @@ export function InvestmentRoutes() {
          ===================================================================== */}
       <div ref={ctaRef} className="container-luxury relative z-10 mt-6 sm:mt-7 lg:mt-8 mb-2 sm:mb-3 lg:mb-4">
         <div className="relative text-center max-w-[900px] mx-auto">
-          {/* Realce de contraste orgânico e totalmente sem bordas atrás do CTA */}
+          {/* Realce de contraste orgânico e totalmente sem bordas atrás do CTA — névoa profunda suave */}
           <div
-            className="absolute -inset-x-12 -inset-y-8 sm:-inset-x-20 sm:-inset-y-12 pointer-events-none -z-10 blur-3xl opacity-55"
+            className="absolute -inset-x-14 -inset-y-10 sm:-inset-x-24 sm:-inset-y-14 pointer-events-none -z-10 blur-3xl opacity-75"
             style={{
               background:
-                'radial-gradient(ellipse 70% 65% at 50% 50%, rgba(7, 19, 13, 0.55) 0%, rgba(7, 19, 13, 0.20) 50%, transparent 75%)',
+                'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(5, 16, 11, 0.85) 0%, rgba(5, 16, 11, 0.40) 55%, transparent 80%)',
             }}
             aria-hidden="true"
           />
@@ -658,12 +664,12 @@ export function InvestmentRoutes() {
 
           {/* Headline do CTA com leitura nítida em tom champanhe */}
           <h3
-            className={`font-serif font-normal leading-[1.15] text-[#F8F6F0] tracking-tight text-center max-w-[860px] mx-auto transition-all duration-700 delay-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`font-serif font-normal leading-[1.15] text-[#FFFFFF] tracking-tight text-center max-w-[860px] mx-auto transition-all duration-700 delay-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isCtaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
             style={{
               fontSize: 'clamp(1.55rem, 1.8vw + 0.95rem, 2.45rem)',
-              textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 4px 16px rgba(4,10,7,0.95)',
+              textShadow: '0 2px 4px rgba(0,0,0,0.98), 0 4px 18px rgba(3,8,6,0.95)',
             }}
           >
             {t.routes.ctaHeadline}
@@ -671,12 +677,12 @@ export function InvestmentRoutes() {
 
           {/* Subtítulo do CTA com contraste confortável e sem caixas */}
           <p
-            className={`mt-2 sm:mt-2.5 font-normal text-[#F2ECE1] max-w-[680px] mx-auto leading-[1.58] text-center transition-all duration-700 delay-400 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`mt-2 sm:mt-2.5 font-semibold text-[#FFFDF8] max-w-[680px] mx-auto leading-[1.6] text-center transition-all duration-700 delay-400 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isCtaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
             }`}
             style={{
               fontSize: 'clamp(0.875rem, 0.25vw + 0.8rem, 1.05rem)',
-              textShadow: '0 1px 3px rgba(0,0,0,0.95), 0 2px 8px rgba(4,10,7,0.85)',
+              textShadow: '0 1px 4px rgba(0,0,0,0.98), 0 2px 10px rgba(3,8,6,0.92)',
             }}
           >
             {t.routes.ctaSubtitle}
@@ -710,8 +716,8 @@ export function InvestmentRoutes() {
             </div>
 
             <p
-              className="mt-1.5 text-[12px] sm:text-[12.5px] font-normal tracking-[0.02em] text-[#F2ECE1] text-center"
-              style={{ textShadow: '0 1px 4px rgba(0,0,0,0.95), 0 2px 8px rgba(4,10,7,0.85)' }}
+              className="mt-1.5 text-[12px] sm:text-[12.5px] font-semibold tracking-[0.02em] text-[#FFFDF8] text-center"
+              style={{ textShadow: '0 1px 4px rgba(0,0,0,1), 0 2px 10px rgba(3,8,6,0.92)' }}
             >
               {t.routes.ctaSubtext}
             </p>

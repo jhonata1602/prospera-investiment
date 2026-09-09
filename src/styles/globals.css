@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-prospera-green: #0F3B2E;
-  --color-prospera-green-secondary: #123F35;
+  --color-prospera-green: #1A4D3F;
+  --color-prospera-green-secondary: #164538;
+  --color-prospera-green-dark: #0F3B2E;
   --color-prospera-gold: #D4AF37;
   --color-prospera-gold-light: #E7C76A;
   --color-prospera-gold-dark: #B88922;
@@ -16,8 +17,9 @@
 }
 
 :root {
-  --prospera-green: #0F3B2E;
-  --prospera-green-secondary: #123F35;
+  --prospera-green: #1A4D3F;
+  --prospera-green-secondary: #164538;
+  --prospera-green-dark: #0F3B2E;
   --prospera-gold: #D4AF37;
   --prospera-gold-light: #E7C76A;
   --prospera-gold-dark: #B88922;
@@ -66,8 +68,8 @@
 }
 
 ::selection {
-  background-color: #0F3B2E;
-  color: #F8F5EE;
+  background-color: #1A4D3F;
+  color: #FFFDF8;
 }
 
 .container-prospera {
@@ -164,10 +166,26 @@
 }
 
 .text-gold-metallic {
-  background: linear-gradient(135deg, #FFF1CE 0%, #F5D982 25%, #D4AF37 55%, #AA7C1E 100%);
+  background: linear-gradient(135deg, #FDE6A3 0%, #E8C35A 25%, #C99E28 55%, #9E7416 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.text-gold-metallic-light {
+  color: #946813;
+  background: linear-gradient(135deg, #7C5305 0%, #A97A19 35%, #8C600D 70%, #684300 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-shadow-editorial-light {
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9), 0 1px 6px rgba(15, 59, 46, 0.06);
+}
+
+.text-shadow-editorial-dark {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95), 0 4px 18px rgba(4, 10, 7, 0.9);
 }
 
 .bg-gold-metallic {
@@ -483,33 +501,38 @@ footer.border-t {
    - Altura difusa controlada (24px a 38px) para fusão imperceptível
    - Zero linhas secas, zero faixas pretas, zero cortes horizontais
    - Verde institucional ultra-translúcido com dissipação contínua e nuance champagne
+/* ==========================================================================
+   TRANSIÇÕES SUAVES E SOMBRAS DE PROFUNDIDADE ENTRE AS DOBRAS
+   - Transição horizontal difusa com blur/gradiente em verde escuro nobre + transparência
+   - Separação sutil, refinada e contínua sem linhas secas, faixas pretas ou bordas duras
+   - Nuance champagne/dourada muito discreta e elegante
    ========================================================================== */
 .fold-transition-bottom {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 24px;
+  height: 40px;
   pointer-events: none;
   z-index: 20;
   background: linear-gradient(
-    to top,
-    rgba(15, 59, 46, 0.09) 0%,
-    rgba(15, 59, 46, 0.04) 45%,
-    rgba(212, 175, 55, 0.02) 75%,
-    transparent 100%
+    to bottom,
+    transparent 0%,
+    rgba(15, 59, 46, 0.08) 40%,
+    rgba(7, 20, 14, 0.28) 80%,
+    rgba(7, 20, 14, 0.45) 100%
   );
 }
 
 @media (min-width: 640px) {
   .fold-transition-bottom {
-    height: 32px;
+    height: 52px;
   }
 }
 
 @media (min-width: 1024px) {
   .fold-transition-bottom {
-    height: 38px;
+    height: 64px;
   }
 }
 
@@ -518,27 +541,27 @@ footer.border-t {
   left: 0;
   right: 0;
   top: 0;
-  height: 24px;
+  height: 40px;
   pointer-events: none;
-  z-index: 10;
+  z-index: 20;
   background: linear-gradient(
     to bottom,
-    rgba(15, 59, 46, 0.09) 0%,
-    rgba(15, 59, 46, 0.04) 45%,
-    rgba(212, 175, 55, 0.02) 75%,
+    rgba(7, 20, 14, 0.45) 0%,
+    rgba(7, 20, 14, 0.25) 30%,
+    rgba(15, 59, 46, 0.08) 70%,
     transparent 100%
   );
 }
 
 @media (min-width: 640px) {
   .fold-transition-top {
-    height: 32px;
+    height: 52px;
   }
 }
 
 @media (min-width: 1024px) {
   .fold-transition-top {
-    height: 38px;
+    height: 64px;
   }
 }
 
@@ -546,14 +569,146 @@ footer.border-t {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse 75% 100% at 50% 100%, rgba(212, 175, 55, 0.035) 0%, transparent 80%);
+  background: radial-gradient(ellipse 75% 100% at 50% 100%, rgba(212, 175, 55, 0.04) 0%, transparent 80%);
 }
 
 .fold-transition-glow-top {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse 75% 100% at 50% 0%, rgba(212, 175, 55, 0.035) 0%, transparent 80%);
+  background: radial-gradient(ellipse 75% 100% at 50% 0%, rgba(212, 175, 55, 0.04) 0%, transparent 80%);
+}
+
+/* ==========================================================================
+   BADGE INSTITUCIONAL PADRONIZADO DAS SEÇÕES (PROSPERA DESIGN SYSTEM)
+   - Fundo verde refinado institucional (#1A4D3F via #164538)
+   - Borda e detalhes em ouro clássico (#D4AF37 / #F8E6B0)
+   - Mesma altura, padding, border-radius e tipografia padronizada
+   ========================================================================== */
+.badge-section-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1.05rem;
+  min-height: 32px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #1A4D3F 0%, #164538 100%);
+  border: 1px solid rgba(212, 175, 55, 0.75);
+  color: #F8E6B0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 12px rgba(26, 77, 63, 0.25), 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .badge-section-pill {
+    font-size: 11.5px;
+    padding: 0.4rem 1.2rem;
+    min-height: 34px;
+  }
+}
+
+/* ==========================================================================
+   ENQUADRAMENTO RESPONSIVO DE ALTA PRECISÃO PARA VÍDEOS DO HERO
+   - london-skyline: foco sutilmente elevado para valorizar céu + topo dos edifícios + nome NUVEEN
+   - london-eye: enquadramento harmônico da roda + County Hall sem faixas laterais
+   ========================================================================== */
+.hero-video-skyline {
+  object-fit: cover;
+  object-position: 30% 10%;
+}
+
+@media (min-width: 640px) {
+  .hero-video-skyline {
+    object-position: 36% 10%;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-video-skyline {
+    object-position: 38% 8%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-video-skyline {
+    object-position: center 10%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-video-skyline {
+    object-position: center 8%;
+  }
+}
+
+@media (min-width: 1536px) {
+  .hero-video-skyline {
+    object-position: center 4%;
+  }
+}
+
+@media (min-width: 1920px) {
+  .hero-video-skyline {
+    object-position: center 2%;
+  }
+}
+
+@media (min-width: 2560px) {
+  .hero-video-skyline {
+    object-position: center 0%;
+  }
+}
+
+.hero-video-london-eye {
+  object-fit: cover;
+  object-position: 22% center;
+  transform: scale(1.04);
+  transform-origin: 25% 50%;
+}
+
+@media (min-width: 640px) {
+  .hero-video-london-eye {
+    object-position: 24% center;
+    transform: scale(1.05);
+    transform-origin: 25% 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-video-london-eye {
+    object-position: 28% center;
+    transform: scale(1.06);
+    transform-origin: 25% 50%;
+  }
+}
+
+.hero-video-big-ben {
+  object-fit: cover;
+  object-position: 55% center;
+}
+
+@media (min-width: 1536px) {
+  .hero-video-big-ben {
+    object-position: 55% 68%;
+  }
+}
+
+@media (min-width: 1920px) {
+  .hero-video-big-ben {
+    object-position: 55% 70%;
+  }
+}
+
+@media (min-width: 2560px) {
+  .hero-video-big-ben {
+    object-position: 55% 75%;
+  }
 }
 
 

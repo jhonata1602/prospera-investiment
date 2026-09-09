@@ -108,6 +108,7 @@ export interface TranslationSchema {
     goalOptions: string[]
     countryOptions: string[]
     submitButton: string
+    submitButtonWhatsApp: string
     submittingButton: string
     microcopy: string
     successTitle: string
@@ -371,7 +372,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
           desc: 'Qual estratégia combina melhor com seu nível de risco e objetivo?',
         },
       ],
-      trustBadges: ['32+ anos no UK', 'Método PROSPERA', 'Análise Estratégica', 'Acompanhamento Personalizado'],
+      trustBadges: ['32+ anos no UK', 'Método PROSPERA', 'Análise Estratégica'],
       formTitle: 'Diagnóstico Preliminar',
       formSubtitle: 'Preencha os campos abaixo para entendermos o seu momento patrimonial.',
       labels: {
@@ -388,6 +389,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
         phone: '+55 (11) 99999-9999',
       },
       capitalOptions: [
+        '£0 – £15,000',
         '£15,000 – £50,000',
         '£50,000 – £100,000',
         '£100,000 – £250,000',
@@ -402,6 +404,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       ],
       countryOptions: ['Brasil', 'Reino Unido', 'Estados Unidos', 'Portugal', 'Outro'],
       submitButton: 'QUERO ANALISAR MEU PERFIL',
+      submitButtonWhatsApp: 'ENVIAR MEU PERFIL NO WHATSAPP',
       submittingButton: 'ENVIANDO...',
       microcopy: 'Seus dados serão tratados com confidencialidade.',
       successTitle: 'Solicitação Recebida com Sucesso',
@@ -668,7 +671,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
           desc: 'Which strategy best aligns with your risk tolerance and goals?',
         },
       ],
-      trustBadges: ['32+ Years in the UK', 'PROSPERA Method', 'Strategic Advisory', 'Tailored Support'],
+      trustBadges: ['32+ Years in the UK', 'PROSPERA Method', 'Strategic Advisory'],
       formTitle: 'Preliminary Diagnostic',
       formSubtitle: 'Please complete the details below so we can understand your investment goals.',
       labels: {
@@ -685,6 +688,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
         phone: '+44 7911 123456',
       },
       capitalOptions: [
+        '£0 – £15,000',
         '£15,000 – £50,000',
         '£50,000 – £100,000',
         '£100,000 – £250,000',
@@ -699,6 +703,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       ],
       countryOptions: ['Brazil', 'United Kingdom', 'United States', 'Portugal', 'Other'],
       submitButton: 'ANALYZE MY PROFILE',
+      submitButtonWhatsApp: 'SEND MY PROFILE ON WHATSAPP',
       submittingButton: 'SUBMITTING...',
       microcopy: 'Your information is handled with strict confidentiality.',
       successTitle: 'Request Successfully Received',

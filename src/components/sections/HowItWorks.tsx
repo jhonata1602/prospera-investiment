@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, Sparkles } from 'lucide-react'
 import { useScrollReveal } from '@/hooks/useScrollReveal'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -79,6 +79,33 @@ export function HowItWorks() {
   const video1Ref = useRef<HTMLVideoElement>(null)
   const video2Ref = useRef<HTMLVideoElement>(null)
   const isTransitioningRef = useRef(false)
+  const activeVideoRef = useRef<1 | 2>(activeVideo)
+
+  useEffect(() => {
+    activeVideoRef.current = activeVideo
+  }, [activeVideo])
+
+  // Função segura e padronizada de disparo de reprodução de vídeo sem travar
+  const safePlay = (video: HTMLVideoElement | null) => {
+    if (!video) return
+    try {
+      video.muted = true
+      video.defaultMuted = true
+      video.playbackRate = VIDEO_PLAYBACK_RATE
+      const playPromise = video.play()
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsVideoLoaded(true)
+          })
+          .catch(() => {
+            // Autoplay contido pelo navegador até primeira interação
+          })
+      }
+    } catch {
+      // Ignora erro síncrono de mídia
+    }
+  }
 
   // Gerenciador de transição contínua em esteira suave entre os dois players
   // Elimina qualquer efeito de vai-e-volta, corte seco ou "bater na ponta"
@@ -93,8 +120,7 @@ export function HowItWorks() {
       isTransitioningRef.current = true
 
       nextVideo.currentTime = 0
-      nextVideo.playbackRate = VIDEO_PLAYBACK_RATE
-      nextVideo.play().catch(() => {})
+      safePlay(nextVideo)
 
       const nextActive = currentNum === 1 ? 2 : 1
       setActiveVideo(nextActive)
@@ -115,8 +141,7 @@ export function HowItWorks() {
       const nextVideo = nextActive === 1 ? video1Ref.current : video2Ref.current
       if (nextVideo) {
         nextVideo.currentTime = 0
-        nextVideo.playbackRate = VIDEO_PLAYBACK_RATE
-        nextVideo.play().catch(() => {})
+        safePlay(nextVideo)
       }
       setActiveVideo(nextActive)
     }
@@ -134,34 +159,48 @@ export function HowItWorks() {
       return
     }
 
+    // Configurar propriedades nativas do DOM imediatamente
     if (video1Ref.current) {
+      video1Ref.current.muted = true
+      video1Ref.current.defaultMuted = true
       video1Ref.current.playbackRate = VIDEO_PLAYBACK_RATE
+      if (video1Ref.current.readyState >= 2) {
+        setIsVideoLoaded(true)
+      }
     }
     if (video2Ref.current) {
+      video2Ref.current.muted = true
+      video2Ref.current.defaultMuted = true
       video2Ref.current.playbackRate = VIDEO_PLAYBACK_RATE
     }
 
     const section = sectionRef.current
     if (!section) return
 
-    // Se carregado diretamente com âncora
-    if (window.location.hash === '#como-funciona' || window.location.hash === '#sistema') {
+    // Se carregado diretamente com âncora ou já no campo visual
+    const isAnchor = window.location.hash === '#como-funciona' || window.location.hash === '#sistema'
+    const rect = section.getBoundingClientRect()
+    const isInInitialView = rect.top <= window.innerHeight * 0.95 && rect.bottom >= -100
+
+    if (isAnchor || isInInitialView) {
       setIsVisible(true)
-    } else {
-      const rect = section.getBoundingClientRect()
-      if (rect.top <= window.innerHeight * 0.88) {
-        setIsVisible(true)
-      }
+      setIsVideoLoaded(true)
+      const target = activeVideoRef.current === 1 ? video1Ref.current : video2Ref.current
+      safePlay(target)
     }
+
+    let isSectionIntersecting = isInInitialView
 
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries
+        isSectionIntersecting = entry.isIntersecting
         if (entry.isIntersecting) {
           setIsVisible(true)
-          const currentRef = activeVideo === 1 ? video1Ref.current : video2Ref.current
-          if (currentRef && currentRef.paused) {
-            currentRef.play().catch(() => {})
+          setIsVideoLoaded(true)
+          const target = activeVideoRef.current === 1 ? video1Ref.current : video2Ref.current
+          if (target && target.paused) {
+            safePlay(target)
           }
         } else {
           if (video1Ref.current && !video1Ref.current.paused) video1Ref.current.pause()
@@ -169,20 +208,40 @@ export function HowItWorks() {
         }
       },
       {
-        threshold: 0.05,
-        rootMargin: '120px 0px 120px 0px',
+        threshold: 0.02,
+        rootMargin: '200px 0px 200px 0px',
       }
     )
 
     observer.observe(section)
-    return () => observer.disconnect()
-  }, [activeVideo])
+
+    // Garantia de reprodução em primeira interação do usuário caso o navegador tenha bloqueado autoplay
+    const handleFirstInteraction = () => {
+      if (isSectionIntersecting) {
+        const target = activeVideoRef.current === 1 ? video1Ref.current : video2Ref.current
+        if (target && target.paused) {
+          safePlay(target)
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleFirstInteraction, { passive: true, once: true })
+    window.addEventListener('touchstart', handleFirstInteraction, { passive: true, once: true })
+    window.addEventListener('pointerdown', handleFirstInteraction, { passive: true, once: true })
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', handleFirstInteraction)
+      window.removeEventListener('touchstart', handleFirstInteraction)
+      window.removeEventListener('pointerdown', handleFirstInteraction)
+    }
+  }, [])
 
   return (
     <section
       id="como-funciona"
       ref={sectionRef}
-      className="relative w-full overflow-hidden bg-[#07110D] text-prospera-white py-12 sm:py-14 lg:py-16 selection:bg-[#0F3B2E] selection:text-[#FAF8F3]"
+      className="relative w-full overflow-hidden bg-[#07110D] text-prospera-white py-12 sm:py-14 lg:py-16 selection:bg-[#1A4D3F] selection:text-[#FAF8F3]"
       aria-label="Como Funciona — Jornada do Investidor Prospera"
     >
       {/* Âncora de compatibilidade de navegação */}
@@ -225,10 +284,15 @@ export function HowItWorks() {
               if (motionQuery.matches) {
                 video1Ref.current.pause()
               } else {
-                video1Ref.current.playbackRate = VIDEO_PLAYBACK_RATE
-                video1Ref.current.play().catch(() => {})
+                safePlay(video1Ref.current)
               }
             }
+          }}
+          onCanPlay={() => {
+            setIsVideoLoaded(true)
+          }}
+          onPlaying={() => {
+            setIsVideoLoaded(true)
           }}
           className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1500 ease-in-out ${
             activeVideo === 1 && isVideoLoaded ? 'opacity-100' : 'opacity-0'
@@ -248,6 +312,11 @@ export function HowItWorks() {
           onTimeUpdate={() => handleTimeUpdate(2)}
           onEnded={() => handleVideoEnded(2)}
           onLoadedData={() => {
+            if (video2Ref.current) {
+              video2Ref.current.playbackRate = VIDEO_PLAYBACK_RATE
+            }
+          }}
+          onCanPlay={() => {
             if (video2Ref.current) {
               video2Ref.current.playbackRate = VIDEO_PLAYBACK_RATE
             }
@@ -273,14 +342,40 @@ export function HowItWorks() {
         aria-hidden="true"
       />
 
-      {/* Transição névoa difusa no topo (com a 3ª dobra) */}
-      <div className="fold-transition-top" aria-hidden="true">
-        <div className="fold-transition-glow-top" />
+      {/* Transição suave e difusa no topo (com a 3ª dobra Rotas - sem corte seco) */}
+      <div
+        className="absolute inset-x-0 top-0 h-14 sm:h-18 lg:h-22 pointer-events-none z-20"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(7, 17, 13, 0.85) 0%, rgba(7, 17, 13, 0.45) 35%, rgba(7, 20, 14, 0.15) 70%, transparent 100%)',
+        }}
+        aria-hidden="true"
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse 75% 100% at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 80%)',
+          }}
+        />
       </div>
 
-      {/* Transição névoa difusa na base (com o rodapé) */}
-      <div className="fold-transition-bottom" aria-hidden="true">
-        <div className="fold-transition-glow-bottom" />
+      {/* Transição suave e difusa na base (com a 5ª dobra Oportunidades) */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-16 sm:h-20 lg:h-24 pointer-events-none z-20"
+        style={{
+          background:
+            'linear-gradient(to bottom, transparent 0%, rgba(7, 20, 14, 0.20) 30%, rgba(7, 20, 14, 0.50) 70%, rgba(11, 35, 27, 0.70) 100%)',
+        }}
+        aria-hidden="true"
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse 75% 100% at 50% 100%, rgba(212, 175, 55, 0.05) 0%, transparent 75%)',
+          }}
+        />
       </div>
 
       <div className="container-luxury relative z-10">
@@ -294,39 +389,41 @@ export function HowItWorks() {
         <div ref={headerRef} className="relative text-center max-w-[860px] mx-auto px-4 sm:px-6">
           {/* Suave reforço de contraste focal difuso sem bordas nem caixas */}
           <div
-            className="absolute -inset-x-8 -inset-y-6 sm:-inset-x-16 sm:-inset-y-10 pointer-events-none -z-10 blur-3xl opacity-50"
+            className="absolute -inset-x-8 -inset-y-6 sm:-inset-x-16 sm:-inset-y-10 pointer-events-none -z-10 blur-3xl opacity-75"
             style={{
               background:
-                'radial-gradient(ellipse 75% 65% at 50% 50%, rgba(7, 19, 13, 0.60) 0%, rgba(7, 19, 13, 0.25) 50%, transparent 75%)',
+                'radial-gradient(ellipse 75% 65% at 50% 50%, rgba(5, 16, 11, 0.76) 0%, rgba(5, 16, 11, 0.35) 50%, transparent 75%)',
             }}
             aria-hidden="true"
           />
 
           {/* Eyebrow Institucional Padronizado */}
           <div
-            className={`inline-flex items-center justify-center gap-2 mb-2.5 sm:mb-3 px-3.5 py-1 rounded-full bg-[#09261D]/90 border border-[#D4AF37]/60 text-[#F0D27A] text-[11px] font-bold tracking-[0.22em] uppercase backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.4)] transition-all duration-700 delay-100 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`inline-flex items-center justify-center mb-3 sm:mb-3.5 transition-all duration-700 delay-100 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shadow-[0_0_6px_rgba(212,175,55,0.8)]" />
-            <span>{t.howItWorks.eyebrow}</span>
+            <div className="badge-section-pill">
+              <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" aria-hidden="true" />
+              <span>{t.howItWorks.eyebrow}</span>
+            </div>
           </div>
 
           {/* Headline Nobre em Tom Champanhe com Destaque Dourado Firme */}
           <h2
-            className={`font-serif font-normal leading-[1.14] text-[#F8F6F0] tracking-tight transition-all duration-700 delay-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`font-serif font-medium sm:font-semibold leading-[1.14] text-[#FFFFFF] tracking-tight transition-all duration-700 delay-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
             style={{
               fontSize: 'clamp(1.85rem, 2.2vw + 1.1rem, 3rem)',
-              textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 4px 18px rgba(4,10,7,0.95)',
+              textShadow: '0 2px 4px rgba(0,0,0,0.98), 0 4px 18px rgba(4,10,7,0.95)',
             }}
           >
             {t.howItWorks.headlinePart1}
             <span
-              className="italic font-serif text-[#F0D27A]"
+              className="italic font-serif font-semibold text-[#F5D982]"
               style={{
-                textShadow: '0 0 12px rgba(240,210,122,0.35), 0 2px 4px rgba(0,0,0,0.95)',
+                textShadow: '0 0 16px rgba(245,217,130,0.45), 0 2px 4px rgba(0,0,0,0.95)',
               }}
             >
               {t.howItWorks.headlineGold}
@@ -336,7 +433,7 @@ export function HowItWorks() {
 
           {/* Subheadline Institucional em Tom Claro Nobre com Alta Legibilidade */}
           <p
-            className={`mt-2.5 sm:mt-3 font-normal text-[#F2ECE1] max-w-[720px] mx-auto leading-[1.62] transition-all duration-700 delay-400 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`mt-3 sm:mt-3.5 font-medium text-[#FAF5EC] max-w-[720px] mx-auto leading-[1.66] transition-all duration-700 delay-400 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isHeaderVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
             }`}
             style={{
@@ -360,7 +457,7 @@ export function HowItWorks() {
             return (
               <div
                 key={item.step}
-                className={`group relative bg-[#FFFDF9]/95 hover:bg-white border border-[#D4AF37]/35 hover:border-[#D4AF37]/75 rounded-2xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] shadow-[0_4px_16px_rgba(15,59,46,0.05)] hover:shadow-[0_8px_24px_rgba(212,175,55,0.14)] hover:-translate-y-1 flex flex-col h-full max-w-[420px] sm:max-w-none mx-auto w-full motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+                className={`group relative bg-white border border-[#D4AF37]/45 hover:border-[#D4AF37]/85 rounded-2xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] shadow-[0_4px_18px_rgba(15,59,46,0.08)] hover:shadow-[0_8px_26px_rgba(212,175,55,0.18)] hover:-translate-y-1 flex flex-col h-full max-w-[420px] sm:max-w-none mx-auto w-full motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
                   isCardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                 }`}
                 style={{
@@ -385,18 +482,18 @@ export function HowItWorks() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10 pointer-events-none" />
 
                   {/* Numeração Padronizada da Etapa */}
-                  <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-[#07110D]/85 border border-[#D4AF37]/55 text-[10.5px] font-mono font-bold tracking-[0.18em] text-[#F5D982] shadow-xs">
+                  <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-[#1A4D3F] border border-[#D4AF37]/65 text-[10.5px] font-mono font-bold tracking-[0.18em] text-[#F9E8B2] shadow-xs">
                     {stepData.step}
                   </span>
                 </div>
 
-                {/* Interior Padronizado com Alturas Balanceadas */}
-                <div className="p-4 flex-1 flex flex-col justify-between bg-[#FFFDF9] group-hover:bg-white transition-colors duration-300">
+                {/* Interior Padronizado com Alturas Balanceadas e Alto Contraste */}
+                <div className="p-4 flex-1 flex flex-col justify-between bg-white">
                   <div>
-                    <h3 className="font-sans font-bold text-[13px] xl:text-[13.5px] tracking-[0.08em] text-[#0F3B2E] uppercase group-hover:text-[#99731A] transition-colors duration-300 leading-snug min-h-[38px] flex items-center">
+                    <h3 className="font-sans font-bold text-[13.5px] xl:text-[14px] tracking-[0.08em] text-[#02130C] uppercase group-hover:text-[#7A4F05] transition-colors duration-300 leading-snug min-h-[38px] flex items-center">
                       {stepData.title}
                     </h3>
-                    <p className="mt-1.5 text-[12.5px] text-[#3D4A41] font-normal leading-[1.56]">
+                    <p className="mt-2 text-[13px] text-[#03140E] font-semibold leading-[1.58]">
                       {stepData.description}
                     </p>
                   </div>
@@ -417,22 +514,22 @@ export function HowItWorks() {
           <div className="relative">
             {/* Suave reforço de contraste focal difuso no bloco CTA */}
             <div
-              className="absolute -inset-x-12 -inset-y-8 sm:-inset-x-20 sm:-inset-y-12 pointer-events-none -z-10 blur-3xl opacity-55"
+              className="absolute -inset-x-12 -inset-y-8 sm:-inset-x-20 sm:-inset-y-12 pointer-events-none -z-10 blur-3xl opacity-75"
               style={{
                 background:
-                  'radial-gradient(ellipse 70% 65% at 50% 50%, rgba(7, 19, 13, 0.55) 0%, rgba(7, 19, 13, 0.20) 50%, transparent 75%)',
+                  'radial-gradient(ellipse 70% 65% at 50% 50%, rgba(5, 16, 11, 0.75) 0%, rgba(5, 16, 11, 0.32) 50%, transparent 75%)',
               }}
               aria-hidden="true"
             />
 
             {/* Headline do CTA em tom champanhe com leitura nítida e sem palavra isolada */}
             <h3
-              className={`font-serif font-normal leading-[1.18] text-[#F8F6F0] tracking-tight transition-all duration-700 delay-150 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+              className={`font-serif font-medium sm:font-semibold leading-[1.18] text-[#FFFFFF] tracking-tight transition-all duration-700 delay-150 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
                 isCtaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
               }`}
               style={{
                 fontSize: 'clamp(1.5rem, 1.6vw + 0.85rem, 2.25rem)',
-                textShadow: '0 2px 4px rgba(0,0,0,0.95), 0 4px 18px rgba(4,10,7,0.95)',
+                textShadow: '0 2px 4px rgba(0,0,0,0.98), 0 4px 18px rgba(4,10,7,0.95)',
               }}
             >
               {t.howItWorks.ctaHeadline}
@@ -440,7 +537,7 @@ export function HowItWorks() {
 
             {/* Texto de Apoio em Tom Claro Nobre com espaçamento reduzido e elegante */}
             <p
-              className={`mt-2 sm:mt-2.5 font-normal text-[#F2ECE1] max-w-[580px] mx-auto leading-[1.6] transition-all duration-700 delay-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+              className={`mt-2 sm:mt-2.5 font-medium text-[#FAF5EC] max-w-[580px] mx-auto leading-[1.62] transition-all duration-700 delay-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
                 isCtaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
               }`}
               style={{
@@ -477,8 +574,8 @@ export function HowItWorks() {
               </div>
 
               <p
-                className="text-[12px] sm:text-[12.5px] font-normal tracking-[0.02em] text-[#F2ECE1] text-center"
-                style={{ textShadow: '0 1px 4px rgba(0,0,0,0.95), 0 2px 8px rgba(4,10,7,0.85)' }}
+                className="text-[12px] sm:text-[12.5px] font-semibold tracking-[0.02em] text-[#FFFDF8] text-center"
+                style={{ textShadow: '0 1px 4px rgba(0,0,0,1), 0 2px 8px rgba(4,10,7,0.92)' }}
               >
                 {t.howItWorks.ctaSubtext}
               </p>

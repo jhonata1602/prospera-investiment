@@ -5,55 +5,46 @@ import { useLanguage } from '@/contexts/LanguageContext'
 // Available High-Definition London Scenes in public/assets/prospera/video/
 const VIDEO_SCENES = [
   {
+    id: 'london-skyline',
+    src: '/assets/prospera/video/london-skyline.mp4',
+    title: 'Cena 1: Skyline Corporativo de Londres & Nuveen',
+    className: 'hero-video-skyline',
+    style: undefined,
+  },
+  {
     id: 'big-ben',
     src: '/assets/prospera/video/london-big-ben.mp4',
-    title: 'Cena 1: Big Ben & Palácio de Westminster',
-    className: 'object-cover',
-    style: {
-      objectPosition: '55% center',
-    },
+    title: 'Cena 2: Big Ben & Palácio de Westminster',
+    className: 'hero-video-big-ben',
+    style: undefined,
   },
   {
     id: 'thames-bridge',
     src: '/assets/prospera/video/london-thames-bridge.mp4',
-    title: 'Cena 2: Tower Bridge & Rio Tâmisa',
-    className: 'object-cover object-center',
-    style: undefined,
-  },
-  {
-    id: 'london-eye',
-    src: '/assets/prospera/video/london-eye.mp4',
-    title: 'Cena 3: London Eye & Tâmisa',
-    className: 'object-cover',
-    style: {
-      objectPosition: '35% center',
-      transform: 'scale(1.18) translateX(12%)',
-    },
-  },
-  {
-    id: 'london-streets',
-    src: '/assets/prospera/video/london-streets.mp4',
-    title: 'Cena 4: Trafalgar Square & Arquitetura Britânica',
-    className: 'object-cover',
-    style: {
-      objectPosition: '60% center',
-    },
-  },
-  {
-    id: 'london-skyline',
-    src: '/assets/prospera/video/london-skyline.mp4',
-    title: 'Cena 5: Skyline Contemporâneo de Londres',
+    title: 'Cena 3: Tower Bridge & Rio Tâmisa',
     className: 'object-cover object-center',
     style: undefined,
   },
   {
     id: 'victoria-memorial',
     src: '/assets/prospera/video/london-victoria-memorial.mp4',
-    title: 'Cena 6: Victoria Memorial & Tradição',
-    className: 'object-cover',
-    style: {
-      objectPosition: 'center 40%',
-    },
+    title: 'Cena 4: Victoria Memorial & Tradição',
+    className: 'object-cover object-[center_40%]',
+    style: undefined,
+  },
+  {
+    id: 'london-eye',
+    src: '/assets/prospera/video/london-eye.mp4',
+    title: 'Cena 5: London Eye & Tâmisa',
+    className: 'hero-video-london-eye',
+    style: undefined,
+  },
+  {
+    id: 'london-streets',
+    src: '/assets/prospera/video/london-streets.mp4',
+    title: 'Cena 6: Trafalgar Square & Arquitetura Britânica',
+    className: 'object-cover object-[60%_center]',
+    style: undefined,
   },
 ]
 
@@ -71,7 +62,45 @@ export function CinematicHero({
   const [isDesktop, setIsDesktop] = useState(false)
   const [currentSceneIdx, setCurrentSceneIdx] = useState(0)
   const [isAnyVideoWorking, setIsAnyVideoWorking] = useState(false)
+  const [isVideoReady, setIsVideoReady] = useState(false)
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+
+  // Detecção e disparo imediato do primeiro vídeo para transição sem flash
+  useEffect(() => {
+    const firstVideo = videoRefs.current[0]
+    if (!firstVideo) return
+
+    if (!firstVideo.paused && firstVideo.readyState >= 2) {
+      setIsVideoReady(true)
+      setIsAnyVideoWorking(true)
+      return
+    }
+
+    const markReady = () => {
+      setIsVideoReady(true)
+      setIsAnyVideoWorking(true)
+    }
+
+    firstVideo.addEventListener('playing', markReady, { once: true })
+    firstVideo.addEventListener('timeupdate', markReady, { once: true })
+
+    firstVideo.play().then(markReady).catch(() => {
+      // Autoplay bloqueado por política de economia/navegador — poster permanece ativo com elegância
+    })
+
+    return () => {
+      firstVideo.removeEventListener('playing', markReady)
+      firstVideo.removeEventListener('timeupdate', markReady)
+    }
+  }, [])
+
+  // Estratégia de preload progressivo: prioriza vídeo 0 no carregamento inicial
+  const getPreload = (idx: number) => {
+    if (idx === 0) return 'auto'
+    if (idx === (currentSceneIdx + 1) % VIDEO_SCENES.length && isVideoReady) return 'auto'
+    if (idx === currentSceneIdx) return 'auto'
+    return 'none'
+  }
 
   // Detect capability: Desktop pointer, viewport size, reduced motion
   useEffect(() => {
@@ -175,24 +204,47 @@ export function CinematicHero({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
+      {/* Âncora oficial de navegação para Método PROSPERA */}
+      <div id="metodo" className="absolute top-0 pointer-events-none" aria-hidden="true" />
       {/* =========================================================================
           CAMADA 1: VÍDEOS DE ALTA RESOLUÇÃO DE LONDRES (Background Cinematográfico)
-          - Transição suave entre as 6 cenas em crossfade de 700ms
-          - Zoom lento contínuo (ken burns) para máxima sofisticação
-          - Fallback com poster panorâmico garantindo zero tela preta
+          - Poster estático com o primeiro frame idêntico ao 1º vídeo (Big Ben ao entardecer)
+          - Transição suave em fade-in (500ms) assim que o vídeo estiver pronto para tocar
+          - Zero flash verde, zero flash preto, zero tela vazia
+          - Crossfade contínuo de 700ms entre as 6 cenas subsequentes
          ========================================================================= */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
+        {/* Poster de Alta Precisão (Espelho fiel do primeiro frame da Cena 1) */}
+        <div
+          className={`absolute inset-0 transition-opacity duration-500 ease-out z-0 pointer-events-none ${
+            isVideoReady ? 'opacity-0' : 'opacity-100'
+          }`}
+          aria-hidden="true"
+        >
+          <img
+            src={posterSrc}
+            alt=""
+            fetchPriority="high"
+            className="w-full h-full brightness-[1.18] contrast-[1.05] saturate-[1.04] hero-video-skyline"
+          />
+        </div>
+
+        {/* Camadas de Vídeo com Transição Suave e Priorização de Carregamento */}
         {VIDEO_SCENES.map((scene, idx) => {
           const isActive = idx === currentSceneIdx
+          const isVisible = idx === 0 ? (isActive && isVideoReady) : isActive
+
           return (
             <div
               key={scene.id}
-              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                isActive ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              className={`absolute inset-0 transition-opacity ${
+                idx === 0 ? 'duration-500' : 'duration-700'
+              } ease-in-out z-10 ${
+                isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
               }`}
             >
               <div
-                className="w-full h-full animate-kenburns-subtle will-change-transform"
+                className="w-full h-full overflow-hidden animate-kenburns-subtle will-change-transform"
                 style={scene.style}
               >
                 <video
@@ -201,10 +253,13 @@ export function CinematicHero({
                   muted
                   loop
                   playsInline
-                  preload={idx < 2 ? 'auto' : 'metadata'}
-                  className={`w-full h-full brightness-[1.14] contrast-[1.08] saturate-[1.05] ${scene.className}`}
+                  preload={getPreload(idx)}
+                  className={`w-full h-full brightness-[1.18] contrast-[1.05] saturate-[1.04] ${scene.className}`}
                   aria-hidden="true"
-                  onPlaying={() => setIsAnyVideoWorking(true)}
+                  onPlaying={() => {
+                    setIsVideoReady(true)
+                    setIsAnyVideoWorking(true)
+                  }}
                 >
                   <source src={scene.src} type="video/mp4" />
                 </video>
@@ -212,38 +267,29 @@ export function CinematicHero({
             </div>
           )
         })}
-
-        {!isAnyVideoWorking && (
-          <img
-            src={posterSrc}
-            alt=""
-            fetchPriority="high"
-            className="absolute inset-0 w-full h-full object-cover object-center brightness-[1.14] contrast-[1.08]"
-          />
-        )}
       </div>
 
       {/* =========================================================================
-          CAMADA 2: OVERLAY CINEMATOGRÁFICO LUMINOSO E CLARO
-          - Maior luminosidade e vivacidade da arquitetura, céu e iluminação noturna de Londres
-          - Clareamento equilibrado sem estourar a luz
-          - Preserva leitura nobre e contraste imediato do Header e da copy
+          CAMADA 2: OVERLAY CINEMATOGRÁFICO LUMINOSO, NATURAL E CRISTALINO
+          - Elimina a presença pesada do verde sobre os vídeos e monumentos de Londres
+          - Céu, arquitetura e rio Tâmisa mais naturais, límpidos e com brilho elegante
+          - Preserva contraste refinado para leitura da copy sem estourar e sem lavar
          ========================================================================= */}
       <div
         className="absolute inset-0 pointer-events-none z-10"
         style={{
           background:
-            'radial-gradient(ellipse 115% 95% at 50% 46%, rgba(7,17,13,0.02) 0%, rgba(7,17,13,0.12) 50%, rgba(7,17,13,0.28) 100%), linear-gradient(180deg, rgba(7,17,13,0.22) 0%, transparent 18%, transparent 80%, rgba(7,17,13,0.16) 100%)',
+            'radial-gradient(ellipse 120% 90% at 50% 46%, transparent 0%, rgba(10,12,16,0.04) 55%, rgba(10,12,16,0.18) 100%)',
         }}
         aria-hidden="true"
       />
 
-      {/* Transição inferior de profundidade suave e difusa com a 2ª dobra (sem linhas, cortes ou faixas escuras) */}
+      {/* Transição inferior de profundidade suave e difusa com a 2ª dobra (sem linhas duras, acabamento refinado) */}
       <div
-        className="absolute inset-x-0 bottom-0 h-20 sm:h-28 pointer-events-none z-20"
+        className="absolute inset-x-0 bottom-0 h-16 sm:h-20 lg:h-24 pointer-events-none z-20"
         style={{
           background:
-            'linear-gradient(to top, rgba(7, 24, 18, 0.28) 0%, rgba(7, 24, 18, 0.10) 45%, rgba(15, 59, 46, 0.03) 80%, transparent 100%)',
+            'linear-gradient(to bottom, transparent 0%, rgba(7, 16, 12, 0.10) 40%, rgba(7, 16, 12, 0.32) 80%, rgba(11, 35, 27, 0.52) 100%)',
         }}
         aria-hidden="true"
       >
@@ -251,7 +297,7 @@ export function CinematicHero({
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse 70% 100% at 50% 100%, rgba(212, 175, 55, 0.03) 0%, transparent 70%)',
+              'radial-gradient(ellipse 75% 100% at 50% 100%, rgba(212, 175, 55, 0.04) 0%, transparent 75%)',
           }}
         />
       </div>
@@ -264,12 +310,12 @@ export function CinematicHero({
           - CTAs equilibrados: Principal dominante + Secundário discreto
          ========================================================================= */}
       <div className="container-luxury relative z-30 w-full pt-28 pb-20 sm:pt-32 sm:pb-24 lg:py-0 flex flex-col items-center justify-center min-h-[calc(100svh-5rem)] lg:min-h-screen text-center">
-        {/* Halo difuso imperceptível atrás da área de leitura para contraste cristalino sem faixa visível */}
+        {/* Halo difuso imperceptível atrás da área de leitura para contraste cristalino sem faixa visível e sem verde pesado */}
         <div
-          className="absolute max-w-[960px] w-full h-[440px] pointer-events-none -z-10 blur-3xl opacity-75"
+          className="absolute max-w-[960px] w-full h-[440px] pointer-events-none -z-10 blur-3xl opacity-60"
           style={{
             background:
-              'radial-gradient(ellipse 85% 70% at 50% 48%, rgba(5,15,11,0.48) 0%, rgba(5,15,11,0.22) 50%, rgba(7,17,13,0.06) 75%, transparent 100%)',
+              'radial-gradient(ellipse 85% 70% at 50% 48%, rgba(8,10,12,0.28) 0%, rgba(8,10,12,0.10) 55%, transparent 85%)',
           }}
           aria-hidden="true"
         />
@@ -287,17 +333,17 @@ export function CinematicHero({
           }}
         >
           <h1
-            className="animate-hero-fade-in-up-1 font-serif font-normal leading-[1.12] sm:leading-[1.08] lg:leading-[1.08] tracking-[-0.015em] text-[#FFFDF8] text-center"
+            className="animate-hero-fade-in-up-1 font-serif font-medium sm:font-semibold leading-[1.12] sm:leading-[1.08] lg:leading-[1.08] tracking-[-0.015em] text-[#FFFDF8] text-center"
             style={{
               fontSize: 'clamp(2.25rem, 2.5vw + 1.5rem, 4.5rem)',
-              textShadow: '0 2px 8px rgba(0, 0, 0, 0.85), 0 4px 20px rgba(4, 10, 7, 0.75)',
+              textShadow: '0 2px 8px rgba(0, 0, 0, 0.95), 0 4px 22px rgba(4, 10, 7, 0.9)',
             }}
           >
             {t.hero.headlinePart1}
             <span
-              className="text-[#F5D982] italic font-normal sm:whitespace-nowrap font-serif"
+              className="text-[#F5D982] italic font-semibold sm:whitespace-nowrap font-serif"
               style={{
-                textShadow: '0 0 22px rgba(245, 217, 130, 0.45), 0 2px 6px rgba(0, 0, 0, 0.85)',
+                textShadow: '0 0 22px rgba(245, 217, 130, 0.5), 0 2px 6px rgba(0, 0, 0, 0.9)',
               }}
             >
               {t.hero.headlineGold}
@@ -306,9 +352,9 @@ export function CinematicHero({
           </h1>
 
           <p
-            className="animate-hero-fade-in-up-2 mt-6 sm:mt-7 [@media(min-width:2200px)]:mt-9 text-[15px] sm:text-[17px] lg:text-[1.15rem] xl:text-[1.25rem] font-normal leading-relaxed text-[#FAF6EE] max-w-[740px] [@media(min-width:2200px)]:max-w-[860px] text-center mx-auto"
+            className="animate-hero-fade-in-up-2 mt-6 sm:mt-7 [@media(min-width:2200px)]:mt-9 text-[15px] sm:text-[17px] lg:text-[1.15rem] xl:text-[1.25rem] font-semibold leading-relaxed text-[#FFFDF8] max-w-[740px] [@media(min-width:2200px)]:max-w-[860px] text-center mx-auto"
             style={{
-              textShadow: '0 1px 4px rgba(0, 0, 0, 0.85), 0 2px 12px rgba(4, 10, 7, 0.75)',
+              textShadow: '0 1px 4px rgba(0, 0, 0, 0.98), 0 2px 14px rgba(4, 10, 7, 0.90)',
             }}
           >
             {t.hero.subheadline}
@@ -337,10 +383,12 @@ export function CinematicHero({
                 </a>
               </div>
 
-              {/* Microcopy Elegante e Perceptível */}
+              {/* Microcopy Elegante e Perceptível com Contraste Reforçado */}
               <p
-                className="text-[12px] sm:text-[12.5px] font-normal tracking-[0.02em] text-[#F2ECE1]/95 text-center"
-                style={{ textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}
+                className="text-[12px] sm:text-[12.5px] font-semibold tracking-[0.02em] text-[#FFFDF8] text-center"
+                style={{
+                  textShadow: '0 1px 4px rgba(0, 0, 0, 0.98), 0 2px 10px rgba(0, 0, 0, 0.85)',
+                }}
               >
                 {t.hero.microcopy}
               </p>
@@ -349,11 +397,11 @@ export function CinematicHero({
             {/* CTA Secundário: Translúcido, refinado e elegante, sem competir com o botão principal */}
             <a
               href="#sobre"
-              className="relative inline-flex items-center justify-center gap-2.5 rounded-full w-full sm:w-auto max-w-[320px] px-6 py-3.5 sm:px-7 sm:py-4 min-h-[50px] sm:min-h-[56px] text-xs sm:text-[13px] font-semibold tracking-[0.14em] uppercase text-[#F8F6F0] bg-[#07110D]/35 hover:bg-prospera-gold/[0.09] hover:text-[#FFFDF8] border border-prospera-gold/30 hover:border-prospera-gold/60 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_0_18px_rgba(212,175,55,0.18)] group/sec cursor-pointer sm:mb-6"
-              style={{ textShadow: '0 1px 3px rgba(0,0,0,0.85)' }}
+              className="relative inline-flex items-center justify-center gap-2.5 rounded-full w-full sm:w-auto max-w-[320px] px-6 py-3.5 sm:px-7 sm:py-4 min-h-[50px] sm:min-h-[56px] text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-[#FFFDF8] bg-[#07110D]/55 hover:bg-[#07110D]/75 hover:text-white border border-prospera-gold/45 hover:border-prospera-gold/75 backdrop-blur-md transition-all duration-300 hover:shadow-[0_0_18px_rgba(212,175,55,0.25)] group/sec cursor-pointer sm:mb-6"
+              style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)' }}
             >
               <span>{t.hero.ctaSecondary}</span>
-              <ArrowRight className="w-4 h-4 text-prospera-gold/90 transition-transform duration-300 group-hover/sec:translate-x-1" />
+              <ArrowRight className="w-4 h-4 text-prospera-gold transition-transform duration-300 group-hover/sec:translate-x-1" />
             </a>
           </div>
 
@@ -366,7 +414,8 @@ export function CinematicHero({
       <button
         type="button"
         onClick={scrollToNext}
-        className="hidden lg:flex absolute bottom-6 [@media(min-width:2200px)]:bottom-9 [@media(min-width:2560px)]:bottom-11 left-1/2 -translate-x-1/2 z-30 flex-col items-center gap-1 text-[10px] [@media(min-width:2200px)]:text-[12px] tracking-[0.25em] uppercase text-prospera-gold/70 hover:text-prospera-gold transition-colors focus:outline-none"
+        className="hidden lg:flex absolute bottom-6 [@media(min-width:2200px)]:bottom-9 [@media(min-width:2560px)]:bottom-11 left-1/2 -translate-x-1/2 z-30 flex-col items-center gap-1 text-[10px] [@media(min-width:2200px)]:text-[12px] tracking-[0.25em] uppercase text-[#F5D982] hover:text-white transition-colors focus:outline-none"
+        style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.95)' }}
         aria-label="Rolar para a próxima seção"
       >
         <span className="font-light">EXPLORAR</span>

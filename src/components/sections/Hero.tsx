@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { ArrowUpRight, ChevronDown, Landmark, ShieldCheck } from 'lucide-react'
 
 export function Hero() {
@@ -122,7 +122,7 @@ export function Hero() {
           >
             {/* Step 1: Eyebrow Badge & Linha de Autoridade */}
             <div className="animate-hero-fade-in-up-1">
-              <div className="inline-flex items-center gap-2.5 rounded-full border border-prospera-gold/40 bg-[#0F3B2E]/80 px-4 py-1.5 backdrop-blur-md shadow-sm">
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-prospera-gold/40 bg-[#1A4D3F]/80 px-4 py-1.5 backdrop-blur-md shadow-sm">
                 <span className="h-1.5 w-1.5 rounded-full bg-prospera-gold animate-pulse" />
                 <span className="text-[10px] sm:text-xs font-medium tracking-[0.2em] text-prospera-gold uppercase">
                   Private UK Property Advisory

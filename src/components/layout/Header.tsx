@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { FlagBR, FlagGB } from '@/components/ui/FlagIcons'
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -8,8 +9,8 @@ export function Header() {
   const { language, setLanguage, t } = useLanguage()
 
   const navItems = [
-    { label: t.nav.about, href: '#sobre' },
     { label: t.nav.method, href: '#metodo' },
+    { label: t.nav.about, href: '#sobre' },
     { label: t.nav.routes, href: '#rotas' },
     { label: t.nav.howItWorks, href: '#como-funciona' },
     { label: t.nav.opportunities, href: '#oportunidades' },
@@ -39,15 +40,15 @@ export function Header() {
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? 'bg-[#07110D]/95 shadow-[0_8px_32px_rgba(0,0,0,0.7)] backdrop-blur-xl border-b border-prospera-gold/20 h-18 lg:h-20'
-          : 'bg-gradient-to-b from-[#07110D]/75 via-[#07110D]/35 to-transparent backdrop-blur-[4px] h-20 lg:h-24'
+          ? 'bg-gradient-to-r from-[#1A4D3F]/94 via-[#164538]/92 to-[#1A4D3F]/94 shadow-[0_8px_24px_rgba(15,59,46,0.22)] backdrop-blur-xl border-b border-[#D4AF37]/25 h-18 lg:h-20'
+          : 'bg-gradient-to-b from-[#05110B]/60 via-[#05110B]/20 to-transparent backdrop-blur-[1.5px] border-b-0 border-transparent shadow-none h-20 lg:h-24'
       }`}
     >
-      <div className="container-luxury flex h-full items-center justify-between gap-4 sm:gap-6 lg:gap-8">
+      <div className="container-luxury flex h-full items-center justify-between gap-2 sm:gap-4 lg:gap-3 xl:gap-8">
         {/* Logo Oficial Prospera: Escudo à esquerda + Tipografia refinada */}
         <a
           href="#topo"
-          className="group flex items-center gap-2.5 sm:gap-3.5 transition-opacity hover:opacity-95 shrink-0"
+          className="group flex items-center gap-2 sm:gap-3 lg:gap-2.5 xl:gap-3.5 transition-opacity hover:opacity-95 shrink-0"
           aria-label="Prospera Investment — Página inicial"
         >
           {/* Brasão Oficial com Escudo Verde, Coroa e Coluna */}
@@ -55,32 +56,45 @@ export function Header() {
             <img
               src="/assets/prospera/brand/logo-shield.webp"
               alt="Brasão Oficial Prospera Investment"
-              className="h-10 sm:h-11 md:h-12 lg:h-13.5 xl:h-14 [@media(min-width:2000px)]:h-16 w-auto object-contain drop-shadow-[0_2px_12px_rgba(212,175,55,0.3)] transition-transform duration-300 group-hover:scale-105"
+              className="h-9 sm:h-11 md:h-12 lg:h-12 xl:h-14 [@media(min-width:2000px)]:h-16 w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] drop-shadow-[0_2px_12px_rgba(212,175,55,0.3)] transition-transform duration-300 group-hover:scale-105"
             />
           </div>
 
           {/* Nome Oficial Institucional */}
           <div className="flex flex-col justify-center">
-            <span className="font-serif text-base sm:text-lg md:text-xl lg:text-[1.35rem] [@media(min-width:2000px)]:text-2xl font-semibold tracking-[0.24em] text-prospera-white uppercase leading-tight">
+            <span
+              className="font-serif text-[15px] sm:text-lg md:text-xl lg:text-[1.2rem] xl:text-[1.35rem] [@media(min-width:2000px)]:text-2xl font-bold tracking-[0.24em] text-[#FFFDF8] uppercase leading-tight"
+              style={{
+                textShadow: '0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.75)',
+              }}
+            >
               PROSPERA
             </span>
-            <span className="text-[8.5px] sm:text-[9.5px] md:text-[10.5px] lg:text-[11px] [@media(min-width:2000px)]:text-[12px] font-semibold tracking-[0.32em] text-gold-metallic uppercase leading-tight mt-0.5">
+            <span
+              className="text-[8px] sm:text-[9.5px] md:text-[10.5px] lg:text-[10px] xl:text-[11px] [@media(min-width:2000px)]:text-[12px] font-bold tracking-[0.32em] text-[#F5D982] uppercase leading-tight mt-0.5"
+              style={{
+                textShadow: '0 1px 2px rgba(0, 0, 0, 0.95), 0 0 10px rgba(245, 217, 130, 0.35)',
+              }}
+            >
               INVESTMENT
             </span>
           </div>
         </a>
 
         {/* Desktop Navigation & Seletor de Idioma: Todos os itens com mesma elegância e hover dourado */}
-        <div className="hidden items-center gap-3 lg:gap-4 xl:gap-6 2xl:gap-7 lg:flex">
+        <div className="hidden items-center gap-2 lg:gap-2.5 xl:gap-5 2xl:gap-7 lg:flex shrink-0">
           <nav
-            className="flex items-center gap-3 lg:gap-3.5 xl:gap-5 2xl:gap-6"
+            className="flex items-center gap-1.5 lg:gap-2 xl:gap-4.5 2xl:gap-6"
             aria-label="Navegação principal"
           >
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="group relative py-1.5 text-[12px] lg:text-[12.5px] xl:text-[13.5px] font-medium tracking-[0.02em] text-[#FFFDF8] transition-colors duration-200 hover:text-[#D4AF37] drop-shadow-[0_1px_2px_rgba(0,0,0,0.85)] whitespace-nowrap"
+                className="group relative py-1 text-[11px] lg:text-[11.5px] xl:text-[13px] 2xl:text-[13.5px] font-semibold tracking-[0.01em] xl:tracking-[0.02em] text-[#FFFDF8] transition-colors duration-200 hover:text-[#D4AF37] whitespace-nowrap"
+                style={{
+                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.75)',
+                }}
               >
                 {item.label}
                 <span className="absolute bottom-0 left-0 h-[1.5px] w-0 bg-[#D4AF37] transition-all duration-300 group-hover:w-full rounded-full shadow-[0_0_8px_rgba(212,175,55,0.7)]" />
@@ -88,68 +102,74 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Seletor Discreto de Idioma PT / EN */}
+          {/* Seletor Compacto de Idioma PT / EN com Bandeiras */}
           <div
-            className="flex items-center rounded-full p-0.5 bg-[#0A1F17]/90 border border-[#D4AF37]/35 shadow-[0_2px_10px_rgba(0,0,0,0.3)] backdrop-blur-md ml-1"
+            className="shrink-0 flex items-center rounded-full p-0.5 bg-black/40 border border-[#D4AF37]/30 shadow-[0_2px_12px_rgba(0,0,0,0.35)] backdrop-blur-md"
             role="group"
             aria-label="Seletor de idioma / Language selector"
           >
             <button
               type="button"
               onClick={() => setLanguage('pt')}
-              className={`px-2.5 py-1 rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1 text-[10.5px] font-bold tracking-wider uppercase ${
+              className={`px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1.5 text-[10.5px] lg:text-[11px] font-bold tracking-wider uppercase select-none ${
                 language === 'pt'
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#07110D] shadow-xs'
-                  : 'text-[#FAF8F5]/75 hover:text-[#D4AF37]'
+                  ? 'bg-gradient-to-r from-[#F5D982] via-[#E2BA4E] to-[#C8992D] text-[#07110D] shadow-[0_1px_6px_rgba(212,175,55,0.4)]'
+                  : 'text-[#FAF8F5]/75 hover:text-[#FFFDF8] hover:bg-white/5 font-medium'
               }`}
-              aria-label="Alterar idioma para Português"
+              aria-label="Alterar idioma para Português (Brasil)"
               aria-pressed={language === 'pt'}
             >
-              <span className="text-[12px]">🇧🇷</span>
+              <FlagBR className="w-3.5 h-2.5" />
               <span>PT</span>
             </button>
             <button
               type="button"
               onClick={() => setLanguage('en')}
-              className={`px-2.5 py-1 rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1 text-[10.5px] font-bold tracking-wider uppercase ${
+              className={`px-2 py-0.5 lg:px-2.5 lg:py-1 rounded-full transition-all duration-200 cursor-pointer flex items-center gap-1.5 text-[10.5px] lg:text-[11px] font-bold tracking-wider uppercase select-none ${
                 language === 'en'
-                  ? 'bg-gradient-to-r from-[#D4AF37] to-[#AA7C11] text-[#07110D] shadow-xs'
-                  : 'text-[#FAF8F5]/75 hover:text-[#D4AF37]'
+                  ? 'bg-gradient-to-r from-[#F5D982] via-[#E2BA4E] to-[#C8992D] text-[#07110D] shadow-[0_1px_6px_rgba(212,175,55,0.4)]'
+                  : 'text-[#FAF8F5]/75 hover:text-[#FFFDF8] hover:bg-white/5 font-medium'
               }`}
-              aria-label="Switch language to English"
+              aria-label="Switch language to English (UK)"
               aria-pressed={language === 'en'}
             >
-              <span className="text-[12px]">🇬🇧</span>
+              <FlagGB className="w-3.5 h-2.5" />
               <span>EN</span>
             </button>
           </div>
         </div>
 
         {/* Mobile: Seletor Compacto + Hamburger Toggle Button */}
-        <div className="flex items-center gap-2.5 lg:hidden">
+        <div className="flex items-center gap-2 sm:gap-2.5 lg:hidden shrink-0">
           {/* Seletor Compacto Mobile */}
-          <div className="flex items-center rounded-full p-0.5 bg-[#0A1F17]/90 border border-[#D4AF37]/35">
+          <div
+            className="flex items-center rounded-full p-0.5 bg-black/40 border border-[#D4AF37]/30 shadow-[0_2px_8px_rgba(0,0,0,0.3)] backdrop-blur-md"
+            role="group"
+            aria-label="Seletor de idioma / Language selector"
+          >
             <button
               type="button"
               onClick={() => setLanguage('pt')}
-              className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase transition-colors ${
+              className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase transition-all duration-200 ${
                 language === 'pt'
-                  ? 'bg-[#D4AF37] text-[#07110D]'
-                  : 'text-[#FAF8F5]/70 hover:text-[#D4AF37]'
+                  ? 'bg-gradient-to-r from-[#F5D982] via-[#E2BA4E] to-[#C8992D] text-[#07110D] shadow-[0_1px_4px_rgba(212,175,55,0.4)]'
+                  : 'text-[#FAF8F5]/75 hover:text-[#FFFDF8]'
               }`}
               aria-label="Português"
+              aria-pressed={language === 'pt'}
             >
               PT
             </button>
             <button
               type="button"
               onClick={() => setLanguage('en')}
-              className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase transition-colors ${
+              className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase transition-all duration-200 ${
                 language === 'en'
-                  ? 'bg-[#D4AF37] text-[#07110D]'
-                  : 'text-[#FAF8F5]/70 hover:text-[#D4AF37]'
+                  ? 'bg-gradient-to-r from-[#F5D982] via-[#E2BA4E] to-[#C8992D] text-[#07110D] shadow-[0_1px_4px_rgba(212,175,55,0.4)]'
+                  : 'text-[#FAF8F5]/75 hover:text-[#FFFDF8]'
               }`}
               aria-label="English"
+              aria-pressed={language === 'en'}
             >
               EN
             </button>
@@ -158,11 +178,11 @@ export function Header() {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="grid h-10 w-10 place-items-center rounded-full border border-prospera-gold/40 bg-[#07110D]/80 text-prospera-gold backdrop-blur-md transition-all hover:border-prospera-gold hover:bg-prospera-gold/20 focus:outline-none focus:ring-2 focus:ring-prospera-gold/50 cursor-pointer"
+            className="grid h-9 w-9 sm:h-10 sm:w-10 place-items-center rounded-full border border-prospera-gold/40 bg-[#1A4D3F]/85 text-prospera-gold backdrop-blur-md transition-all hover:border-prospera-gold hover:bg-[#164538] focus:outline-none focus:ring-2 focus:ring-prospera-gold/50 cursor-pointer shrink-0"
             aria-label={isMobileMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
             aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
@@ -172,41 +192,47 @@ export function Header() {
         <div className="lg:hidden">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 top-[72px] sm:top-20 z-40 bg-[#07110D]/75 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 top-[72px] sm:top-20 z-40 bg-[#0F3B2E]/65 backdrop-blur-sm transition-opacity"
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />
 
           {/* Drawer content */}
-          <div className="fixed inset-x-0 top-[72px] sm:top-20 z-50 max-h-[calc(100vh-5rem)] overflow-y-auto border-b border-prospera-gold/25 bg-[#07110D]/98 backdrop-blur-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)]">
+          <div className="fixed inset-x-0 top-[72px] sm:top-20 z-50 max-h-[calc(100vh-5rem)] overflow-y-auto border-b border-prospera-gold/25 bg-gradient-to-b from-[#1A4D3F]/98 via-[#164538]/98 to-[#133D31]/98 backdrop-blur-2xl p-6 shadow-[0_20px_50px_rgba(15,59,46,0.45)]">
             {/* Seletor de Idioma em Destaque no Drawer */}
             <div className="flex items-center justify-between pb-4 mb-2 border-b border-white/10">
               <span className="text-xs uppercase tracking-wider text-prospera-gold font-bold">
                 {language === 'pt' ? 'Idioma / Language' : 'Language / Idioma'}
               </span>
-              <div className="flex items-center gap-1 rounded-full p-1 bg-[#0A1F17] border border-[#D4AF37]/35">
+              <div
+                className="flex items-center gap-1 rounded-full p-1 bg-black/40 border border-[#D4AF37]/30"
+                role="group"
+                aria-label="Seletor de idioma / Language selector"
+              >
                 <button
                   type="button"
                   onClick={() => setLanguage('pt')}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-colors flex items-center gap-1.5 ${
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 ${
                     language === 'pt'
-                      ? 'bg-[#D4AF37] text-[#07110D]'
-                      : 'text-white/70 hover:text-white'
+                      ? 'bg-gradient-to-r from-[#F5D982] via-[#E2BA4E] to-[#C8992D] text-[#07110D] shadow-[0_1px_6px_rgba(212,175,55,0.35)]'
+                      : 'text-white/75 hover:text-white'
                   }`}
+                  aria-pressed={language === 'pt'}
                 >
-                  <span>🇧🇷</span>
+                  <FlagBR className="w-4 h-2.5" />
                   <span>Português</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setLanguage('en')}
-                  className={`px-3 py-1 rounded-full text-xs font-bold transition-colors flex items-center gap-1.5 ${
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-2 ${
                     language === 'en'
-                      ? 'bg-[#D4AF37] text-[#07110D]'
-                      : 'text-white/70 hover:text-white'
+                      ? 'bg-gradient-to-r from-[#F5D982] via-[#E2BA4E] to-[#C8992D] text-[#07110D] shadow-[0_1px_6px_rgba(212,175,55,0.35)]'
+                      : 'text-white/75 hover:text-white'
                   }`}
+                  aria-pressed={language === 'en'}
                 >
-                  <span>🇬🇧</span>
+                  <FlagGB className="w-4 h-2.5" />
                   <span>English</span>
                 </button>
               </div>
