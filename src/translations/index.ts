@@ -17,6 +17,7 @@ export interface TranslationSchema {
     ctaPrimary: string
     ctaSecondary: string
     microcopy: string
+    scrollExplore: string
   }
   adriana: {
     eyebrow: string
@@ -151,6 +152,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       ctaPrimary: 'DESCOBRIR MINHA ROTA',
       ctaSecondary: 'CONHECER A PROSPERA',
       microcopy: 'Acesso a oportunidades selecionadas e estruturação sob medida.',
+      scrollExplore: 'EXPLORAR',
     },
     adriana: {
       eyebrow: 'ADRIANA HORROCKS',
@@ -433,33 +435,34 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
   en: {
     nav: {
       about: 'About',
-      method: 'PROSPERA Method',
+      method: 'The Prospera Method',
       routes: 'Investment Routes',
       howItWorks: 'How It Works',
       opportunities: 'Opportunities',
-      analyzeProfile: 'Analyze My Profile',
+      analyzeProfile: 'Analyse My Profile',
       tagline: 'High-end property advisory and wealth structuring in the United Kingdom',
     },
     hero: {
       eyebrow: 'PRIVATE PROPERTY ADVISORY • UNITED KINGDOM',
-      headlinePart1: 'Prime UK property investment with ',
-      headlineGold: 'strategic advisory',
+      headlinePart1: 'Prime UK property investment, ',
+      headlineGold: 'expertly guided',
       headlinePart2: '.',
       subheadline:
-        'We guide high-net-worth investors in acquiring, structuring and expanding property portfolios across the United Kingdom with transparency, governance and a long-term perspective.',
+        'We help high-net-worth investors acquire, structure and grow property portfolios across the UK through expert advice, carefully selected opportunities and a long-term investment strategy.',
       ctaPrimary: 'DISCOVER MY ROUTE',
       ctaSecondary: 'ABOUT PROSPERA',
-      microcopy: 'Access to curated off-market opportunities and bespoke structuring.',
+      microcopy: 'Access to curated off-market opportunities and tailored investment structures.',
+      scrollExplore: 'EXPLORE',
     },
     adriana: {
       eyebrow: 'ADRIANA HORROCKS',
       headlinePart1: 'Real experience transformed into ',
       headlineGold: 'property strategy',
       headlinePart2: '.',
-      role: 'CEO – Prospera Investments',
-      p1: 'For over 32 years in the United Kingdom, Adriana Horrocks has built an accomplished track record across business, property portfolios and long-term vision.',
-      p2: 'At Prospera Investment, this hands-on experience translates into strategic advisory for investors seeking clarity, structure and trusted partnership in the UK property market.',
-      p3: 'More than presenting properties, Prospera structures pathways — from strategy definition to deal evaluation, acquisition, asset management and wealth creation.',
+      role: 'CEO, Prospera Investment',
+      p1: 'With over 32 years of experience in the United Kingdom, Adriana Horrocks has built a strong track record across business and property investment, with a focus on long-term growth.',
+      p2: 'At Prospera Investment, this hands-on experience translates into strategic guidance for investors seeking clarity, structure and a trusted partner in the UK property market.',
+      p3: 'Prospera goes beyond simply presenting properties. We provide a clear investment pathway, from defining your strategy and evaluating opportunities to acquisition, asset management and long-term wealth creation.',
       quote: '“Strategy comes before property. Clarity comes before opportunity.”',
       metric1Label: 'Experience',
       metric1Value: '32+ YEARS',
@@ -477,17 +480,17 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       eyebrow: 'INVESTMENT ROUTES',
       headlinePart1: 'Distinct routes. ',
       headlineGold: 'One strategy',
-      headlinePart2: ' tailored to your wealth.',
+      headlinePart2: ' built around your goals.',
       subheadline:
-        'From recurring rental yield to capital appreciation, every investor has a distinct profile, capital and goals — which is why Prospera structures the optimal property route for your vision.',
+        'From generating rental income to achieving long-term capital growth, every investor has different objectives, resources and ambitions. Prospera helps identify and structure the property investment strategy best suited to yours.',
       dragNote: 'Drag or navigate using arrows',
       exploreRoute: 'Explore route',
-      visionBadge: 'Prospera Vision',
-      ctaHeadline: 'Before selecting property, we define the strategy.',
+      visionBadge: '',
+      ctaHeadline: 'Before selecting a property, we define the strategy.',
       ctaSubtitle:
-        'Prospera advises each investor based on profile, capital, horizon and vision, structuring the most coherent route to transform capital into generational wealth.',
+        'Prospera takes the time to understand your goals, available capital and long-term objectives, creating a clear investment strategy designed to build lasting wealth.',
       ctaButton: 'DISCOVER MY ROUTE',
-      ctaSubtext: 'Begin with our strategic diagnostic of your profile and investment goals.',
+      ctaSubtext: 'Begin with a confidential assessment of your circumstances and investment goals.',
       items: {
         'new-developments': {
           title: 'New Developments',
@@ -541,56 +544,56 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
     },
     howItWorks: {
       eyebrow: 'HOW IT WORKS',
-      headlinePart1: 'From decision to ',
-      headlineGold: 'wealth creation',
+      headlinePart1: 'From strategy to ',
+      headlineGold: 'long-term wealth',
       headlinePart2: '.',
       subheadline:
-        'Prospera structures every stage of your UK property journey with clarity, strategic direction and dedicated partnership.',
-      ctaHeadline: 'Your wealth begins with a clear direction.',
+        'Prospera guides you through every stage of your UK property investment journey, providing clear direction, strategic expertise and support at every step.',
+      ctaHeadline: 'Building wealth starts with a clear strategy.',
       ctaSubtitle:
-        'Discover which strategy makes the most sense for your current horizon.',
+        'Discover the property investment approach best suited to your goals and circumstances.',
       ctaButton: 'DISCOVER MY ROUTE',
-      ctaSubtext: 'Confidential advisory service for qualified investors.',
+      ctaSubtext: 'Confidential guidance for serious property investors.',
       steps: [
         {
           step: '01',
           title: 'DECISION',
-          description: 'Defining goals, investment horizon, and long-term vision.',
+          description: 'Defining your goals, investment timeframe and long-term objectives.',
         },
         {
           step: '02',
           title: 'STRUCTURE',
-          description: 'Analyzing investor profile, capital allocation, and optimal structure.',
+          description: 'Assessing your investor profile, available capital and the most appropriate investment structure.',
         },
         {
           step: '03',
-          title: 'SEARCH',
-          description: 'Curating select opportunities aligned with your strategic plan.',
+          title: 'OPPORTUNITY SELECTION',
+          description: 'Identifying carefully selected opportunities aligned with your investment strategy.',
         },
         {
           step: '04',
           title: 'ACQUISITION',
-          description: 'Analysis, negotiation, and guiding the transaction through to completion.',
+          description: 'Due diligence, negotiation and guidance throughout the acquisition process.',
         },
         {
           step: '05',
           title: 'FINANCING',
-          description: 'Mortgage and capital structuring where applicable.',
+          description: 'Mortgage and financing solutions structured around your investment, where appropriate.',
         },
         {
           step: '06',
           title: 'VALUE ENHANCEMENT',
-          description: 'Asset management, optimization, and yield enhancement.',
+          description: 'Asset management, optimisation and strategies designed to enhance long-term returns.',
         },
         {
           step: '07',
           title: 'EXIT STRATEGY',
-          description: 'Disposal, refinancing, rental returns, or portfolio repositioning.',
+          description: 'Planning for disposal, refinancing, rental returns or portfolio restructuring.',
         },
         {
           step: '08',
-          title: 'REAL WEALTH',
-          description: 'Sustained capital compounding and enduring legacy.',
+          title: 'LONG-TERM WEALTH',
+          description: 'Building lasting wealth through sustained capital growth and a carefully managed property portfolio.',
         },
       ],
     },
@@ -600,11 +603,11 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       headlineGold: 'different objectives',
       headlinePart2: '.',
       subheadline:
-        'The best opportunity is not the most glamorous — it is the one that aligns with your strategy, capital and horizon.',
+        'The right opportunity isn\'t always the most obvious. It\'s the one that aligns with your investment strategy, available capital and long-term goals.',
       actionLink: 'Bespoke strategy upon consultation',
       closingHeadline: 'Not every opportunity suits every investor.',
-      closingSubtitle: 'Prospera evaluates context, capital, timeframe and targets before recommending any route.',
-      closingButton: 'ANALYZE MY PROFILE',
+      closingSubtitle: 'Prospera considers your circumstances, available capital, timeframe and investment goals before recommending the right approach.',
+      closingButton: 'ANALYSE MY PROFILE',
       closingMicrocopy: 'Strategic and strictly confidential advisory.',
       items: {
         'buy-to-let': {
@@ -646,12 +649,12 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       },
     },
     profileAnalysis: {
-      eyebrow: 'ANALYZE MY PROFILE',
-      headlinePart1: 'Before the opportunity comes the ',
-      headlineGold: 'right strategy for you',
+      eyebrow: 'ANALYSE MY PROFILE',
+      headlinePart1: 'The right opportunity starts with the ',
+      headlineGold: 'right strategy',
       headlinePart2: '.',
       subheadline:
-        'Share your current position with Prospera and discover which property route best matches your vision.',
+        'Tell us about your investment goals, circumstances and available capital, and we\'ll help identify the property strategy best suited to you.',
       sectionTitle: 'What Prospera evaluates before the property',
       pillars: [
         {
@@ -702,7 +705,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
         'Portfolio building and international legacy',
       ],
       countryOptions: ['Brazil', 'United Kingdom', 'United States', 'Portugal', 'Other'],
-      submitButton: 'ANALYZE MY PROFILE',
+      submitButton: 'ANALYSE MY PROFILE',
       submitButtonWhatsApp: 'SEND MY PROFILE ON WHATSAPP',
       submittingButton: 'SUBMITTING...',
       microcopy: 'Your information is handled with strict confidentiality.',
@@ -716,15 +719,15 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
     },
     footer: {
       tagline:
-        'Strategic direction, wealth structuring and dedicated advisory for prime UK real estate investment.',
+        'Strategic guidance, investment structuring and dedicated advice for prime UK property investment.',
       location: 'London, United Kingdom',
       navTitle: 'Navigation',
       diagnosticLink: 'Prospera Diagnostic →',
-      complianceTitle: 'Regulatory Notice & Compliance',
+      complianceTitle: 'Legal Notice',
       complianceText1:
-        'Prospera Investment provides strategic planning, asset structuring and advisory for UK property investments. Past performance does not guarantee future results. Investment decisions should consider individual suitability and consult accredited UK legal and tax professionals.',
+        'Prospera Investment provides strategic guidance and investment structuring in relation to UK property. Past performance is not a guarantee of future results. Investors should consider their individual circumstances and seek appropriate independent legal, financial and tax advice before making investment decisions.',
       complianceText2:
-        'International property and corporate transactions require specialist due diligence and formal representation by qualified UK solicitors and certified tax advisors.',
+        'International property and corporate transactions may require specialist due diligence and formal representation by suitably qualified UK solicitors, accountants, tax advisers or other regulated professionals.',
       copyright: 'All rights reserved.',
       backToTop: 'Back to top ↑',
     },

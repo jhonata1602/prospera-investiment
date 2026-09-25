@@ -121,7 +121,7 @@ export function Footer() {
               href="#aviso-institucional"
               className="hover:text-[#F7DC8D] transition-colors duration-200"
             >
-              {language === 'en' ? 'Institutional Notice' : 'Aviso Institucional'}
+              {language === 'en' ? 'Legal Notice' : 'Aviso Institucional'}
             </a>
           </nav>
 

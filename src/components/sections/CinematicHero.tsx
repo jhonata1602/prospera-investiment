@@ -360,8 +360,8 @@ export function CinematicHero({
             {t.hero.subheadline}
           </p>
 
-          <div className="animate-hero-fade-in-up-3 mt-8 sm:mt-11 [@media(min-width:2200px)]:mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 w-full">
-            <div className="flex flex-col items-center gap-2.5 w-full sm:w-auto">
+          <div className="animate-hero-fade-in-up-3 mt-8 sm:mt-11 [@media(min-width:2200px)]:mt-14 flex flex-col items-center justify-center gap-4 w-full">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 w-full">
               <div className="relative group w-full sm:w-auto flex justify-center">
                 <div
                   className="absolute -inset-1 rounded-full bg-prospera-gold/25 blur-lg animate-cta-glow pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity duration-500"
@@ -383,26 +383,26 @@ export function CinematicHero({
                 </a>
               </div>
 
-              {/* Microcopy Elegante e Perceptível com Contraste Reforçado */}
-              <p
-                className="text-[12px] sm:text-[12.5px] font-semibold tracking-[0.02em] text-[#FFFDF8] text-center"
-                style={{
-                  textShadow: '0 1px 4px rgba(0, 0, 0, 0.98), 0 2px 10px rgba(0, 0, 0, 0.85)',
-                }}
+              {/* CTA Secundário: Translúcido, refinado e elegante, sem competir com o botão principal */}
+              <a
+                href="#sobre"
+                className="relative inline-flex items-center justify-center gap-2.5 rounded-full w-full sm:w-auto max-w-[320px] px-6 py-3.5 sm:px-7 sm:py-4 min-h-[50px] sm:min-h-[56px] text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-[#FFFDF8] bg-[#07110D]/55 hover:bg-[#07110D]/75 hover:text-white border border-prospera-gold/45 hover:border-prospera-gold/75 backdrop-blur-md transition-all duration-300 hover:shadow-[0_0_18px_rgba(212,175,55,0.25)] group/sec cursor-pointer"
+                style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)' }}
               >
-                {t.hero.microcopy}
-              </p>
+                <span>{t.hero.ctaSecondary}</span>
+                <ArrowRight className="w-4 h-4 text-prospera-gold transition-transform duration-300 group-hover/sec:translate-x-1" />
+              </a>
             </div>
 
-            {/* CTA Secundário: Translúcido, refinado e elegante, sem competir com o botão principal */}
-            <a
-              href="#sobre"
-              className="relative inline-flex items-center justify-center gap-2.5 rounded-full w-full sm:w-auto max-w-[320px] px-6 py-3.5 sm:px-7 sm:py-4 min-h-[50px] sm:min-h-[56px] text-xs sm:text-[13px] font-bold tracking-[0.14em] uppercase text-[#FFFDF8] bg-[#07110D]/55 hover:bg-[#07110D]/75 hover:text-white border border-prospera-gold/45 hover:border-prospera-gold/75 backdrop-blur-md transition-all duration-300 hover:shadow-[0_0_18px_rgba(212,175,55,0.25)] group/sec cursor-pointer sm:mb-6"
-              style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.95)' }}
+            {/* Microcopy Elegante e Perceptível com Contraste Reforçado */}
+            <p
+              className="text-[12px] sm:text-[12.5px] font-semibold tracking-[0.02em] text-[#FFFDF8] text-center"
+              style={{
+                textShadow: '0 1px 4px rgba(0, 0, 0, 0.98), 0 2px 10px rgba(0, 0, 0, 0.85)',
+              }}
             >
-              <span>{t.hero.ctaSecondary}</span>
-              <ArrowRight className="w-4 h-4 text-prospera-gold transition-transform duration-300 group-hover/sec:translate-x-1" />
-            </a>
+              {t.hero.microcopy}
+            </p>
           </div>
 
         </div>
@@ -418,7 +418,7 @@ export function CinematicHero({
         style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.95)' }}
         aria-label="Rolar para a próxima seção"
       >
-        <span className="font-light">EXPLORAR</span>
+        <span className="font-light">{t.hero.scrollExplore}</span>
         <div className="animate-subtle-scroll">
           <ChevronDown size={15} />
         </div>

@@ -343,9 +343,9 @@ export function Opportunities() {
 
           {/* Headline com maior destaque visual, contraste aprimorado e sofisticação */}
           <h3
-            className="font-serif text-lg sm:text-[1.25rem] lg:text-[1.32rem] font-bold text-[#0B1712] tracking-tight leading-snug"
+            className="font-serif text-lg sm:text-[1.25rem] lg:text-[1.32rem] font-bold text-[#020D08] tracking-tight leading-snug"
             style={{
-              textShadow: '0 1px 1px rgba(255, 255, 255, 0.85)',
+              textShadow: '0 1px 2px rgba(255, 255, 255, 0.65)',
             }}
           >
             {t.opportunities.closingHeadline}
@@ -353,9 +353,9 @@ export function Opportunities() {
 
           {/* Subtitle refinado com excelente leitura e respiro */}
           <p
-            className="mt-1.5 sm:mt-2 text-[13px] sm:text-[14px] text-[#162920] font-medium sm:font-semibold max-w-lg mx-auto leading-relaxed"
+            className="mt-1.5 sm:mt-2 text-[13px] sm:text-[14px] text-[#081F15] font-semibold max-w-lg mx-auto leading-relaxed"
             style={{
-              textShadow: '0 1px 1px rgba(255, 255, 255, 0.65)',
+              textShadow: '0 1px 2px rgba(255, 255, 255, 0.60)',
             }}
           >
             {t.opportunities.closingSubtitle}
@@ -369,7 +369,7 @@ export function Opportunities() {
               <span>{t.opportunities.closingButton}</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-[#07110D]" />
             </a>
-            <span className="text-[11.5px] font-semibold text-[#5A3F0E] tracking-wide">
+            <span className="text-[11.5px] font-semibold text-[#132A20] tracking-wide mt-1">
               {t.opportunities.closingMicrocopy}
             </span>
           </div>

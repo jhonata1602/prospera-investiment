@@ -8,6 +8,7 @@ interface JourneyStep {
   title: string
   description: string
   image: string
+  position?: string
 }
 
 const JOURNEY_STEPS: JourneyStep[] = [
@@ -16,48 +17,56 @@ const JOURNEY_STEPS: JourneyStep[] = [
     title: 'DECISÃO',
     description: 'Definição do objetivo, horizonte e visão patrimonial.',
     image: '/assets/prospera/journey/step-01-decisao.webp',
+    position: 'object-[center_20%]',
   },
   {
     step: '02',
     title: 'ESTRUTURA',
     description: 'Análise do perfil, capital, estratégia e estrutura adequada.',
     image: '/assets/prospera/journey/step-02-estrutura.webp',
+    position: 'object-[center_22%]',
   },
   {
     step: '03',
     title: 'BUSCA',
     description: 'Seleção de oportunidades alinhadas ao plano do investidor.',
     image: '/assets/prospera/journey/step-03-busca.webp',
+    position: 'object-[center_18%]',
   },
   {
     step: '04',
     title: 'AQUISIÇÃO',
     description: 'Análise, negociação e condução do processo de compra.',
     image: '/assets/prospera/journey/step-04-aquisicao.webp',
+    position: 'object-[center_25%]',
   },
   {
     step: '05',
     title: 'FINANCIAMENTO',
     description: 'Estruturação financeira quando aplicável.',
     image: '/assets/prospera/journey/step-05-financiamento.webp',
+    position: 'object-[center_20%]',
   },
   {
     step: '06',
     title: 'VALORIZAÇÃO',
     description: 'Gestão, melhoria e potencialização do ativo.',
     image: '/assets/prospera/journey/step-06-valorizacao.webp',
+    position: 'object-[center_35%]',
   },
   {
     step: '07',
     title: 'SAÍDA',
     description: 'Venda, refinanciamento, renda ou reposicionamento estratégico.',
     image: '/assets/prospera/journey/step-07-saida.webp',
+    position: 'object-[center_15%]',
   },
   {
     step: '08',
     title: 'RIQUEZA REAL',
     description: 'Crescimento patrimonial com visão de longo prazo.',
     image: '/assets/prospera/journey/step-08-riqueza-real.webp',
+    position: 'object-[center_18%]',
   },
 ]
 
@@ -457,7 +466,7 @@ export function HowItWorks() {
             return (
               <div
                 key={item.step}
-                className={`group relative bg-white border border-[#D4AF37]/45 hover:border-[#D4AF37]/85 rounded-2xl overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] shadow-[0_4px_18px_rgba(15,59,46,0.08)] hover:shadow-[0_8px_26px_rgba(212,175,55,0.18)] hover:-translate-y-1 flex flex-col h-full max-w-[420px] sm:max-w-none mx-auto w-full motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+                className={`group relative flex flex-col overflow-hidden rounded-xl sm:rounded-2xl bg-white border border-[#D4AF37]/45 shadow-[0_4px_20px_rgba(15,59,46,0.08),0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(15,59,46,0.14)] hover:border-[#D4AF37]/85 transition-all duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 max-w-[340px] sm:max-w-none mx-auto w-full h-full motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
                   isCardsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
                 }`}
                 style={{
@@ -465,11 +474,11 @@ export function HowItWorks() {
                 }}
               >
                 {/* Imagem Temática Coerente no Topo */}
-                <div className="relative w-full h-[142px] sm:h-[148px] overflow-hidden shrink-0 bg-[#EAE5D9]">
+                <div className="relative h-[142px] sm:h-[148px] lg:h-[160px] w-full overflow-hidden shrink-0 bg-[#1A4D3F]/5">
                   <img
                     src={item.image}
                     alt={`${stepData.step} - ${stepData.title}`}
-                    className="w-full h-full object-cover transition-transform duration-600 ease-out group-hover:scale-105"
+                    className={`w-full h-full object-cover ${item.position || 'object-[center_20%]'} brightness-[1.02] transition-transform duration-500 ease-out group-hover:scale-105`}
                     loading="lazy"
                     decoding="async"
                     onError={(e) => {
@@ -479,21 +488,23 @@ export function HowItWorks() {
                       }
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10 pointer-events-none" aria-hidden="true" />
 
                   {/* Numeração Padronizada da Etapa */}
-                  <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-[#1A4D3F] border border-[#D4AF37]/65 text-[10.5px] font-mono font-bold tracking-[0.18em] text-[#F9E8B2] shadow-xs">
-                    {stepData.step}
-                  </span>
+                  <div className="absolute top-2.5 left-2.5 z-10">
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 bg-[#1A4D3F] border border-[#D4AF37]/60 text-[10.5px] font-mono font-bold tracking-[0.18em] uppercase text-[#FFFDF8] shadow-xs">
+                      {stepData.step}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Interior Padronizado com Alturas Balanceadas e Alto Contraste */}
-                <div className="p-4 flex-1 flex flex-col justify-between bg-white">
+                <div className="flex flex-1 flex-col justify-start px-3.5 pt-3 pb-3.5 sm:px-4 sm:pt-3.5 sm:pb-4 lg:p-4 bg-white">
                   <div>
-                    <h3 className="font-sans font-bold text-[13.5px] xl:text-[14px] tracking-[0.08em] text-[#02130C] uppercase group-hover:text-[#7A4F05] transition-colors duration-300 leading-snug min-h-[38px] flex items-center">
+                    <h3 className="font-sans font-bold text-[12.5px] sm:text-[13px] lg:text-[13.5px] xl:text-[14px] tracking-[0.08em] text-[#02130C] uppercase group-hover:text-[#7A4F05] transition-colors duration-200 leading-snug min-h-[28px] sm:min-h-[32px] lg:min-h-[38px] flex items-center">
                       {stepData.title}
                     </h3>
-                    <p className="mt-2 text-[13px] text-[#03140E] font-semibold leading-[1.58]">
+                    <p className="mt-0.5 sm:mt-1 lg:mt-1.5 text-[12.5px] sm:text-[13px] lg:text-[13.5px] leading-[1.45] sm:leading-relaxed font-semibold text-[#03140E]">
                       {stepData.description}
                     </p>
                   </div>

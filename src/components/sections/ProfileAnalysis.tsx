@@ -235,40 +235,50 @@ export function ProfileAnalysis() {
               : 'opacity-0 translate-y-5'
           }`}
         >
-          {/* Bruma suave e discreta atrás da copy para realçar nitidez sem esbranquiçar o cenário */}
+          {/* Sombra focal difusa atrás da copy para realçar nitidez do texto claro no fundo */}
           <div
-            className="absolute -inset-x-8 -inset-y-6 sm:-inset-x-16 sm:-inset-y-8 pointer-events-none -z-10 blur-3xl opacity-35"
+            className="absolute -inset-x-8 -inset-y-6 sm:-inset-x-16 sm:-inset-y-10 pointer-events-none -z-10 blur-3xl opacity-75"
             style={{
               background:
-                'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(253, 251, 247, 0.50) 0%, rgba(251, 248, 242, 0.20) 55%, transparent 80%)',
+                'radial-gradient(ellipse 80% 75% at 50% 50%, rgba(5, 16, 11, 0.68) 0%, rgba(5, 16, 11, 0.28) 55%, transparent 80%)',
             }}
             aria-hidden="true"
           />
 
           {/* Eyebrow Institucional Padronizado */}
-          <div className="inline-flex items-center justify-center mb-3 sm:mb-3.5">
+          <div className="inline-flex items-center justify-center mb-4 sm:mb-4 lg:mb-3.5">
             <div className="badge-section-pill">
               <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" aria-hidden="true" />
               <span>{t.profileAnalysis.eyebrow}</span>
             </div>
           </div>
 
-          {/* Headline Principal: Título com destaque em branco sofisticado e alta legibilidade */}
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-[2.65rem] font-bold leading-[1.16] tracking-tight text-[#111A15] max-w-2xl mx-auto">
+          {/* Headline Principal: Predominantemente em branco nobre com destaque em ouro sólido */}
+          <h2
+            className="font-serif text-2xl sm:text-3xl lg:text-[2.65rem] font-medium sm:font-semibold leading-[1.16] tracking-tight text-[#FFFFFF] max-w-[320px] sm:max-w-lg lg:max-w-2xl mx-auto"
+            style={{
+              textShadow: '0 2px 4px rgba(0,0,0,0.85), 0 4px 18px rgba(4,10,7,0.75)',
+            }}
+          >
             {t.profileAnalysis.headlinePart1}
             <span
-              className="text-white font-serif font-bold italic sm:whitespace-nowrap"
+              className="italic font-serif font-semibold text-[#F5D982] sm:whitespace-nowrap"
               style={{
-                textShadow:
-                  '0 1px 2px rgba(7, 20, 14, 0.65), 0 2px 10px rgba(7, 20, 14, 0.35)',
+                textShadow: '0 0 16px rgba(245,217,130,0.35), 0 2px 4px rgba(0,0,0,0.85)',
               }}
             >
-              {t.profileAnalysis.headlineGold}{t.profileAnalysis.headlinePart2}
+              {t.profileAnalysis.headlineGold}
             </span>
+            {t.profileAnalysis.headlinePart2}
           </h2>
 
-          {/* Subheadline com alta nitidez */}
-          <p className="mt-3 sm:mt-3.5 text-[14.5px] sm:text-[15.5px] lg:text-[1.05rem] font-semibold leading-[1.68] text-[#142019] max-w-xl mx-auto">
+          {/* Subheadline com alta nitidez em tom Off-White para contraste otimizado */}
+          <p
+            className="mt-4 sm:mt-4 lg:mt-3.5 text-[14.5px] sm:text-[15.5px] lg:text-[1.05rem] font-medium leading-[1.68] text-[#FAF5EC] max-w-xl mx-auto"
+            style={{
+              textShadow: '0 1px 3px rgba(0,0,0,0.85), 0 2px 8px rgba(4,10,7,0.75)',
+            }}
+          >
             {t.profileAnalysis.subheadline}
           </p>
         </div>
