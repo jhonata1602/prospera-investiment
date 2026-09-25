@@ -216,9 +216,7 @@ export function CinematicHero({
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
         {/* Poster de Alta Precisão (Espelho fiel do primeiro frame da Cena 1) */}
         <div
-          className={`absolute inset-0 transition-opacity duration-500 ease-out z-0 pointer-events-none ${
-            isVideoReady ? 'opacity-0' : 'opacity-100'
-          }`}
+          className="absolute inset-0 z-0 pointer-events-none opacity-100"
           aria-hidden="true"
         >
           <img

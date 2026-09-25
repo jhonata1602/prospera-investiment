@@ -34,7 +34,6 @@
     scroll-behavior: smooth;
     font-family: var(--font-sans);
     color: var(--prospera-graphite);
-    background-color: #050605;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
