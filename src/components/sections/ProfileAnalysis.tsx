@@ -50,7 +50,7 @@ interface FormDataState {
 }
 
 export function ProfileAnalysis() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [isVisible, setIsVisible] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -124,7 +124,9 @@ export function ProfileAnalysis() {
 
     // Monta a mensagem estruturada com os dados do perfil sem envio automático
     const whatsappMessage = [
-      'Olá! Gostaria de solicitar uma análise estratégica de perfil na Prospera Investment.',
+      language === 'en'
+        ? 'Hello! I would like to request a strategic profile analysis at Prospera Investment.'
+        : 'Olá! Gostaria de solicitar uma análise estratégica de perfil na Prospera Investimentos.',
       '',
       `*Nome:* ${formData.name.trim()}`,
       `*E-mail:* ${formData.email.trim()}`,

@@ -48,13 +48,13 @@ export function Header() {
         <a
           href="#topo"
           className="group flex items-center gap-1.5 sm:gap-3 lg:gap-2.5 xl:gap-3.5 transition-opacity hover:opacity-95 shrink-0 min-w-0"
-          aria-label="Prospera Investment — Página inicial"
+          aria-label={t.aria.headerHome}
         >
           {/* Brasão Oficial com Escudo Verde, Coroa e Coluna */}
           <div className="relative shrink-0 flex items-center justify-center">
             <img
               src="/assets/prospera/brand/logo-shield.webp"
-              alt="Brasão Oficial Prospera Investment"
+              alt={t.aria.headerLogo}
               className="h-8.5 sm:h-11 md:h-12 lg:h-12 xl:h-14 [@media(min-width:2000px)]:h-16 w-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] drop-shadow-[0_2px_12px_rgba(212,175,55,0.3)] transition-transform duration-300 group-hover:scale-105"
             />
           </div>
@@ -75,7 +75,7 @@ export function Header() {
                 textShadow: '0 1px 2px rgba(0, 0, 0, 0.95), 0 0 10px rgba(245, 217, 130, 0.35)',
               }}
             >
-              INVESTMENT
+              {language === 'pt' ? 'INVESTIMENTOS' : 'INVESTMENT'}
             </span>
           </div>
         </a>

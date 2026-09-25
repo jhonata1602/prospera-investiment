@@ -199,7 +199,7 @@ export function CinematicHero({
   return (
     <section
       id="hero"
-      aria-label="Introdução Prospera Investment"
+      aria-label="Introdução Prospera Investimentos"
       className="relative min-h-[100svh] w-full flex items-center overflow-hidden bg-transparent"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}

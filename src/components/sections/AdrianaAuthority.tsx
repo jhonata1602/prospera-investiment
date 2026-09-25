@@ -150,7 +150,7 @@ export function AdrianaAuthority() {
     <section
       id="sobre"
       ref={sectionRef}
-      aria-label="Sobre Adriana Horrocks — Fundadora da Prospera Investment"
+      aria-label={t.aria.adrianaSection}
       className="relative w-full overflow-hidden bg-[#FAF7F2] text-[#0A221A]"
     >
       {/* =========================================================================
@@ -322,7 +322,7 @@ export function AdrianaAuthority() {
               <div className="relative w-[86%] max-w-[340px] md:max-w-[390px] mx-auto aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-[0_12px_36px_rgba(15,59,46,0.15)] border border-[#D4AF37]/35 bg-gradient-to-b from-white to-[#F5F0E6] p-2 sm:p-2.5">
                 <img
                   src="/assets/prospera/adriana-executive-portrait.png"
-                  alt="Adriana Horrocks — CEO da Prospera Investments"
+                  alt={`Adriana Horrocks — ${t.adriana.role}`}
                   className="w-full h-full object-cover object-top rounded-xl"
                   loading="lazy"
                   decoding="async"
@@ -472,7 +472,7 @@ export function AdrianaAuthority() {
             <div className="relative w-full h-full min-h-[680px] xl:min-h-[740px] 2xl:min-h-[780px] flex items-end justify-center lg:justify-end">
               <img
                 src="/assets/prospera/adriana-executive-portrait.png"
-                alt="Adriana Horrocks — CEO e Fundadora da Prospera Investments"
+                alt={`Adriana Horrocks — ${t.adriana.role}`}
                 className="w-auto h-full max-h-[740px] xl:max-h-[800px] 2xl:max-h-[840px] object-contain object-bottom drop-shadow-[0_20px_40px_rgba(15,59,46,0.18)] select-none pointer-events-none transition-transform duration-700 hover:scale-[1.015]"
                 loading="lazy"
                 decoding="async"

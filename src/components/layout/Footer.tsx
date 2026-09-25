@@ -33,7 +33,7 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <img
                 src="/assets/prospera/brand/logo-shield.webp"
-                alt="Brasão Oficial Prospera Investment"
+                alt={language === 'pt' ? 'Brasão Oficial Prospera Investimentos' : 'Prospera Investment Official Crest'}
                 className="h-10 sm:h-11 lg:h-12 w-auto object-contain drop-shadow-[0_2px_10px_rgba(212,175,55,0.25)]"
               />
               <div className="flex flex-col justify-center">
@@ -41,7 +41,7 @@ export function Footer() {
                   PROSPERA
                 </div>
                 <div className="text-[9.5px] sm:text-[10px] font-semibold tracking-[0.32em] text-[#F7DC8D] uppercase leading-tight mt-0.5">
-                  INVESTMENT
+                  {language === 'pt' ? 'INVESTIMENTOS' : 'INVESTMENT'}
                 </div>
               </div>
             </div>
@@ -127,7 +127,7 @@ export function Footer() {
 
           {/* Linha Secundária: Identificação Institucional Mais Discreta */}
           <p className="mt-1.5 text-[11px] sm:text-[11.5px] text-[#C4B9A5] tracking-wide font-normal">
-            Prospera Investment — London, United Kingdom
+            {language === 'pt' ? 'Prospera Investimentos — Londres, Reino Unido' : 'Prospera Investment — London, United Kingdom'}
           </p>
 
           {/* Voltar ao Topo: Discreto, no canto direito em desktop, centralizado abaixo em mobile */}

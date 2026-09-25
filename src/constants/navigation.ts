@@ -10,10 +10,10 @@ export const NAV_ITEMS: NavItem[] = [
 ]
 
 export const BRAND_INFO = {
-  name: 'Prospera Investment',
+  name: 'Prospera Investimentos',
   shortName: 'Prospera',
   tagline: 'Private UK Property Advisory',
   city: 'Londres, Reino Unido',
   disclaimer:
-    'A Prospera Investment atua em planejamento, estruturação estratégica e acompanhamento para investimento imobiliário no Reino Unido. Não realizamos promessas de rentabilidade garantida. Decisões de investimento devem considerar o perfil individual e contar com validações profissionais e regulatórias britânicas.',
+    'A Prospera Investimentos atua em planejamento, estruturação estratégica e acompanhamento para investimento imobiliário no Reino Unido. Não realizamos promessas de rentabilidade garantida. Decisões de investimento devem considerar o perfil individual e contar com validações profissionais e regulatórias britânicas.',
 }

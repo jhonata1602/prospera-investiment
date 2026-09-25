@@ -300,7 +300,7 @@ export function InvestmentRoutes() {
     <section
       ref={sectionRef}
       id="rotas"
-      aria-label="Rotas de Investimento — Prospera Investment"
+      aria-label={t.aria.routesSection}
       className="relative w-full overflow-hidden bg-[#07130D] text-prospera-white py-12 sm:py-14 lg:py-16 select-none"
     >
       {/* =====================================================================

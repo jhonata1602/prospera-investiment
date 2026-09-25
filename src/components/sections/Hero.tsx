@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { ArrowUpRight, ChevronDown, Landmark, ShieldCheck } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export function Hero() {
+  const { t } = useLanguage()
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 })
   const [isDesktop, setIsDesktop] = useState(false)
 
@@ -50,7 +52,7 @@ export function Hero() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="relative w-full min-h-[90vh] lg:min-h-screen xl:h-screen flex items-center justify-center bg-[#07110D] text-prospera-white overflow-hidden py-12 sm:py-16 lg:py-0"
-      aria-label="Primeira Dobra — Prospera Investment"
+      aria-label={t.aria.heroSection}
     >
       {/* Ambient Background Aura */}
       <div
@@ -75,7 +77,7 @@ export function Hero() {
               {/* Image with controlled framing & object-position to guarantee face and house are intact */}
               <img
                 src="/assets/prospera/hero-adriana-london-house.webp"
-                alt="Adriana Horrocks — Fundadora da Prospera Investment em Londres com visão do Big Ben e arquitetura britânica"
+                alt={t.aria.heroAlt}
                 fetchPriority="high"
                 loading="eager"
                 decoding="async"

@@ -56,6 +56,16 @@ export interface TranslationSchema {
     ctaSubtext: string
     items: Record<string, { title: string; microcopy: string }>
   }
+  aria: {
+    headerHome: string
+    headerLogo: string
+    heroSection: string
+    heroAlt: string
+    cinematicHero: string
+    adrianaSection: string
+    routesSection: string
+    profileSection: string
+  }
   howItWorks: {
     eyebrow: string
     headlinePart1: string
@@ -159,9 +169,9 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       headlinePart1: 'Experiência real transformada em ',
       headlineGold: 'estratégia imobiliária',
       headlinePart2: '.',
-      role: 'CEO – Prospera Investments',
+      role: 'CEO – Prospera Investimentos',
       p1: 'Há mais de 32 anos no Reino Unido, Adriana Horrocks construiu uma trajetória sólida entre negócios, patrimônio e visão de longo prazo.',
-      p2: 'Na Prospera Investment, essa experiência prática se transforma em direção estratégica para investidores que buscam clareza, estrutura e acompanhamento no mercado imobiliário britânico.',
+      p2: 'Na Prospera Investimentos, essa experiência prática se transforma em direção estratégica para investidores que buscam clareza, estrutura e acompanhamento no mercado imobiliário britânico.',
       p3: 'Mais do que apresentar imóveis, a Prospera estrutura caminhos — da definição da estratégia à análise de oportunidades, aquisição, gestão e crescimento patrimonial.',
       quote: '“Antes do imóvel, vem a estratégia. Antes da oportunidade, vem a clareza.”',
       metric1Label: 'Experiência',
@@ -241,6 +251,16 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
           microcopy: 'Acesso antecipado a propriedades singulares antes da abertura ao mercado aberto.',
         },
       },
+    },
+    aria: {
+      headerHome: 'Prospera Investimentos — Página inicial',
+      headerLogo: 'Brasão Oficial Prospera Investimentos',
+      heroSection: 'Primeira Dobra — Prospera Investimentos',
+      heroAlt: 'Adriana Horrocks — Fundadora da Prospera Investimentos em Londres com visão do Big Ben e arquitetura britânica',
+      cinematicHero: 'Introdução Prospera Investimentos',
+      adrianaSection: 'Autoridade e Experiência — Prospera Investimentos',
+      routesSection: 'Rotas de Investimento — Prospera Investimentos',
+      profileSection: 'Análise de Perfil — Prospera Investimentos',
     },
     howItWorks: {
       eyebrow: 'COMO FUNCIONA',
@@ -425,7 +445,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       diagnosticLink: 'Diagnóstico Prospera →',
       complianceTitle: 'Aviso Institucional & Conformidade',
       complianceText1:
-        'A Prospera Investment atua em planejamento, estruturação estratégica e acompanhamento para investimento imobiliário no Reino Unido. Não realizamos promessas de rentabilidade garantida. Decisões de investimento devem considerar o perfil individual e contar com validações profissionais e regulatórias britânicas.',
+        'A Prospera Investimentos atua em planejamento, estruturação estratégica e acompanhamento para investimento imobiliário no Reino Unido. Não realizamos promessas de rentabilidade garantida. Decisões de investimento devem considerar o perfil individual e contar com validações profissionais e regulatórias britânicas.',
       complianceText2:
         'Operações imobiliárias e societárias internacionais exigem diligência técnica e representação por profissionais habilitados (solicitors e consultores fiscais credenciados).',
       copyright: 'Todos os direitos reservados.',
@@ -435,7 +455,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
   en: {
     nav: {
       about: 'About',
-      method: 'The Prospera Method',
+      method: 'The PROSPERA Method',
       routes: 'Investment Routes',
       howItWorks: 'How It Works',
       opportunities: 'Opportunities',
@@ -541,6 +561,16 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
           microcopy: 'Privileged, off-market access to rare properties before general public marketing.',
         },
       },
+    },
+    aria: {
+      headerHome: 'Prospera Investment — Home',
+      headerLogo: 'Prospera Investment Official Crest',
+      heroSection: 'Hero Section — Prospera Investment',
+      heroAlt: 'Adriana Horrocks — Founder of Prospera Investment in London with Big Ben and British architecture view',
+      cinematicHero: 'Introduction Prospera Investment',
+      adrianaSection: 'Authority and Experience — Prospera Investment',
+      routesSection: 'Investment Routes — Prospera Investment',
+      profileSection: 'Profile Analysis — Prospera Investment',
     },
     howItWorks: {
       eyebrow: 'HOW IT WORKS',
