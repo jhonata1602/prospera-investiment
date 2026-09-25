@@ -279,10 +279,9 @@ export function HowItWorks() {
         {/* Video Player 1 (A) */}
         <video
           ref={video1Ref}
-          autoPlay
           muted
           playsInline
-          preload="auto"
+          preload="none"
           poster={POSTER_SRC}
           onTimeUpdate={() => handleTimeUpdate(1)}
           onEnded={() => handleVideoEnded(1)}
@@ -316,7 +315,7 @@ export function HowItWorks() {
           ref={video2Ref}
           muted
           playsInline
-          preload="auto"
+          preload="none"
           poster={POSTER_SRC}
           onTimeUpdate={() => handleTimeUpdate(2)}
           onEnded={() => handleVideoEnded(2)}

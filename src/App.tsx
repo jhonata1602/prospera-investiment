@@ -11,10 +11,10 @@ import { Footer } from '@/components/layout/Footer'
 export default function App() {
   return (
     <LanguageProvider>
-      <div id="topo" className="w-full overflow-x-hidden min-h-screen bg-[#07110D] text-prospera-white flex flex-col justify-between selection:bg-prospera-green selection:text-prospera-gold">
+      <div id="topo" className="w-full overflow-x-hidden min-h-screen bg-transparent text-prospera-white flex flex-col justify-between selection:bg-prospera-green selection:text-prospera-gold">
         <Header />
 
-        <main className="flex-1 bg-[#07110D]">
+        <main className="flex-1 bg-transparent">
           <CinematicHero />
           <AdrianaAuthority />
           <InvestmentRoutes />

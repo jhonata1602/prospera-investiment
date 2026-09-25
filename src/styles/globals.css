@@ -34,7 +34,7 @@
     scroll-behavior: smooth;
     font-family: var(--font-sans);
     color: var(--prospera-graphite);
-    background-color: #07110D;
+    background-color: #050605;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -46,7 +46,7 @@
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
-    background-color: #07110D;
+    background-color: #050605;
     color: var(--prospera-graphite);
     overflow-x: hidden;
     max-width: 100vw;

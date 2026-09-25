@@ -514,8 +514,8 @@ export function InvestmentRoutes() {
                   <img
                     src={route.imageSrc}
                     alt={cardData.title}
-                    loading="eager"
-                    decoding="auto"
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-0 brightness-[1.14] contrast-[1.03] saturate-[1.05]"
                     style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                   />
@@ -588,8 +588,8 @@ export function InvestmentRoutes() {
                   <img
                     src={route.imageSrc}
                     alt={cardData.title}
-                    loading="eager"
-                    decoding="auto"
+                    loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none z-0 brightness-[1.14] contrast-[1.03] saturate-[1.05]"
                     style={{ transform: 'translateZ(0)', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                   />

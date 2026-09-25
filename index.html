@@ -12,7 +12,15 @@
     <meta name="description" content="Prospera Investment — Estratégia, estrutura e acompanhamento para investimento imobiliário no Reino Unido." />
     <title>Prospera Investment | Private UK Property Advisory</title>
   </head>
-  <body>
+  <body style="margin: 0; background-color: #050605;">
+    <!-- FOUC / Flash Prevention: Pre-render Hero Poster com LQIP Instantâneo -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; background-color: transparent; overflow: hidden; pointer-events: none;">
+      <img src="/assets/prospera/hero/poster-london.webp" class="hero-video-skyline" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(1.18) contrast(1.05) saturate(1.04); background-image: url('data:image/webp;base64,UklGRmgBAABXRUJQVlA4IFwBAADwCgCdASpAACQAPl0mkEWjoiIarf78OAXEsoBYj9DIYG7BzmW3Vb6vAax2mRPNiaduDVa1z/Iv5ZnzJzf0A2BRuOxue9PuBgI0wRMJ6dwCapHqDATJzdN4uU9cM52hvgAA/vi5E5VHh2AIM6G9IByzi1dLybU3UkbbvEXXv7CkcrJa1UKtgHinaosrQjQHTQ0IOILmmbeO4JGElJeb7Ne6Hph6jRRmCObKNF1CuUJQEP45EITxMu6skEUKYuio6EyEcvqgQfUboSYm0Cxhcxs0QLFwpchnk9KYF13dLukJccoh6sUl7EOACVFBARqyR01FRfSNcDgac7WK5N14z9ujsl1P2GpTC6phNyd25Oad6xiMefGOzqaYYiNaqOk1B2eV3Q3MLGsooR3U/9HzHoDWL6Tl8idyCmcXGtJ6IkHVGo5qGI2uNtteXbUljjhFCKp2zhQPAKC+W+zAIAA='); background-size: cover; background-position: center;" decoding="sync" fetchpriority="high" alt="" />
+      
+      <!-- Overlay Cinematográfico para o pre-render ser idêntico ao React -->
+      <div style="position: absolute; inset: 0; background: radial-gradient(ellipse 120% 90% at 50% 46%, transparent 0%, rgba(10,12,16,0.04) 55%, rgba(10,12,16,0.18) 100%); pointer-events: none;"></div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

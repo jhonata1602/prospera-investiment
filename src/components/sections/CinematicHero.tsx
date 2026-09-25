@@ -97,8 +97,8 @@ export function CinematicHero({
   // Estratégia de preload progressivo: prioriza vídeo 0 no carregamento inicial
   const getPreload = (idx: number) => {
     if (idx === 0) return 'auto'
-    if (idx === (currentSceneIdx + 1) % VIDEO_SCENES.length && isVideoReady) return 'auto'
     if (idx === currentSceneIdx) return 'auto'
+    if (idx === (currentSceneIdx + 1) % VIDEO_SCENES.length && isVideoReady) return 'metadata'
     return 'none'
   }
 
@@ -200,7 +200,7 @@ export function CinematicHero({
     <section
       id="hero"
       aria-label="Introdução Prospera Investment"
-      className="relative min-h-[100svh] w-full flex items-center overflow-hidden bg-[#07110D]"
+      className="relative min-h-[100svh] w-full flex items-center overflow-hidden bg-transparent"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -226,6 +226,11 @@ export function CinematicHero({
             alt=""
             fetchPriority="high"
             className="w-full h-full brightness-[1.18] contrast-[1.05] saturate-[1.04] hero-video-skyline"
+            style={{
+              backgroundImage: `url("data:image/webp;base64,UklGRmgBAABXRUJQVlA4IFwBAADwCgCdASpAACQAPl0mkEWjoiIarf78OAXEsoBYj9DIYG7BzmW3Vb6vAax2mRPNiaduDVa1z/Iv5ZnzJzf0A2BRuOxue9PuBgI0wRMJ6dwCapHqDATJzdN4uU9cM52hvgAA/vi5E5VHh2AIM6G9IByzi1dLybU3UkbbvEXXv7CkcrJa1UKtgHinaosrQjQHTQ0IOILmmbeO4JGElJeb7Ne6Hph6jRRmCObKNF1CuUJQEP45EITxMu6skEUKYuio6EyEcvqgQfUboSYm0Cxhcxs0QLFwpchnk9KYF13dLukJccoh6sUl7EOACVFBARqyR01FRfSNcDgac7WK5N14z9ujsl1P2GpTC6phNyd25Oad6xiMefGOzqaYYiNaqOk1B2eV3Q3MLGsooR3U/9HzHoDWL6Tl8idyCmcXGtJ6IkHVGo5qGI2uNtteXbUljjhFCKp2zhQPAKC+W+zAIAA=")`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
           />
         </div>
 
@@ -249,7 +254,7 @@ export function CinematicHero({
               >
                 <video
                   ref={(el) => { videoRefs.current[idx] = el }}
-                  autoPlay
+                  autoPlay={idx === 0}
                   muted
                   loop
                   playsInline

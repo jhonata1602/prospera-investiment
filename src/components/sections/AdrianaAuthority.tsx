@@ -177,7 +177,7 @@ export function AdrianaAuthority() {
             src="/assets/prospera/adriana-london-background.jpg"
             alt="Skyline panorâmico de Londres — Big Ben, Rio Tâmisa e Westminster"
             className="w-full h-full object-cover object-center brightness-[1.01] contrast-[1.05]"
-            loading="eager"
+            loading="lazy"
             decoding="async"
           />
         </div>
@@ -474,7 +474,7 @@ export function AdrianaAuthority() {
                 src="/assets/prospera/adriana-executive-portrait.png"
                 alt="Adriana Horrocks — CEO e Fundadora da Prospera Investments"
                 className="w-auto h-full max-h-[740px] xl:max-h-[800px] 2xl:max-h-[840px] object-contain object-bottom drop-shadow-[0_20px_40px_rgba(15,59,46,0.18)] select-none pointer-events-none transition-transform duration-700 hover:scale-[1.015]"
-                loading="eager"
+                loading="lazy"
                 decoding="async"
               />
             </div>
