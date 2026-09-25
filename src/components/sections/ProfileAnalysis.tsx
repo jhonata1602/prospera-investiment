@@ -482,6 +482,12 @@ export function ProfileAnalysis() {
                       aria-hidden="true"
                     />
 
+                    {/* Efeito de Shimmer/Flash idêntico aos demais CTAs dourados */}
+                    <span
+                      className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none animate-button-shine"
+                      aria-hidden="true"
+                    />
+
                     {/* Conteúdo do Botão com transição suave de cor e ícones */}
                     <span
                       className={`relative z-10 inline-flex items-center justify-center gap-2.5 transition-colors duration-300 ease-out ${

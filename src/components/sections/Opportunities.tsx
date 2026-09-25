@@ -343,9 +343,9 @@ export function Opportunities() {
 
           {/* Headline com maior destaque visual, contraste aprimorado e sofisticação */}
           <h3
-            className="font-serif text-lg sm:text-[1.25rem] lg:text-[1.32rem] font-bold text-[#020D08] tracking-tight leading-snug"
+            className="font-serif text-xl sm:text-2xl lg:text-[1.65rem] font-bold text-[#020D08] tracking-tight leading-snug"
             style={{
-              textShadow: '0 1px 2px rgba(255, 255, 255, 0.65)',
+              textShadow: '0 1px 2px rgba(255, 255, 255, 0.70)',
             }}
           >
             {t.opportunities.closingHeadline}
@@ -353,23 +353,27 @@ export function Opportunities() {
 
           {/* Subtitle refinado com excelente leitura e respiro */}
           <p
-            className="mt-1.5 sm:mt-2 text-[13px] sm:text-[14px] text-[#081F15] font-semibold max-w-lg mx-auto leading-relaxed"
+            className="mt-2.5 sm:mt-3 text-[14px] sm:text-[15px] lg:text-[1rem] text-[#06140D] font-bold max-w-xl mx-auto leading-relaxed"
             style={{
-              textShadow: '0 1px 2px rgba(255, 255, 255, 0.60)',
+              textShadow: '0 1px 2px rgba(255, 255, 255, 0.75)',
             }}
           >
             {t.opportunities.closingSubtitle}
           </p>
 
-          <div className="mt-3.5 sm:mt-4 flex flex-col items-center justify-center gap-1.5">
+          <div className="mt-5 sm:mt-6 flex flex-col items-center justify-center gap-2">
             <a
               href="#diagnostico"
               className="btn-gold-primary relative overflow-hidden inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 sm:px-7 sm:py-3 text-xs sm:text-[12.5px] font-bold tracking-[0.12em] uppercase text-[#07110D] shadow-[0_4px_18px_rgba(212,175,55,0.40)] transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-prospera-gold/70 cursor-pointer"
             >
+              <span
+                className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none animate-button-shine"
+                aria-hidden="true"
+              />
               <span>{t.opportunities.closingButton}</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-[#07110D]" />
             </a>
-            <span className="text-[11.5px] font-semibold text-[#132A20] tracking-wide mt-1">
+            <span className="text-[11.5px] font-bold text-[#0A1A12] tracking-wide mt-1.5">
               {t.opportunities.closingMicrocopy}
             </span>
           </div>
