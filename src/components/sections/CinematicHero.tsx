@@ -418,7 +418,7 @@ export function CinematicHero({
         style={{ textShadow: '0 1px 4px rgba(0, 0, 0, 0.95)' }}
         aria-label="Rolar para a próxima seção"
       >
-        <span className="font-light">EXPLORAR</span>
+        <span className="font-light">{t.hero.scrollIndicator}</span>
         <div className="animate-subtle-scroll">
           <ChevronDown size={15} />
         </div>
