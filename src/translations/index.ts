@@ -5,7 +5,9 @@ export interface TranslationSchema {
     routes: string
     howItWorks: string
     opportunities: string
-    analyzeProfile: string
+    testimonials: string
+    faq: string
+    analyseProfile: string
     tagline: string
   }
   hero: {
@@ -91,6 +93,22 @@ export interface TranslationSchema {
     closingMicrocopy: string
     items: Record<string, { tag: string; subtitle: string; title: string; description: string }>
   }
+  feedback: {
+    eyebrow: string
+    headlinePart1: string
+    headlineGold: string
+    headlinePart2: string
+    subheadline: string
+    items: Array<{ id: number; name: string; role: string; image?: string; text: string }>
+  }
+  faq: {
+    eyebrow: string
+    headlinePart1: string
+    headlineGold: string
+    headlinePart2: string
+    subheadline: string
+    questions: Array<{ id: number; q: string; a: string }>
+  }
   profileAnalysis: {
     eyebrow: string
     headlinePart1: string
@@ -149,7 +167,9 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       routes: 'Rotas de Investimento',
       howItWorks: 'Como Funciona',
       opportunities: 'Oportunidades',
-      analyzeProfile: 'Analisar Meu Perfil',
+      testimonials: 'Depoimentos',
+      faq: 'FAQ',
+      analyseProfile: 'Analisar Meu Perfil',
       tagline: 'Estrutura e estratégia imobiliária de alto padrão no Reino Unido',
     },
     hero: {
@@ -368,6 +388,75 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
         },
       },
     },
+    feedback: {
+      eyebrow: 'DEPOIMENTOS',
+      headlinePart1: 'Confiança construída com ',
+      headlineGold: 'resultados',
+      headlinePart2: '.',
+      subheadline: 'Visão estratégica e acompanhamento contínuo na construção do seu patrimônio.',
+      items: [
+        {
+          id: 1,
+          name: 'A. Ribeiro',
+          role: 'Empresário brasileiro',
+          image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=150&q=80',
+          text: '“A clareza do processo foi o maior diferencial. A Prospera não apenas conduziu a aquisição do imóvel, mas estruturou toda a minha estratégia de entrada no Reino Unido com máxima segurança.”'
+        },
+        {
+          id: 2,
+          name: 'M. Santos',
+          role: 'Investidora no Reino Unido',
+          image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80',
+          text: '“Acompanhamento executivo irretocável. Desde a análise rigorosa de viabilidade até a gestão documental, a tomada de decisão foi fundamentada em dados e vasta experiência local.”'
+        },
+        {
+          id: 3,
+          name: 'L. & C. Almeida',
+          role: 'Casal Investidor',
+          image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80',
+          text: '“Entender a dinâmica britânica parecia um desafio à distância, mas a organização e a visão patrimonial de longo prazo da equipe nos deram total tranquilidade para expandir o portfólio.”'
+        }
+      ]
+    },
+    faq: {
+      eyebrow: 'FAQ',
+      headlinePart1: 'Dúvidas ',
+      headlineGold: 'frequentes',
+      headlinePart2: '.',
+      subheadline: 'Clareza em cada etapa do processo de investimento no Reino Unido.',
+      questions: [
+        {
+          id: 1,
+          q: 'Posso investir no Reino Unido morando no Brasil?',
+          a: 'Sim. A Prospera orienta todo o processo, desde a estruturação inicial até a aquisição e gestão, permitindo que investidores no Brasil construam patrimônio no Reino Unido de forma segura e organizada.'
+        },
+        {
+          id: 2,
+          q: 'Como funciona a análise do meu perfil de investidor?',
+          a: 'Avaliamos seus objetivos, capital disponível e horizonte de investimento. A partir desse diagnóstico, desenhamos uma estratégia imobiliária focada em renda recorrente, valorização ou construção de portfólio.'
+        },
+        {
+          id: 3,
+          q: 'A Prospera participa apenas da compra ou também ajuda na estratégia?',
+          a: 'Nosso foco principal é a direção estratégica (Private Property Advisory). Orientamos a definição do caminho ideal antes mesmo da escolha do ativo, focando em estruturação patrimonial de longo prazo.'
+        },
+        {
+          id: 4,
+          q: 'Quais estratégias imobiliárias podem ser analisadas?',
+          a: 'Trabalhamos com diversas rotas, incluindo Buy-to-Let (renda), HMO (Maximização de yield), Flip/Retrofit (valorização), e portfólios off-market em localizações consagradas.'
+        },
+        {
+          id: 5,
+          q: 'Como funciona a parte jurídica e documental?',
+          a: 'O mercado britânico possui regulamentações rigorosas. Nós conduzimos nossos clientes junto a advogados e especialistas locais (solicitors e mortgage brokers) para garantir total conformidade (compliance) e segurança jurídica.'
+        },
+        {
+          id: 6,
+          q: 'Como a Prospera aborda a gestão de risco e a proteção do capital?',
+          a: 'A rentabilidade no mercado imobiliário depende da estratégia escolhida, da estrutura financeira e do momento. Na Prospera, nosso papel é estruturar cada oportunidade com profunda diligência prévia e análise criteriosa de viabilidade, atuando para mitigar riscos e maximizar o potencial do seu portfólio no Reino Unido com segurança.'
+        }
+      ]
+    },
     profileAnalysis: {
       eyebrow: 'ANALISAR MEU PERFIL',
       headlinePart1: 'Antes da oportunidade, vem a ',
@@ -459,7 +548,9 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       routes: 'Investment Routes',
       howItWorks: 'How It Works',
       opportunities: 'Opportunities',
-      analyzeProfile: 'Analyse My Profile',
+      testimonials: 'Testimonials',
+      faq: 'FAQ',
+      analyseProfile: 'Analyse My Profile',
       tagline: 'High-end property advisory and wealth structuring in the United Kingdom',
     },
     hero: {
@@ -502,7 +593,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
       headlineGold: 'One strategy',
       headlinePart2: ' built around your goals.',
       subheadline:
-        'From generating rental income to achieving long-term capital growth, every investor has different objectives, resources and ambitions. Prospera helps identify and structure the property investment strategy best suited to yours.',
+        'From generating rental income to achieving long-term capital growth, every investor has different objectives, resources and ambitions. Prospera helps identify and structure the property investment strategy best suited to your circumstances.',
       dragNote: 'Drag or navigate using arrows',
       exploreRoute: 'Explore route',
       visionBadge: '',
@@ -662,7 +753,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
           tag: 'Asset Growth',
           subtitle: 'UK Prime Off-Plan',
           title: 'New Developments',
-          description: 'Selected residential schemes offering strong capital growth and modern specifications.',
+          description: 'Selected residential schemes with potential for long-term capital growth and modern specifications.',
         },
         portfolio: {
           tag: 'Long-Term',
@@ -677,6 +768,75 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
           description: 'Discreet transactions requiring strategic discernment and timely decision-making.',
         },
       },
+    },
+    feedback: {
+      eyebrow: 'TESTIMONIALS',
+      headlinePart1: 'Trust built on ',
+      headlineGold: 'results',
+      headlinePart2: '.',
+      subheadline: 'Strategic insight and continuous guidance in building your wealth.',
+      items: [
+        {
+          id: 1,
+          name: 'A. Ribeiro',
+          role: 'Brazilian Businessman',
+          image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=150&q=80',
+          text: '“The clarity of the process was the standout factor. Prospera did not merely handle the property acquisition; they structured my entire entry strategy into the UK market with utmost security.”'
+        },
+        {
+          id: 2,
+          name: 'M. Santos',
+          role: 'UK-based Investor',
+          image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80',
+          text: '“Flawless executive advisory. From the rigorous feasibility analysis to documentation management, every decision was backed by data and extensive local expertise.”'
+        },
+        {
+          id: 3,
+          name: 'L. & C. Almeida',
+          role: 'Investor Couple',
+          image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&q=80',
+          text: '“Understanding the British market dynamics from afar seemed challenging, but the team’s organisation and long-term wealth vision gave us complete confidence to expand our portfolio.”'
+        }
+      ]
+    },
+    faq: {
+      eyebrow: 'FAQ',
+      headlinePart1: 'Frequently asked ',
+      headlineGold: 'questions',
+      headlinePart2: '.',
+      subheadline: 'Clarity at every stage of the UK property investment process.',
+      questions: [
+        {
+          id: 1,
+          q: 'Can I invest in the UK whilst living in Brazil?',
+          a: 'Yes. Prospera provides guidance throughout the entire process, from initial structuring to acquisition and management, enabling international investors to build wealth in the UK securely and efficiently.'
+        },
+        {
+          id: 2,
+          q: 'How does the investor profile analysis work?',
+          a: 'We evaluate your objectives, available capital and investment horizon. Based on this diagnostic, we design a property strategy focused on recurring income, capital growth or portfolio building.'
+        },
+        {
+          id: 3,
+          q: 'Does Prospera assist only with the purchase, or also with the strategy?',
+          a: 'Our primary focus is Private Property Advisory. We guide the definition of the optimal strategy before selecting any asset, focusing heavily on long-term wealth structuring.'
+        },
+        {
+          id: 4,
+          q: 'Which property strategies can be analysed?',
+          a: 'We work with various routes, including Buy-to-Let (income), HMO (yield maximisation), Flip/Retrofit (capital growth), and off-market portfolios in prime locations.'
+        },
+        {
+          id: 5,
+          q: 'How does the legal and documentation process work?',
+          a: 'The UK market has strict regulations. We introduce our clients to trusted local specialists (solicitors and mortgage brokers) to ensure full compliance and rigorous legal due diligence.'
+        },
+        {
+          id: 6,
+          q: 'How does Prospera approach risk management and capital protection?',
+          a: 'Returns depend on the chosen strategy, financial structure, and market timing. At Prospera, our role is to structure each opportunity with rigorous due diligence and meticulous feasibility analysis, acting to mitigate risks and maximise the potential of your UK portfolio with security.'
+        }
+      ]
     },
     profileAnalysis: {
       eyebrow: 'ANALYSE MY PROFILE',
@@ -705,7 +865,7 @@ export const translations: Record<'pt' | 'en', TranslationSchema> = {
         },
       ],
       trustBadges: ['32+ Years in the UK', 'PROSPERA Method', 'Strategic Advisory'],
-      formTitle: 'Preliminary Diagnostic',
+      formTitle: 'Initial Assessment',
       formSubtitle: 'Please complete the details below so we can understand your investment goals.',
       labels: {
         name: 'Full Name *',

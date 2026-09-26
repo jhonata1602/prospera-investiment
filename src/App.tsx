@@ -5,6 +5,8 @@ import { AdrianaAuthority } from '@/components/sections/AdrianaAuthority'
 import { InvestmentRoutes } from '@/components/sections/InvestmentRoutes'
 import { HowItWorks } from '@/components/sections/HowItWorks'
 import { Opportunities } from '@/components/sections/Opportunities'
+import { Feedback } from '@/components/sections/Feedback'
+import { FAQ } from '@/components/sections/FAQ'
 import { ProfileAnalysis } from '@/components/sections/ProfileAnalysis'
 import { Footer } from '@/components/layout/Footer'
 
@@ -20,6 +22,8 @@ export default function App() {
           <InvestmentRoutes />
           <HowItWorks />
           <Opportunities />
+          <Feedback />
+          <FAQ />
           <ProfileAnalysis />
         </main>
 

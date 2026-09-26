@@ -10,7 +10,9 @@ export function Footer() {
     { label: t.nav.routes, href: '#rotas' },
     { label: t.nav.howItWorks, href: '#como-funciona' },
     { label: t.nav.opportunities, href: '#oportunidades' },
-    { label: t.nav.analyzeProfile, href: '#diagnostico' },
+    { label: t.nav.testimonials, href: '#testimonials' },
+    { label: t.nav.faq, href: '#faq' },
+    { label: t.nav.analyseProfile, href: '#diagnostico' },
   ]
 
   return (

@@ -63,7 +63,7 @@ const OPPORTUNITIES_DATA: OpportunityCard[] = [
 ]
 
 export function Opportunities() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [isVisible, setIsVisible] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
@@ -107,7 +107,7 @@ export function Opportunities() {
     <section
       id="oportunidades"
       ref={sectionRef}
-      className="relative w-full overflow-hidden bg-[#FAF7F2] text-[#0A221A] py-12 sm:py-14 lg:py-16 selection:bg-[#1A4D3F] selection:text-[#FAF8F3]"
+      className="relative z-30 w-full overflow-hidden bg-[#FAF7F2] text-[#0A221A] py-12 sm:py-14 lg:py-16 shadow-[0_40px_80px_-12px_rgba(0,0,0,0.45)] selection:bg-[#1A4D3F] selection:text-[#FAF8F3]"
       aria-label="Oportunidades no Mercado Imobiliário Britânico"
     >
       {/* =========================================================================
@@ -138,52 +138,36 @@ export function Opportunities() {
           - Camada de luz champanhe perolada límpida
           - Textura imobiliária marcante e luxuosa com leitura impecável dos cards
          ========================================================================= */}
-      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
-        {/* Base Nobre Off-White / Creme / Champagne Límpida */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 100% 85% at 50% 25%, #FFFDF8 0%, #FAF7F2 55%, #F4ECE0 100%)',
-          }}
-        />
-
-        {/* Imagem de Fundo de Mansão Inglesa de Luxo Mais Visível e Nítida (Casa, Jardim e Carro) */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.58] sm:opacity-[0.62] lg:opacity-[0.66] mix-blend-multiply" aria-hidden="true">
+      <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden bg-[#FAF7F2]" aria-hidden="true">
+        {/* Imagem de Fundo 100% fotográfica, presença absoluta, sem lavagem creme ou estourados */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-100" aria-hidden="true">
           <img
             src="/assets/prospera/opportunities-mansion-bg.jpg"
             alt=""
-            className="w-full h-full object-cover object-[center_32%] sm:object-[center_35%] lg:object-[center_38%] brightness-[1.03] contrast-[1.10] saturate-[1.12]"
+            className="w-full h-full object-cover object-[center_35%]"
             loading="lazy"
             decoding="async"
           />
         </div>
-
-        {/* Véu de contraste perolado difuso sob os cards: garante foco nos cards sem apagar a imagem ao redor */}
+        
+        {/* Gradiente superior ultra-sutil para garantir leitura do texto branco sem escurecer a seção inteira */}
         <div
-          className="absolute top-[35%] left-1/2 -translate-x-1/2 w-[95vw] max-w-[1120px] h-[650px] rounded-full pointer-events-none blur-3xl opacity-75"
+          className="absolute inset-x-0 top-0 h-[45%] pointer-events-none"
           style={{
-            background:
-              'radial-gradient(ellipse 85% 65% at 50% 50%, rgba(255, 253, 248, 0.85) 0%, rgba(250, 247, 242, 0.45) 60%, transparent 90%)',
+            background: 'linear-gradient(to bottom, rgba(5, 23, 16, 0.65) 0%, transparent 100%)',
           }}
         />
 
-        {/* Brilho Atmosférico Champagne Suave */}
+        {/* Gradiente inferior largo e majestoso para ancorar o CTA final e dar leitura absoluta aos textos */}
         <div
-          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[90vw] max-w-[1100px] h-[450px] rounded-full pointer-events-none blur-3xl opacity-30"
+          className="absolute inset-x-0 bottom-0 h-[55%] pointer-events-none"
           style={{
-            background: 'radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 70%)',
+            background: 'linear-gradient(to top, rgba(5, 23, 16, 0.95) 0%, rgba(5, 23, 16, 0.6) 45%, transparent 100%)',
           }}
         />
       </div>
 
       <div className="container-luxury relative z-10">
-        {/* =======================================================================
-            3. CABEÇALHO DA 5ª DOBRA
-            - Eyebrow compacto e nobre
-            - Headline elegante com destaque em dourado suave
-            - Subheadline reflexiva com entrelinha equilibrada
-           ======================================================================= */}
         <div
           className={`relative mx-auto max-w-3xl text-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isVisible || prefersReducedMotion
@@ -191,35 +175,22 @@ export function Opportunities() {
               : 'opacity-0 translate-y-5'
           }`}
         >
-          {/* Bruma suave perolada/champagne para garantir legibilidade e contraste impecável sobre o fundo */}
-          <div
-            className="absolute -inset-x-8 -inset-y-6 sm:-inset-x-16 sm:-inset-y-8 pointer-events-none -z-10 blur-3xl opacity-90"
-            style={{
-              background:
-                'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(255, 253, 248, 0.95) 0%, rgba(250, 247, 242, 0.70) 55%, transparent 85%)',
-            }}
-            aria-hidden="true"
-          />
-
-          {/* Eyebrow Institucional Padronizado */}
           <div className="inline-flex items-center justify-center mb-3 sm:mb-3.5">
-            <div className="badge-section-pill">
+            <div className="badge-section-pill bg-white/10 backdrop-blur-md border-white/20 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2)]">
               <Sparkles className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" aria-hidden="true" />
               <span>{t.opportunities.eyebrow}</span>
             </div>
           </div>
 
-          {/* Headline Principal: Sólida, nítida e com ouro britânico de alto impacto */}
-          <h2 className="font-serif text-2xl sm:text-3xl lg:text-[2.65rem] font-bold leading-[1.16] tracking-[-0.015em] text-[#051710]">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-[2.75rem] font-bold leading-[1.15] tracking-tight text-[#FFFFFF] drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)]">
             {t.opportunities.headlinePart1}
-            <span className="text-[#845607] font-serif font-bold italic tracking-tight">
+            <span className="text-[#F5D982] font-serif font-bold italic tracking-tight mx-1.5 drop-shadow-[0_0_12px_rgba(245,217,130,0.4)]">
               {t.opportunities.headlineGold}
             </span>
             {t.opportunities.headlinePart2}
           </h2>
-
-          {/* Subheadline com excelente contraste */}
-          <p className="mt-3 sm:mt-3.5 text-[14px] sm:text-[15px] lg:text-[1.05rem] font-medium leading-[1.66] text-[#142B20] max-w-2xl mx-auto">
+          
+          <p className="mt-4 sm:mt-5 text-[15.5px] sm:text-[1.05rem] lg:text-[1.15rem] text-[#FFFFFF] font-bold max-w-2xl mx-auto leading-relaxed drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
             {t.opportunities.subheadline}
           </p>
         </div>
@@ -325,57 +296,58 @@ export function Opportunities() {
             - Botão dourado e microcopy perfeitamente alinhados
            ======================================================================= */}
         <div
-          className={`relative mt-4 sm:mt-5 max-w-xl mx-auto text-center px-4 transition-all duration-700 delay-150 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`relative mt-12 sm:mt-16 max-w-3xl mx-auto transition-all duration-700 delay-150 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             isVisible || prefersReducedMotion
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-3'
           }`}
         >
-          {/* Apoio visual suave: névoa/bruma difusa translúcida sem contornos nem bordas rígidas */}
+          {/* Suporte visual localizado e elegante para maximizar legibilidade sem lavar a dobra inteira */}
           <div
-            className="absolute -inset-x-8 -inset-y-4 pointer-events-none -z-10 blur-2xl opacity-60"
+            className="absolute -inset-x-12 -inset-y-12 pointer-events-none -z-10 rounded-full blur-[32px] opacity-95"
             style={{
-              background:
-                'radial-gradient(ellipse 80% 65% at 50% 45%, rgba(255, 252, 245, 0.78) 0%, rgba(250, 246, 238, 0.35) 55%, transparent 80%)',
+              background: 'radial-gradient(ellipse at 50% 50%, rgba(5,23,16,0.85) 0%, rgba(5,23,16,0.3) 60%, transparent 80%)',
             }}
             aria-hidden="true"
           />
 
-          {/* Headline com maior destaque visual, contraste aprimorado e sofisticação */}
-          <h3
-            className="font-serif text-xl sm:text-2xl lg:text-[1.65rem] font-bold text-[#020D08] tracking-tight leading-snug"
-            style={{
-              textShadow: '0 1px 2px rgba(255, 255, 255, 0.70)',
-            }}
-          >
-            {t.opportunities.closingHeadline}
-          </h3>
-
-          {/* Subtitle refinado com excelente leitura e respiro */}
-          <p
-            className="mt-2.5 sm:mt-3 text-[14px] sm:text-[15px] lg:text-[1rem] text-[#06140D] font-bold max-w-xl mx-auto leading-relaxed"
-            style={{
-              textShadow: '0 1px 2px rgba(255, 255, 255, 0.75)',
-            }}
-          >
-            {t.opportunities.closingSubtitle}
-          </p>
-
-          <div className="mt-5 sm:mt-6 flex flex-col items-center justify-center gap-2">
-            <a
-              href="#diagnostico"
-              className="btn-gold-primary relative overflow-hidden inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 sm:px-7 sm:py-3 text-xs sm:text-[12.5px] font-bold tracking-[0.12em] uppercase text-[#07110D] shadow-[0_4px_18px_rgba(212,175,55,0.40)] transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-prospera-gold/70 cursor-pointer"
+          <div className="relative px-4 text-center">
+            <h3 
+              className="font-serif text-xl sm:text-2xl lg:text-[1.75rem] font-bold text-[#FFFFFF] tracking-tight leading-snug drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]"
             >
-              <span
-                className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none animate-button-shine"
-                aria-hidden="true"
-              />
-              <span>{t.opportunities.closingButton}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#07110D]" />
-            </a>
-            <span className="text-[11.5px] font-bold text-[#0A1A12] tracking-wide mt-1.5">
-              {t.opportunities.closingMicrocopy}
-            </span>
+              {language === 'pt' ? (
+                <>
+                  Nem toda oportunidade serve para <span className="text-[#F5D982] drop-shadow-[0_0_12px_rgba(245,217,130,0.4)]">todo investidor.</span>
+                </>
+              ) : (
+                <>
+                  Not every opportunity suits <span className="text-[#F5D982] drop-shadow-[0_0_12px_rgba(245,217,130,0.4)]">every investor.</span>
+                </>
+              )}
+            </h3>
+
+            <p 
+              className="mt-3 sm:mt-4 text-[14.5px] sm:text-[15.5px] lg:text-[1.05rem] text-[#FFFFFF] font-bold max-w-xl mx-auto leading-relaxed drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]"
+            >
+              {t.opportunities.closingSubtitle}
+            </p>
+
+            <div className="mt-8 sm:mt-10 flex flex-col items-center justify-center gap-4">
+              <a
+                href="#diagnostico"
+                className="btn-gold-primary relative overflow-hidden inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-xs sm:text-[13px] font-bold tracking-[0.12em] uppercase text-[#07110D] shadow-[0_4px_24px_rgba(212,175,55,0.40)] transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-prospera-gold/70 cursor-pointer"
+              >
+                <span
+                  className="absolute inset-0 w-1/3 h-full bg-gradient-to-r from-transparent via-white/35 to-transparent pointer-events-none animate-button-shine"
+                  aria-hidden="true"
+                />
+                <span>{t.opportunities.closingButton}</span>
+                <ArrowUpRight className="w-4 h-4 text-[#07110D]" />
+              </a>
+              <span className="text-[12px] font-bold text-[#D4AF37] tracking-widest mt-1 uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                {t.opportunities.closingMicrocopy}
+              </span>
+            </div>
           </div>
         </div>
       </div>

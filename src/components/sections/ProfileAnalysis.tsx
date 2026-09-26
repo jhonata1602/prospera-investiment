@@ -109,7 +109,39 @@ export function ProfileAnalysis() {
     const section = sectionRef.current
     if (section) observer.observe(section)
 
-    return () => observer.disconnect()
+    const handleHashClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      const link = target.closest('a')
+      const href = link?.getAttribute('href')
+      
+      if (href === '#diagnostico' || href === '#perfil') {
+        e.preventDefault()
+        const section = document.getElementById('diagnostico')
+        if (section) {
+          const headerHeight = window.innerWidth >= 1024 ? 96 : 80 // h-24 lg:h-24 vs mobile h-20
+          const elementPosition = section.getBoundingClientRect().top
+          const offsetPosition = elementPosition + window.pageYOffset - headerHeight
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          })
+
+          setTimeout(() => {
+            const nameInput = document.getElementById('profile-name')
+            if (nameInput) {
+              nameInput.focus({ preventScroll: true })
+            }
+          }, 850)
+        }
+      }
+    }
+    document.addEventListener('click', handleHashClick)
+
+    return () => {
+      observer.disconnect()
+      document.removeEventListener('click', handleHashClick)
+    }
   }, [])
 
   const handleSubmit = (e: FormEvent) => {
@@ -156,10 +188,9 @@ export function ProfileAnalysis() {
     <section
       id="diagnostico"
       ref={sectionRef}
-      className="relative w-full overflow-hidden bg-[#F6F1E8] text-[#0A221A] pt-10 sm:pt-12 lg:pt-14 pb-6 sm:pb-8 lg:pb-10 selection:bg-[#1A4D3F] selection:text-[#FAF8F3]"
+      className="relative z-0 w-full overflow-hidden bg-[#F6F1E8] text-[#0A221A] pt-10 sm:pt-12 lg:pt-14 pb-6 sm:pb-8 lg:pb-10 selection:bg-[#1A4D3F] selection:text-[#FAF8F3] scroll-mt-24 sm:scroll-mt-28"
       aria-label="Analisar Meu Perfil — Diagnóstico Estratégico Prospera"
     >
-      {/* Âncora alternativa de navegação */}
       <div id="perfil" className="absolute -top-24 pointer-events-none" aria-hidden="true" />
 
       {/* =========================================================================
@@ -169,6 +200,15 @@ export function ProfileAnalysis() {
           - Ambiente executivo nítido com móveis, janelas e luz natural
          ========================================================================= */}
       <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
+        {/* Sombra de dobra visual curta na junção superior (FAQ -> Profile Analysis) */}
+        <div 
+          className="absolute inset-x-0 top-0 h-16 sm:h-20 lg:h-24 pointer-events-none z-[100]"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(5,23,16,1) 0%, rgba(5,23,16,0.6) 25%, rgba(5,23,16,0) 100%)'
+          }}
+          aria-hidden="true"
+        />
+
         {/* Base Creme Champagne Quente e Acolhedora — Sem Branco Estourado */}
         <div
           className="absolute inset-0"

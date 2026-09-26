@@ -92,7 +92,7 @@ const ROW_2_ROUTES: RouteCard[] = [
 ]
 
 export function InvestmentRoutes() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [isVisible, setIsVisible] = useState(false)
   const [headerRef, isHeaderVisible] = useScrollReveal<HTMLDivElement>({ threshold: 0.15, rootMargin: '0px 0px -40px 0px' })
   const [ctaRef, isCtaVisible] = useScrollReveal<HTMLDivElement>({ threshold: 0.15, rootMargin: '0px 0px -40px 0px' })
@@ -662,27 +662,30 @@ export function InvestmentRoutes() {
             {t.routes.visionBadge}
           </div>
 
-          {/* Headline do CTA com leitura nítida em tom champanhe */}
+          {/* Headline do CTA com leitura nítida em tom champanhe e destaque dourado */}
           <h3
-            className={`font-serif font-normal leading-[1.15] text-[#FFFFFF] tracking-tight text-center max-w-[860px] mx-auto transition-all duration-700 delay-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`font-serif font-bold leading-[1.15] text-[#FFFFFF] tracking-tight text-center max-w-[860px] mx-auto transition-all duration-700 delay-250 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
               isCtaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
             style={{
               fontSize: 'clamp(1.55rem, 1.8vw + 0.95rem, 2.45rem)',
-              textShadow: '0 2px 4px rgba(0,0,0,0.98), 0 4px 18px rgba(3,8,6,0.95)',
+              textShadow: '0 2px 16px rgba(0,0,0,0.95)',
             }}
           >
-            {t.routes.ctaHeadline}
+            {language === 'pt' ? (
+              <>Antes de escolher o imóvel, definimos a <span className="text-[#F5D982] drop-shadow-[0_0_12px_rgba(245,217,130,0.4)]">estratégia.</span></>
+            ) : (
+              <>Before selecting a property, we define the <span className="text-[#F5D982] drop-shadow-[0_0_12px_rgba(245,217,130,0.4)]">strategy.</span></>
+            )}
           </h3>
 
           {/* Subtítulo do CTA com contraste confortável e sem caixas */}
           <p
-            className={`mt-2 sm:mt-2.5 font-semibold text-[#FFFDF8] max-w-[680px] mx-auto leading-[1.6] text-center transition-all duration-700 delay-400 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 ${
+            className={`mt-3 sm:mt-4 font-bold text-[#FFFFFF] max-w-[680px] mx-auto leading-[1.65] text-center transition-all duration-700 delay-400 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none motion-reduce:transform-none motion-reduce:opacity-100 drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)] ${
               isCtaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'
             }`}
             style={{
               fontSize: 'clamp(0.875rem, 0.25vw + 0.8rem, 1.05rem)',
-              textShadow: '0 1px 4px rgba(0,0,0,0.98), 0 2px 10px rgba(3,8,6,0.92)',
             }}
           >
             {t.routes.ctaSubtitle}
